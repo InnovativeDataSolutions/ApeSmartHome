@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ids.smarthomev2.Home"
+    tools:showIn="@layout/activity_home">
+<!--========================================================================================================================================================-->
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/ll"
+       android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sp1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"></Spinner>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sp2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"></Spinner>
+    </RelativeLayout>
+   </LinearLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/ll"-->
+        <!--android:id="@+id/ll2">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/tvinfo"/>-->
+    <!--</RelativeLayout>-->
+
+
+
+<!--============================================================================================================================================================-->
+
+   <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/rl5g"
+       android:layout_marginTop="20dp"
+       android:layout_below="@+id/ll"
+       android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/rl5g1"
+               android:layout_alignParentRight="true"
+               android:layout_alignParentEnd="true"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
+               android:layout_marginTop="20dp">
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="ON"
+                   android:visibility="gone"
+                   android:id="@+id/btnon5g"
+                   android:onClick="btnon5g"
+                   android:background="@drawable/button_on" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="OFF"
+                   android:id="@+id/btnoff5g"
+                   android:onClick="btnoff5g"
+                   android:background="@drawable/button_off" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="OFF"
+                   android:id="@+id/btn1off5g"
+                   android:onClick="btn1off5g"
+                   android:background="@drawable/button_off"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_alignParentEnd="true"/>
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="ON"
+                   android:visibility="gone"
+                   android:id="@+id/btn1on5g"
+                   android:onClick="btn1on5g"
+                   android:background="@drawable/button_on"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_alignParentEnd="true" />
+
+           </RelativeLayout>
+
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/rl5g2"
+               android:layout_below="@+id/rl5g1"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               android:layout_marginTop="35dp">
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="ON"
+                   android:visibility="gone"
+                   android:id="@+id/btn2on5g"
+                   android:onClick="btn2on5g"
+                   android:background="@drawable/button_on"
+                   android:layout_alignParentTop="true"
+                   android:layout_centerHorizontal="true" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="OFF"
+                   android:id="@+id/btn2off5g"
+                   android:onClick="btn2off5g"
+                   android:background="@drawable/button_off"
+                   android:layout_alignParentTop="true"
+                   android:layout_centerHorizontal="true" />
+
+           </RelativeLayout>
+
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_below="@+id/rl5g2"
+               android:layout_alignParentRight="true"
+               android:layout_alignParentEnd="true"
+               android:layout_marginTop="35dp"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
+               android:layout_marginBottom="20dp">
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="ON"
+                   android:visibility="gone"
+                   android:id="@+id/btn3on5g"
+                   android:onClick="btn3on5g"
+                   android:background="@drawable/button_on" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="OFF"
+                   android:id="@+id/btn3off5g"
+                   android:onClick="btn3off5g"
+                   android:background="@drawable/button_off" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="ON"
+                   android:visibility="gone"
+                   android:id="@+id/btn4on5g"
+                   android:onClick="btn4on5g"
+                   android:background="@drawable/button_on"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_alignParentEnd="true" />
+
+               <Button
+                   android:layout_width="70dp"
+                   android:layout_height="70dp"
+                   android:text="OFF"
+                   android:id="@+id/btn4off5g"
+                   android:onClick="btn4off5g"
+                   android:background="@drawable/button_off"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_alignParentEnd="true"/>
+
+           </RelativeLayout>
+
+    </RelativeLayout>
+
+ <!--===================================================================================================================================================-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/ll"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/rl4g">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl4g1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:id="@+id/btnon4g"
+                android:onClick="btnon4g"
+                android:background="@drawable/button_on"
+                android:visibility="gone" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btnoff4g"
+                android:onClick="btnoff4g"
+                android:background="@drawable/button_off"/>
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn1off4g"
+                android:onClick="btn1off4g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:id="@+id/btn1on4g"
+                android:onClick="btn1on4g"
+                android:background="@drawable/button_on"
+                android:visibility="gone"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl4g3"
+            android:visibility="invisible"
+            android:layout_below="@+id/rl4g1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="35dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl4g3"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:id="@+id/btn2on4g"
+                android:onClick="btn2on4g"
+                android:background="@drawable/button_on"
+                android:visibility="gone" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn2off4g"
+                android:onClick="btn2off4g"
+                android:background="@drawable/button_off" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:id="@+id/btn3on4g"
+                android:onClick="btn3on4g"
+                android:background="@drawable/button_on"
+                android:visibility="gone"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn3off4g"
+                android:onClick="btn3off4g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+<!--================================================================================================================================================-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/rl3g"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/ll"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl3g1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btnon3g"
+                android:onClick="btnon3g"
+                android:background="@drawable/button_on" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btnoff3g"
+                android:onClick="btnoff3g"
+                android:background="@drawable/button_off" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl3g2"
+            android:layout_below="@+id/rl3g1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="35dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btn1on3g"
+                android:onClick="btn1on3g"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn1off3g"
+                android:onClick="btn1off3g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl3g2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp">
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btn2on3g"
+                android:onClick="btn2on3g"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn2off3g"
+                android:onClick="btn2off3g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+<!--=================================================================================================================================================-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/rl2g"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/ll"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl2g1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btnon2g"
+                android:onClick="btnon2g"
+                android:background="@drawable/button_on" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btnoff2g"
+                android:onClick="btnoff2g"
+                android:background="@drawable/button_off" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl2g2"
+            android:visibility="invisible"
+            android:layout_below="@+id/rl2g1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="35dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl2g2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp">
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btn1on2g"
+                android:onClick="btn1on2g"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn1off2g"
+                android:onClick="btn1off2g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+<!--===================================================================================================================================================-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl1g"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:layout_below="@+id/ll"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl1g1"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:background="@drawable/button_on"
+                android:drawableTop="@android:drawable/ic_lock_power_off" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:background="@drawable/button_off"
+                android:drawableTop="@android:drawable/ic_lock_power_off" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl1g2"
+            android:layout_below="@+id/rl1g1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="35dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btn1on1g"
+                android:onClick="btn1on1g"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btn1off1g"
+                android:onClick="btn1off1g"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl1g2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp">
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:background="@drawable/button_on"
+                android:drawableTop="@android:drawable/ic_lock_power_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:drawableTop="@android:drawable/ic_lock_power_off" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+<!--==========================================================================================================================================    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/ll"
+        android:visibility="gone"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/rlplug">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlplug1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+
+                android:background="@drawable/button_on"
+                android:visibility="gone" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:visibility="gone"
+
+                android:background="@drawable/button_off"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="OFF"
+                android:id="@+id/btn1offplug"
+                android:onClick="btn1offplug"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btn1onplug"
+                android:onClick="btn1onplug"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlplug2"
+            android:layout_below="@+id/rlplug1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="25dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="invisible"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="190dp"
+                android:src="@drawable/idsplug"/>
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:visibility="invisible"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+<!--==========================================================================================================================================================================================-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rlfan"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/ll"
+        android:background="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlfan1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp">
+
+            <ProgressBar
+                android:id="@+id/progressbarfan"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="270dp"
+                android:layout_marginLeft="28dp"
+                android:layout_height="30dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlfan2"
+            android:layout_below="@+id/rlfan1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="35dp">
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="ON"
+                android:visibility="gone"
+                android:id="@+id/btnonfan"
+                android:onClick="btnonfan"
+                android:background="@drawable/button_on"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="OFF"
+                android:id="@+id/btnofffan"
+                android:onClick="btnofffan"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlfan2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="45dp">
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:id="@+id/btnplusfan"
+                android:text="+"
+                android:textSize="40dp"
+                android:textColor="#ffffff"
+                android:onClick="btnplusfan"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/button_off" />
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="-"
+                android:textSize="50dp"
+                android:textColor="#ffffff"
+                android:id="@+id/btnminusfan"
+                android:onClick="btnminusfan"
+                android:background="@drawable/button_off"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/tvinfo"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

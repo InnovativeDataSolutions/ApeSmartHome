@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ids.smarthomev2.Registration"
+    tools:showIn="@layout/activity_registration">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvinfo"
+        android:text="Enter Smart Home Details"
+        android:layout_marginBottom="35dp"
+        android:textSize="20dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/homeidET"
+        android:layout_marginBottom="10dp"
+        android:hint="Home ID" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/usernameET"
+        android:layout_marginBottom="10dp"
+        android:hint="Username" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordET"
+        android:layout_marginBottom="10dp"
+        android:hint="Password" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gatewayET"
+        android:layout_marginBottom="10dp"
+        android:hint="Gateway Address" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ipaddressET"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        android:hint="IP Address" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/regbtn"
+        android:layout_marginBottom="10dp"
+        android:text="Register"
+        android:onClick="regbtn"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/submitbtn"
+        android:layout_marginBottom="10dp"
+        android:onClick="subbtn"
+        android:text="Submit"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/enter"
+        android:layout_marginBottom="10dp"
+        android:onClick="enter"
+        android:visibility="gone"
+        android:text="Enter"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+
+</LinearLayout>

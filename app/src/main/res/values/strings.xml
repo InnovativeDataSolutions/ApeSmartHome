@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">SmarthomeV2</string>
+    <string name="title_activity_home">Home</string>
+    <string-array name="planets_array">
+        <item>Kitchen</item>
+        <item>Master Bed</item>
+        <item>Junior Bed</item>
+        <item>Living Room</item>
+    </string-array>
+
+    <string-array name="planets_array2">
+        <item>5-Gang</item>
+        <item>4-Gang</item>
+        <item>3-Gang</item>
+        <item>2-Gang</item>
+    </string-array>
+    <string name="title_activity_registration">APE Smarthome</string>
+
+</resources>
