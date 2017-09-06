@@ -335,12 +335,8 @@ public class Registration extends AppCompatActivity {
         if (ip == "" || gateway == "") {
             Toast.makeText(Registration.this, "Please enter all infomation", Toast.LENGTH_SHORT).show();
         } else{
-           // if (gateway==ip) {
                 validateinfo vi = new validateinfo();
                 vi.execute(homeid, ip, gateway);
-           // } else {
-            //    Toast.makeText(Registration.this, "gateway and ip address not equal!", Toast.LENGTH_LONG).show();
-           // }
 
         }
 

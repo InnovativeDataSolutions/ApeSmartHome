@@ -2946,46 +2946,46 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnonfan(View view) {
         btnofffan.setVisibility(View.VISIBLE);
         btnonfan.setVisibility(View.GONE);
-        btnplusfan.setEnabled(false);
-        btnminusfan.setEnabled(false);
+        //btnplusfan.setEnabled(false);
+        //btnminusfan.setEnabled(false);
 
-//        int point = v;
-//        System.out.println("btnonfan");
-//        click = "btnonfan";
+        int point = v;
+        System.out.println("btnonfan");
+        click = "btnonfan";
         getcontroller();
-//        // Device : [
-//        String  v1 = devicenameAR.get(point);
-//        String  v2=areaAR.get(point);
-//        String  v3=physicalidAR.get(point);
-//        String  v4=powerlineidAR.get(point);
-//        String  v5=devicecodeAR.get(point);
-//        String  v6=commandidAR.get(point);
-//        String  v7=masteridAR.get(point);
-//        // ]
-//
-//        //Controller : [
-//        int point2 = 0;
-//        String  v8=pidfkARDB.get(point2);
-//        String  v9=contrlidARDB.get(point2);
-//        String  v10=internalidARDB.get(point2);
-//        String  v11=contrltypeARDB.get(point2);
-//        String  v12=contrlstatusARDB.get(point2);
-//        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-//        String v4c1 = dectohex(v4);
-//        String v7c1 = dectohex(v7);
-//        String v6c1 = dectohex(v6);
-//        String v10c1 = dectohex(v10);
-//
-//        String v4c = String.format("%02d",Integer.valueOf(v4c1));
-//        String v7c = String.format("%02d",Integer.valueOf(v7c1));
-//        String v6c = String.format("%02d",Integer.valueOf(v6c1));
-//        String v10c = String.format("%02d",Integer.valueOf(v10c1));
-//        protocolONFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
-//        System.out.println(protocolONFAN);
-//        devicestatus = v1;
-//
-//        this.Thread1OTHER = new Thread(new Thread1OTHER());
-//        this.Thread1OTHER.start();
+        // Device : [
+        String  v1 = devicenameAR.get(point);
+        String  v2=areaAR.get(point);
+        String  v3=physicalidAR.get(point);
+        String  v4=powerlineidAR.get(point);
+        String  v5=devicecodeAR.get(point);
+        String  v6=commandidAR.get(point);
+        String  v7=masteridAR.get(point);
+        // ]
+
+        //Controller : [
+        int point2 = 0;
+        String  v8=pidfkARDB.get(point2);
+        String  v9=contrlidARDB.get(point2);
+        String  v10=internalidARDB.get(point2);
+        String  v11=contrltypeARDB.get(point2);
+        String  v12=contrlstatusARDB.get(point2);
+        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
+        String v4c1 = dectohex(v4);
+        String v7c1 = dectohex(v7);
+        String v6c1 = dectohex(v6);
+        String v10c1 = dectohex(v10);
+
+        String v4c = ("00" + v4c1).substring(v4c1.length());
+        String v7c = ("00" + v7c1).substring(v7c1.length());
+        String v6c = ("00" + v6c1).substring(v6c1.length());
+        String v10c = ("00" + v10c1).substring(v10c1.length());
+        protocolONFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        System.out.println(protocolONFAN);
+        devicestatus = v1;
+
+        this.Thread1OTHER = new Thread(new Thread1OTHER());
+        this.Thread1OTHER.start();
 
     }
 
@@ -3001,39 +3001,40 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }else{
 
             progressbarfan.setProgress(fan);
-            // Device : [
-//            String v1 = devicenameAR.get(point);
-//            String v2 = areaAR.get(point);
-//            String v3 = physicalidAR.get(point);
-//            String v4 = powerlineidAR.get(point);
-//            String v5 = devicecodeAR.get(point);
-//            String v6 = commandidAR.get(point);
-//            String v7 = masteridAR.get(point);
-//            // ]
-//
-//            //Controller : [
-//            int point2 = 0;
-//            String v8 = pidfkARDB.get(point2);
-//            String v9 = contrlidARDB.get(point2);
-//            String v10 = internalidARDB.get(point2);
-//            String v11 = contrltypeARDB.get(point2);
-//            String v12 = contrlstatusARDB.get(point2);
-//            // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-//            String v4c1 = dectohex(v4);
-//            String v7c1 = dectohex(v7);
-//            String v6c1 = dectohex(v6);
-//            String v10c1 = dectohex(v10);
-//
-//            String v4c = String.format("%02d", Integer.valueOf(v4c1));
-//            String v7c = String.format("%02d", Integer.valueOf(v7c1));
-//            String v6c = String.format("%02d", Integer.valueOf(v6c1));
-//            String v10c = String.format("%02d", Integer.valueOf(v10c1));
-//            protocolPLUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
-//            System.out.println(protocolPLUSFAN);
-//            devicestatus = v1;
-//
-//            this.Thread1OTHER = new Thread(new Thread1OTHER());
-//            this.Thread1OTHER.start();
+             //Device : [
+            String v1 = devicenameAR.get(point);
+            String v2 = areaAR.get(point);
+            String v3 = physicalidAR.get(point);
+            String v4 = powerlineidAR.get(point);
+            String v5 = devicecodeAR.get(point);
+            String v6 = commandidAR.get(point);
+            String v7 = masteridAR.get(point);
+            // ]
+
+            //Controller : [
+            int point2 = 0;
+            String v8 = pidfkARDB.get(point2);
+            String v9 = contrlidARDB.get(point2);
+            String v10 = internalidARDB.get(point2);
+            String v11 = contrltypeARDB.get(point2);
+            String v12 = contrlstatusARDB.get(point2);
+            // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
+            String v4c1 = dectohex(v4);
+            String v7c1 = dectohex(v7);
+            String v6c1 = dectohex(v6);
+            String v10c1 = dectohex(v10);
+
+            String v4c = ("00" + v4c1).substring(v4c1.length());
+            String v7c = ("00" + v7c1).substring(v7c1.length());
+            String v6c = ("00" + v6c1).substring(v6c1.length());
+            String v10c = ("00" + v10c1).substring(v10c1.length());
+            String fanintid = String.format("%02d", fan);
+            protocolPLUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, fanintid);
+            System.out.println(protocolPLUSFAN);
+            devicestatus = v1;
+
+            this.Thread1OTHER = new Thread(new Thread1OTHER());
+            this.Thread1OTHER.start();
         }
 
     }
@@ -3051,38 +3052,39 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             --fan;
             progressbarfan.setProgress(fan);
             // Device : [
-//            String v1 = devicenameAR.get(point);
-//            String v2 = areaAR.get(point);
-//            String v3 = physicalidAR.get(point);
-//            String v4 = powerlineidAR.get(point);
-//            String v5 = devicecodeAR.get(point);
-//            String v6 = commandidAR.get(point);
-//            String v7 = masteridAR.get(point);
-//            // ]
-//
-//            //Controller : [
-//            int point2 = 0;
-//            String v8 = pidfkARDB.get(point2);
-//            String v9 = contrlidARDB.get(point2);
-//            String v10 = internalidARDB.get(point2);
-//            String v11 = contrltypeARDB.get(point2);
-//            String v12 = contrlstatusARDB.get(point2);
-//            // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-//            String v4c1 = dectohex(v4);
-//            String v7c1 = dectohex(v7);
-//            String v6c1 = dectohex(v6);
-//            String v10c1 = dectohex(v10);
-//
-//            String v4c = String.format("%02d", Integer.valueOf(v4c1));
-//            String v7c = String.format("%02d", Integer.valueOf(v7c1));
-//            String v6c = String.format("%02d", Integer.valueOf(v6c1));
-//            String v10c = String.format("%02d", Integer.valueOf(v10c1));
-//            protocolMINUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
-//            System.out.println(protocolMINUSFAN);
-//            devicestatus = v1;
-//
-//            this.Thread1OTHER = new Thread(new Thread1OTHER());
-//            this.Thread1OTHER.start();
+            String v1 = devicenameAR.get(point);
+            String v2 = areaAR.get(point);
+            String v3 = physicalidAR.get(point);
+            String v4 = powerlineidAR.get(point);
+            String v5 = devicecodeAR.get(point);
+            String v6 = commandidAR.get(point);
+            String v7 = masteridAR.get(point);
+            // ]
+
+            //Controller : [
+            int point2 = 0;
+            String v8 = pidfkARDB.get(point2);
+            String v9 = contrlidARDB.get(point2);
+            String v10 = internalidARDB.get(point2);
+            String v11 = contrltypeARDB.get(point2);
+            String v12 = contrlstatusARDB.get(point2);
+            // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
+            String v4c1 = dectohex(v4);
+            String v7c1 = dectohex(v7);
+            String v6c1 = dectohex(v6);
+            String v10c1 = dectohex(v10);
+
+            String v4c = ("00" + v4c1).substring(v4c1.length());
+            String v7c = ("00" + v7c1).substring(v7c1.length());
+            String v6c = ("00" + v6c1).substring(v6c1.length());
+            String v10c = ("00" + v10c1).substring(v10c1.length());
+            String fanintid = String.format("%02d", fan);
+            protocolMINUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, fanintid);
+            System.out.println(protocolMINUSFAN);
+            devicestatus = v1;
+
+            this.Thread1OTHER = new Thread(new Thread1OTHER());
+            this.Thread1OTHER.start();
 
         }
     }
@@ -3090,46 +3092,46 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnofffan(View view) {
         btnofffan.setVisibility(View.GONE);
         btnonfan.setVisibility(View.VISIBLE);
-        btnplusfan.setEnabled(true);
-        btnminusfan.setEnabled(true);
+        //btnplusfan.setEnabled(true);
+        //btnminusfan.setEnabled(true);
 
-//        int point = v;
-//        System.out.println("btnofffan");
-//        click = "btnofffan";
+        int point = v;
+        System.out.println("btnofffan");
+        click = "btnofffan";
         getcontroller();
-//        // Device : [
-//        String  v1 = devicenameAR.get(point);
-//        String  v2=areaAR.get(point);
-//        String  v3=physicalidAR.get(point);
-//        String  v4=powerlineidAR.get(point);
-//        String  v5=devicecodeAR.get(point);
-//        String  v6=commandidAR.get(point);
-//        String  v7=masteridAR.get(point);
-//        // ]
-//
-//        //Controller : [
-//        int point2 = 0;
-//        String  v8=pidfkARDB.get(point2);
-//        String  v9=contrlidARDB.get(point2);
-//        String  v10=internalidARDB.get(point2);
-//        String  v11=contrltypeARDB.get(point2);
-//        String  v12=contrlstatusARDB.get(point2);
-//        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-//        String v4c1 = dectohex(v4);
-//        String v7c1 = dectohex(v7);
-//        String v6c1 = dectohex(v6);
-//        String v10c1 = dectohex(v10);
-//
-//        String v4c = String.format("%02d",Integer.valueOf(v4c1));
-//        String v7c = String.format("%02d",Integer.valueOf(v7c1));
-//        String v6c = String.format("%02d",Integer.valueOf(v6c1));
-//        String v10c = String.format("%02d",Integer.valueOf(v10c1));
-//        protocolOFFFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
-//        System.out.println(protocolOFFFAN);
-//        devicestatus = v1;
-//
-//        this.Thread1OTHER = new Thread(new Thread1OTHER());
-//        this.Thread1OTHER.start();
+        // Device : [
+        String  v1 = devicenameAR.get(point);
+        String  v2=areaAR.get(point);
+        String  v3=physicalidAR.get(point);
+        String  v4=powerlineidAR.get(point);
+        String  v5=devicecodeAR.get(point);
+        String  v6=commandidAR.get(point);
+        String  v7=masteridAR.get(point);
+        // ]
+
+        //Controller : [
+        int point2 = 0;
+        String  v8=pidfkARDB.get(point2);
+        String  v9=contrlidARDB.get(point2);
+        String  v10=internalidARDB.get(point2);
+        String  v11=contrltypeARDB.get(point2);
+        String  v12=contrlstatusARDB.get(point2);
+        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
+        String v4c1 = dectohex(v4);
+        String v7c1 = dectohex(v7);
+        String v6c1 = dectohex(v6);
+        String v10c1 = dectohex(v10);
+
+        String v4c = ("00" + v4c1).substring(v4c1.length());
+        String v7c = ("00" + v7c1).substring(v7c1.length());
+        String v6c = ("00" + v6c1).substring(v6c1.length());
+        String v10c = ("00" + v10c1).substring(v10c1.length());
+        protocolOFFFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        System.out.println(protocolOFFFAN);
+        devicestatus = v1;
+
+        this.Thread1OTHER = new Thread(new Thread1OTHER());
+        this.Thread1OTHER.start();
 
     }
 

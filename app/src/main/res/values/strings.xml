@@ -15,5 +15,6 @@
         <item>2-Gang</item>
     </string-array>
     <string name="title_activity_registration">APE Smarthome</string>
+    <string name="title_activity_welcome">Welcome</string>
 
 </resources>
