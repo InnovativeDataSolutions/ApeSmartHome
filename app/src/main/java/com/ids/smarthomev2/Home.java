@@ -2764,7 +2764,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         // ]
 
         //Controller : [
-        int point2 = 0;
+        int point2 = 1;
         String switch_num = "one";
         String  v8=pidfkARDB.get(point2);
         String  v9=contrlidARDB.get(point2);
@@ -2818,7 +2818,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         // ]
 
         //Controller : [
-        int point2 = 0;
+        int point2 = 1;
         String  v8=pidfkARDB.get(point2);
         String  v9=contrlidARDB.get(point2);
         String  v10=internalidARDB.get(point2);
@@ -2884,11 +2884,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         String v10c = ("00" + v10c1).substring(v10c1.length());
-//        String v4c = String.format("%02d",Integer.valueOf(v4c1));
-//        String v7c = String.format("%02d",Integer.valueOf(v7c1));
-//        String v6c = String.format("%02d",Integer.valueOf(v6c1));
-//        String v10c = String.format("%02d",Integer.valueOf(v10c1));
-        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         protocolOFFPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFFPLUG);
         devicestatus = v1;

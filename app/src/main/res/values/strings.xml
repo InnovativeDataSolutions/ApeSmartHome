@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">SmarthomeV2</string>
     <string name="title_activity_home">Home</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Refresh</string>
     <string-array name="planets_array">
         <item>Kitchen</item>
         <item>Master Bed</item>
@@ -14,7 +17,8 @@
         <item>3-Gang</item>
         <item>2-Gang</item>
     </string-array>
-    <string name="title_activity_registration">APE Smarthome</string>
-    <string name="title_activity_welcome">Welcome</string>
+    <string name="title_activity_registration">Registration</string>
+    <string name="title_activity_welcome">APE Smarthome</string>
+    <string name="title_activity_dashboard">Dashboard</string>
 
 </resources>
