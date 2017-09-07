@@ -32,17 +32,6 @@ public class Registration extends AppCompatActivity {
     Database db = new Database(ctx);
     String homeid, un, pw, siteid = "H001", oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8, oneObjectsItem9, oneObjectsItem10, oneObjectsItem11, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16, ip, gateway, statussubmitinfo, statusvalidateinfo, validateip;
     int i, j;
-    private String[] device_id = new String[4];
-    private String[] name = new String[4];
-    private String[] master_id = new String[4];
-    private String[] powerline_id = new String[4];
-    private String[] current_status = new String[4];
-    private String[] command_id = new String[4];
-    private String[] physical_id = new String[4];
-    private String[] internal_id = new String[4];
-    private String[] control_type = new String[4];
-    private String[] device_model = new String[4];
-    private String[] device_type = new String[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +48,10 @@ public class Registration extends AppCompatActivity {
         enterBUT = (Button) findViewById(R.id.enter);
         tv = (TextView) findViewById(R.id.tvinfo);
 
-        count = db.check2();
+        count = db.check2(); //check if home already registered
 
         if (count > 0) {
-            Intent go = new Intent(ctx, Home.class);
+            Intent go = new Intent(ctx, Home.class); //if home already exist proceed to controller page
             startActivity(go);
         }
 
@@ -80,7 +69,7 @@ public class Registration extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/Register/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/Register/"); //service to register home
                 //URL url = new URL("http://1.186.45.172:85/Hotel/Srv_Reservation/SRV_iCOMM_DeviceStatus/");
                 String urlParams = "HomeID="+homeid+"&Username="+username+"&Password="+password+"&GatewayIP="+gateway;
 
@@ -155,7 +144,7 @@ public class Registration extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/HomeValidate/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/HomeValidate/"); //validate home with gateway address
                 //URL url = new URL("http://1.186.45.172:85/Hotel/Srv_Reservation/SRV_iCOMM_DeviceStatus/");
                 String urlParams = "HomeID="+homeid+"&MODEM_IP="+ip+"&GatewayIP="+gateway;
 
@@ -227,7 +216,7 @@ public class Registration extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceList/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceList/"); //get device list of home frm service
                 //URL url = new URL("http://1.186.45.172:85/Hotel/Srv_Reservation/SRV_iCOMM_DeviceStatus/"); + "&ip=" + ip + "&homeid=" + homeid
                 String urlParams = "HomeID="+homeid;
 

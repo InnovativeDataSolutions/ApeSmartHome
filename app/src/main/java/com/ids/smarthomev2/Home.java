@@ -2854,9 +2854,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 //        off_1plug.setVisibility(View.GONE);
 //        on_1plug.setVisibility(View.VISIBLE);
         int point = v;
-        System.out.println("plug1off");
         click = "1PLUGoneOFF";
         getcontroller();
+        System.out.println("plug1off " + SERVER_IP);
         // Device : [
         String  v1 = devicenameAR.get(point);
         String  v2=areaAR.get(point);
@@ -2902,11 +2902,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btn1onplug(View view) {
 //        off_1plug.setVisibility(View.VISIBLE);
 //        on_1plug.setVisibility(View.GONE);
-
         int point = v;
-        System.out.println("1plug1on");
         click = "1PLUGoneON";
         getcontroller();
+        System.out.println("1plug1on " + SERVER_IP);
         // Device : [
         String  v1 = devicenameAR.get(point);
         String  v2=areaAR.get(point);
