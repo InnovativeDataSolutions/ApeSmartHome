@@ -1,18 +1,25 @@
 package com.ids.smarthomev2;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -52,6 +59,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Cursor cursor,cursor2,cursor3,cursor4;
     String devicemodelVAR2;
     Long countdev;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR,areanameVAR,devicenameVAR,devicemodelVAR,powerlineidVAR,cmmndidVAR,masteridVAR,devicecodeVAR,physicalidVAR,contridVAR,internalidVAR,contrnameVAR,contrtypeVAR,contrstatusVAR,pidfk;
     String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
     int i,fan;
@@ -169,6 +181,16 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         on_1plug = (Button) findViewById(R.id.btn1onplug);
         off_1plug = (Button) findViewById(R.id.btn1offplug);
+
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mActivityTitle = getTitle().toString();
+
+        addDrawerItems();
+        setupDrawer();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         tvinfo = (TextView) findViewById(R.id.tvinfo);
         System.out.println("ip & port : " + SERVER_IP + " " + SERVER_PORT);
@@ -3128,6 +3150,88 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         this.Thread1OTHER.start();
 
     }
+
+    private void addDrawerItems() {
+        String[] osArray = { "Home", "Dashboard"};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0){
+                    Intent go = new Intent(Home.this, Home.class); //if home already exist proceed to controller page
+                    startActivity(go);
+                }else if (position == 1){
+                    Intent go = new Intent(Home.this, Dashboard.class); //if home already exist proceed to controller page
+                    startActivity(go);
+                }
+            }
+        });
+    }
+
+    private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle("Menu");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mActivityTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        // Activate the navigation drawer toggle
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 }

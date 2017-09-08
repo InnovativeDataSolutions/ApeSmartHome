@@ -17,6 +17,13 @@
         <item>3-Gang</item>
         <item>2-Gang</item>
     </string-array>
+
+    <string-array name="spdash">
+        <item>--Filter--</item>
+        <item>ON</item>
+        <item>OFF</item>
+        <item>Show All</item>
+    </string-array>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_welcome">APE Smarthome</string>
     <string name="title_activity_dashboard">Dashboard</string>

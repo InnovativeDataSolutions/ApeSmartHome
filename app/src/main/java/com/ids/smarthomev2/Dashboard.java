@@ -1,11 +1,13 @@
 package com.ids.smarthomev2;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,12 +32,15 @@ import java.util.List;
 
 public class Dashboard extends AppCompatActivity {
 
+    ListView listView;
+    Spinner spdash;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     int i;
+    ArrayAdapter<String> adapter;
     String devname,status,siteid = "H001";
     List<String> devicenameAR = new ArrayList<String>();
     List<String> statusAR = new ArrayList<String>();
@@ -47,6 +52,7 @@ public class Dashboard extends AppCompatActivity {
 
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        //spdash = (Spinner)findViewById(R.id.spdash);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -57,9 +63,50 @@ public class Dashboard extends AppCompatActivity {
         checkfordevice cfd = new checkfordevice();
         cfd.execute(siteid);
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.activity_dashboard, devicenameAR);
-        ListView listView = (ListView) findViewById(R.id.dashboardlv);
-        listView.setAdapter(adapter);
+
+        listView = (ListView) findViewById(R.id.dashboardlv);
+        //adapter = new ArrayAdapter<String>(this,R.layout.activity_dashboard, devicenameAR);
+        for (int i = 0 ; i < devicenameAR.size() ; i++){
+            System.out.println("Listx : " + devicenameAR.get(i));
+        }
+        //if (devicenameAR.size()>0) {
+            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, devicenameAR);
+            listView.setAdapter(adapter);
+
+//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+//                R.array.spdash, android.R.layout.simple_spinner_item);
+//// Specify the layout to use when the list of choices appears
+//        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//// Apply the adapter to the spinner
+//        spdash.setAdapter(adapter2);
+//        //}
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Dashboard.this);
+                alertDialogBuilder.setMessage("Are you sure you want to off this device?");
+                alertDialogBuilder.setPositiveButton("Okay",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                SendCmnd sc = new SendCmnd();
+                                sc.execute(siteid);
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        });
 
     }
 
@@ -72,7 +119,7 @@ public class Dashboard extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceList/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/");
                 String urlParams = "HomeID="+homeid;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -122,6 +169,65 @@ public class Dashboard extends AppCompatActivity {
                         // Oops
                     }
                 }
+                adapter.notifyDataSetChanged();
+
+                System.out.println("Raw device list : " + s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                err = "Exception: " + e.getMessage();
+            }
+
+        }
+
+    }
+
+    class SendCmnd extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String homeid = params[0];
+            String data = "";
+            int tmp;
+
+            try {
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/");
+                String urlParams = "HomeID="+homeid;
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                OutputStream os = httpURLConnection.getOutputStream();
+                os.write(urlParams.getBytes());
+                os.flush();
+                os.close();
+                InputStream is = httpURLConnection.getInputStream();
+                while ((tmp = is.read()) != -1) {
+                    data += (char) tmp;
+                }
+                is.close();
+                httpURLConnection.disconnect();
+
+                return data;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            String err = null;
+            if (s.equals("")) {
+                s = "Data saved successfully.";
+            }
+            try {
+                JSONObject user_data = new JSONObject(s);
+                String statusvalidateinfo = user_data.getString("STATUS");
+                String validateip = user_data.getString("MODEM_IP");
+                System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
             } catch (JSONException e) {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
@@ -143,8 +249,6 @@ public class Dashboard extends AppCompatActivity {
                 if (position == 0){
                         Intent go = new Intent(Dashboard.this, Home.class); //if home already exist proceed to controller page
                         startActivity(go);
-                }else{
-                    Toast.makeText(Dashboard.this, "dashboard", Toast.LENGTH_SHORT).show();
                 }
             }
         });
