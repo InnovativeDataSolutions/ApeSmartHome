@@ -41,8 +41,10 @@ public class Dashboard extends AppCompatActivity {
     private String mActivityTitle;
     int i;
     ArrayAdapter<String> adapter;
-    String devname,status,siteid = "H001";
+    String devname,status,siteid = "H001",selected;
     List<String> devicenameAR = new ArrayList<String>();
+    List<String> devicenameAR_ON = new ArrayList<String>();
+    List<String> devicenameAR_OFF = new ArrayList<String>();
     List<String> statusAR = new ArrayList<String>();
 
     @Override
@@ -52,7 +54,7 @@ public class Dashboard extends AppCompatActivity {
 
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        //spdash = (Spinner)findViewById(R.id.spdash);
+        spdash = (Spinner)findViewById(R.id.spdash);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -65,36 +67,65 @@ public class Dashboard extends AppCompatActivity {
 
 
         listView = (ListView) findViewById(R.id.dashboardlv);
-        //adapter = new ArrayAdapter<String>(this,R.layout.activity_dashboard, devicenameAR);
-        for (int i = 0 ; i < devicenameAR.size() ; i++){
-            System.out.println("Listx : " + devicenameAR.get(i));
-        }
-        //if (devicenameAR.size()>0) {
+
             adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, devicenameAR);
             listView.setAdapter(adapter);
 
-//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
-//                R.array.spdash, android.R.layout.simple_spinner_item);
-//// Specify the layout to use when the list of choices appears
-//        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//// Apply the adapter to the spinner
-//        spdash.setAdapter(adapter2);
-//        //}
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+                R.array.spdash, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spdash.setAdapter(adapter2);
+
+        spdash.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (position==1){
+                    adapter = new ArrayAdapter<String>(Dashboard.this, android.R.layout.simple_list_item_1, devicenameAR_ON);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    selected = "ON";
+                }else if (position ==2){
+                    adapter = new ArrayAdapter<String>(Dashboard.this, android.R.layout.simple_list_item_1, devicenameAR_OFF);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    selected = "OFF";
+                }else if (position ==3){
+                    adapter = new ArrayAdapter<String>(Dashboard.this, android.R.layout.simple_list_item_1, devicenameAR);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    selected = "ALL";
+                }else if (position ==0){
+                    selected = "brof";
+                }
+
+            } @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
 
 
+
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Dashboard.this);
-                alertDialogBuilder.setMessage("Are you sure you want to off this device?");
-                alertDialogBuilder.setPositiveButton("Okay",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                SendCmnd sc = new SendCmnd();
-                                sc.execute(siteid);
+                if (selected.equals("ON")) {
+                    alertDialogBuilder.setMessage("Are you sure you want to OFF this device?");
+                }else if (selected.equals("OFF")) {
+                    alertDialogBuilder.setMessage("Are you sure you want to ON this device?");
+                }else{
+                    alertDialogBuilder.setMessage("Are you sure you want to brof this device?");
+                }
+                    alertDialogBuilder.setPositiveButton("Okay",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    SendCmnd sc = new SendCmnd();
+                                    sc.execute(siteid);
 
-                            }
-                        });
+                                }
+                            });
+
 
                 alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -164,6 +195,13 @@ public class Dashboard extends AppCompatActivity {
                         status = oneObject.getString("current_status");
                         devicenameAR.add(devname);
                         statusAR.add(status);
+                        if (status =="2"){
+                            devicenameAR_OFF.add(devname);
+                            System.out.println("status of OFF devices : " + devname + ":" + status);
+                        }else if (status.equals("1")){
+                            devicenameAR_ON.add(devname);
+                            System.out.println("status of ON devices : " + devname + ":" + status);
+                        }
                         System.out.println("status of devices : " + devname + ":" + status);
                     } catch (JSONException e) {
                         // Oops
