@@ -28,7 +28,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -41,11 +43,12 @@ public class Dashboard extends AppCompatActivity {
     private String mActivityTitle;
     int i;
     ArrayAdapter<String> adapter;
-    String devname,status,siteid = "H001",selected;
+    String devname,status,siteid = "H001",selected,itemTouched,statusOfDevice;
     List<String> devicenameAR = new ArrayList<String>();
     List<String> devicenameAR_ON = new ArrayList<String>();
     List<String> devicenameAR_OFF = new ArrayList<String>();
     List<String> statusAR = new ArrayList<String>();
+    Map<String, String> deviceandstatus = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,7 @@ public class Dashboard extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     selected = "ALL";
                 }else if (position ==0){
-                    selected = "brof";
+                    selected = "nil";
                 }
 
             } @Override
@@ -107,22 +110,57 @@ public class Dashboard extends AppCompatActivity {
 
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> arg0, View view, final int position, long id) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Dashboard.this);
                 if (selected.equals("ON")) {
-                    alertDialogBuilder.setMessage("Are you sure you want to OFF this device?");
+                    alertDialogBuilder.setMessage("This device is currently ON,do you want to OFF this device?");
                 }else if (selected.equals("OFF")) {
-                    alertDialogBuilder.setMessage("Are you sure you want to ON this device?");
+                    alertDialogBuilder.setMessage("This device is currently OFF,do you want to ON this device?");
                 }else{
-                    alertDialogBuilder.setMessage("Are you sure you want to brof this device?");
+                    String deviceIdentifier = devicenameAR.get(position);
+                    statusOfDevice = deviceandstatus.get(deviceIdentifier);
+                    if (statusOfDevice.equals("1")){
+                        alertDialogBuilder.setMessage("This device is currently ON,do you want to OFF this device?");
+                    }else if (statusOfDevice.equals("2")){
+                        alertDialogBuilder.setMessage("This device is currently OFF,do you want to ON this device?");
+                    }
                 }
-                    alertDialogBuilder.setPositiveButton("Okay",
-                            new DialogInterface.OnClickListener() {
+                    alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    SendCmnd sc = new SendCmnd();
-                                    sc.execute(siteid);
-
+                                    if (selected.equals("ON")){
+                                        itemTouched = devicenameAR_ON.get(position);
+                                        devicenameAR_OFF.add(itemTouched);
+                                        devicenameAR_ON.remove(position);
+                                        SendCmnd sc = new SendCmnd();
+                                        sc.execute(itemTouched,"02");
+                                        adapter.notifyDataSetChanged();
+                                    }else if (selected.equals("OFF")){
+                                        itemTouched = devicenameAR_OFF.get(position);
+                                        devicenameAR_ON.add(itemTouched);
+                                        devicenameAR_OFF.remove(position);
+                                        SendCmnd sc = new SendCmnd();
+                                        sc.execute(itemTouched,"01");
+                                        adapter.notifyDataSetChanged();
+                                    }else{
+                                        if (statusOfDevice.equals("1")){
+                                            itemTouched = devicenameAR_ON.get(position);
+                                            devicenameAR_OFF.add(itemTouched);
+                                            devicenameAR_ON.remove(position);
+                                            devicenameAR.remove(position);
+                                            SendCmnd sc = new SendCmnd();
+                                            sc.execute(itemTouched,"02");
+                                            adapter.notifyDataSetChanged();
+                                        }else if (statusOfDevice.equals("2")){
+                                            itemTouched = devicenameAR_OFF.get(position);
+                                            devicenameAR_ON.add(itemTouched);
+                                            devicenameAR_OFF.remove(position);
+                                            devicenameAR.remove(position);
+                                            SendCmnd sc = new SendCmnd();
+                                            sc.execute(itemTouched,"01");
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
                                 }
                             });
 
@@ -193,6 +231,7 @@ public class Dashboard extends AppCompatActivity {
                         // Pulling items from the array
                         devname = oneObject.getString("dev_name");
                         status = oneObject.getString("current_status");
+                        deviceandstatus.put(devname,status);
                         devicenameAR.add(devname);
                         statusAR.add(status);
                         if (status =="2"){
