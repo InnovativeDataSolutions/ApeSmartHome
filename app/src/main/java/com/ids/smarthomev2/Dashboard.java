@@ -44,17 +44,18 @@ public class Dashboard extends AppCompatActivity {
     int i;
     ArrayAdapter<String> adapter;
     String devname,status,siteid = "H001",selected,itemTouched,statusOfDevice;
-    List<String> devicenameAR = new ArrayList<String>();
-    List<String> devicenameAR_ON = new ArrayList<String>();
-    List<String> devicenameAR_OFF = new ArrayList<String>();
-    List<String> statusAR = new ArrayList<String>();
-    Map<String, String> deviceandstatus = new HashMap<String, String>();
+    List<String> devicenameAR = new ArrayList<String>(); //stores all devices
+    List<String> devicenameAR_ON = new ArrayList<String>(); //stores devices which are only on
+    List<String> devicenameAR_OFF = new ArrayList<String>(); //stores devices which are only off
+    List<String> statusAR = new ArrayList<String>(); //stores statuses of devices example: on or off , 01= ON // 02=OFF
+    Map<String, String> deviceandstatus = new HashMap<String, String>(); //hashmap which stroes both device name and status
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+//        The dashboard page is used to control appliances of the home from outside using mobile data or wifi,
+//        so that user can check the current status of the devices at home
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         spdash = (Spinner)findViewById(R.id.spdash);
@@ -188,7 +189,7 @@ public class Dashboard extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //SERVICE USED FOR TESTING PURPOSE
                 String urlParams = "HomeID="+homeid;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -267,7 +268,7 @@ public class Dashboard extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/");
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //service used for testing purpose
                 String urlParams = "HomeID="+homeid;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
