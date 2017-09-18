@@ -19,6 +19,7 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:id="@+id/spdash"
+        android:background="@drawable/spinnerdesign"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"></Spinner>
 

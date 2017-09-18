@@ -32,6 +32,7 @@
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/sp1"
+                    android:background="@drawable/spinnerdesign"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"></Spinner>
             </RelativeLayout>
@@ -43,6 +44,7 @@
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/sp2"
+                    android:background="@drawable/spinnerdesign"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"></Spinner>
             </RelativeLayout>
