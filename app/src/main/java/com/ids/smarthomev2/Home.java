@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -271,8 +273,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         UIhandler = new Handler();
 
-//        this.Thread1bg = new Thread(new Thread1bg());
-//        this.Thread1bg.start();
         sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -376,37 +376,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.VISIBLE);
                 }
-                // your code here
-//                String area = parentView.getItemAtPosition(position).toString();
-//               sqLiteDatabase = db.getReadableDatabase();
-//                cursor2 = db.getDevice(area,sqLiteDatabase);
-//
-//                if (cursor2.moveToFirst()) {
-//                    String homeidVAR2 = cursor2.getString(0);
-//                    String usernameVAR2 = cursor2.getString(1);
-//                    String gatewayVAR2 = cursor2.getString(2);
-//                    String ipaddressVAR2 = cursor2.getString(3);
-//                    String physicalidVAR2 = cursor2.getString(4);
-//                    String powerlineidVAR2 = cursor2.getString(5);
-//                    String devicenameVAR2 = cursor2.getString(6);
-//                    String areanameVAR2 = cursor2.getString(7);
-//                    devicemodelVAR2 = cursor2.getString(8);
-//                    String devicecodeVAR2 = cursor2.getString(9);
-//                    String cmmndidVAR2 = cursor2.getString(10);
-//                    String masteridVAR2 = cursor2.getString(11);
-//
-//                        devicemodelAR.add(devicemodelVAR2);
-//                }
-//                ArrayAdapter<String> secondspinnerAdapter = new ArrayAdapter<String>(Home.this, android.R.layout.simple_spinner_item, devicemodelAR);
-//                sp2.setAdapter(secondspinnerAdapter);
-//                sp2.setSelection(position, false);
-//                secondspinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//                ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(Home.this, android.R.layout.simple_spinner_item, devicemodelAR);
-//// Specify the layout to use when the list of choices appears
-//                dataAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//// Apply the adapter to the spinner
-//                sp2.setAdapter(dataAdapter2);
 
             }
 
@@ -629,31 +598,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 System.out.println(devicestatus + " -3- " + v4 + " " + switchstatusid);
             }
         }
-
-//        sqLiteDatabase = db.getReadableDatabase();
-//        String  v4=powerlineidAR.get(v);
-//        cursor3 = db.getCntrlstatus(v4,sqLiteDatabase);
-//
-//        countdev = db.countdevsts();
-
-//        if (cursor3.getCount() == 0){
-//            String mod = devicemodelAR.get(v);
-//            System.out.println("cursor is zero : " + mod);
-//            if (mod.equals("TS1G")  || mod.equals("DM") || mod.equals("METER"))
-//                off_1g.setVisibility(View.VISIBLE);
-//            on_1g.setVisibility(View.GONE);
-//        }else {
-//            cursor3.moveToFirst();
-//            do {
-//                pidcs = cursor3.getString(0);
-//                modelcs = cursor3.getString(1);
-//                switchidcs = cursor3.getString(2);
-//
-//                System.out.println("getcntrlstatus info through PID : " + pidcs + " " + modelcs + " " + switchidcs);
-//            } while (cursor3.moveToNext());
-//        }
-
-
     }
 
     public String dectohex(String dec){
@@ -726,6 +670,30 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
+    public void topToBtm(View view) {
+        Animation animation1 =
+                AnimationUtils.loadAnimation(getApplicationContext(), R.anim.uptobtm);
+        view.startAnimation(animation1);
+    }
+
+    public void btmToUp(View view) {
+        Animation animation1 =
+                AnimationUtils.loadAnimation(getApplicationContext(), R.anim.btmtoup);
+        view.startAnimation(animation1);
+    }
+
+    public void leftToRight(View view) {
+        Animation animation1 =
+                AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
+        view.startAnimation(animation1);
+    }
+
+    public void rightToLeft(View view) {
+        Animation animation1 =
+                AnimationUtils.loadAnimation(getApplicationContext(), R.anim.righttoleft);
+        view.startAnimation(animation1);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -757,6 +725,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.VISIBLE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl5);
                             } else if (value.contains("TS2G")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -766,6 +735,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl4);
                             }else if (value.contains("TS3G")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -775,6 +745,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl3);
                             } else if (value.contains("TS4G")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -784,6 +755,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl2);
                             }else if (value.contains("2")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -793,6 +765,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl4);
                             } else if (value.contains("Dimmer")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -802,6 +775,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl3);
                             } else if (value.contains("BC")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -810,6 +784,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl4.setVisibility(View.GONE);
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
+                                btmToUp(rl2);
                             } else if (value.contains("TS5G")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.VISIBLE);
@@ -818,6 +793,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl4.setVisibility(View.GONE);
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
+                                btmToUp(rl1);
                             } else if (value.contains("PS")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -827,6 +803,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.VISIBLE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rlplug);
                             }else if (value.contains("METER")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -836,6 +813,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.VISIBLE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.GONE);
+                                btmToUp(rl5);
                             }else if (value.contains("FC")) {
                                 getcntrlstatus();
                                 rl1.setVisibility(View.GONE);
@@ -845,6 +823,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rl5.setVisibility(View.GONE);
                                 rlplug.setVisibility(View.GONE);
                                 rlfan.setVisibility(View.VISIBLE);
+                                btmToUp(rlfan);
                             }
                             System.out.println("Page B: " + v);
                             Log.d(TAG, "onSwipe: up" + v);
@@ -876,6 +855,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl5);
                         } else if (value.contains("TS2G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -885,6 +865,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl4);
                         }else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -894,6 +875,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl3);
                         } else if (value.contains("TS4G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -903,6 +885,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl2);
                         }else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -912,6 +895,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl4);
                         } else if (value.contains("Dimmer")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -921,6 +905,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl3);
                         } else if (value.contains("BC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -930,6 +915,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl2);
                         } else if (value.contains("TS5G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.VISIBLE);
@@ -939,6 +925,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl1);
                         } else if (value.contains("PS")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -948,6 +935,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rlplug);
                         }else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -957,6 +945,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            topToBtm(rl5);
                         }else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -966,6 +955,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.VISIBLE);
+                            topToBtm(rlfan);
                         }
                         System.out.println("Page A down: " + v);
 
@@ -1003,6 +993,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl5);
                         } else if (value.contains("TS2G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1012,6 +1003,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl4);
                         }else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1021,6 +1013,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl3);
                         } else if (value.contains("TS4G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1030,6 +1023,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl2);
                         }else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1039,6 +1033,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl4);
                         } else if (value.contains("Dimmer")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1048,6 +1043,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl3);
                         } else if (value.contains("BC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1057,6 +1053,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl2);
                         } else if (value.contains("TS5G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.VISIBLE);
@@ -1066,6 +1063,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rl1);
                         } else if (value.contains("PS")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1075,6 +1073,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
+                            rightToLeft(rlplug);
                         }else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1084,7 +1083,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
-                            getcntrlstatus();
+                            rightToLeft(rl5);
                         }else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1094,6 +1093,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.VISIBLE);
+                            rightToLeft(rlfan);
                         }
                     Log.d(TAG, "onSwipe: left" + j);
                     }catch (IndexOutOfBoundsException e){
@@ -1126,6 +1126,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl5);
                         } else if (value.contains("TS2G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1135,6 +1136,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl4);
                         }else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1144,6 +1146,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl3);
                         } else if (value.contains("TS4G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1153,6 +1156,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl2);
                         }else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1162,6 +1166,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl4);
                         } else if (value.contains("Dimmer")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1171,6 +1176,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl3);
                         } else if (value.contains("BC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1180,6 +1186,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl2);
                         } else if (value.contains("TS5G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.VISIBLE);
@@ -1189,6 +1196,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rl1);
                         } else if (value.contains("PS")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1198,6 +1206,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
+                            leftToRight(rlplug);
                         }else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1207,7 +1216,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.VISIBLE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
-                            getcntrlstatus();
+                            leftToRight(rl5);
                         }else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
@@ -1217,6 +1226,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rl5.setVisibility(View.GONE);
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.VISIBLE);
+                            leftToRight(rlfan);
                         }
                         Log.d(TAG, "onSwipe: right" + j);
                     }catch (IndexOutOfBoundsException e){
