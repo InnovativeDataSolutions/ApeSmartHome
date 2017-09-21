@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -28,11 +29,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +55,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Button on_1g, off_1g, on_1plug, off_1plug,btnplusfan,btnminusfan,btnonfan,btnofffan;
     Spinner sp1, sp2;
     ProgressBar progressbarfan;
-    TextView tvinfo;
+    TextView tvinfo,tvfanspeed;
     private static final String TAG = "motion";
     GestureDetector gestureDetector;
     private String SERVER_IP; //server IP address192.168.1.9 // port = 8081
@@ -124,9 +132,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         setContentView(R.layout.activity_home);
         someLayout = (RelativeLayout) findViewById(R.id.rl);
 
-        //SERVER_IP = getIntent().getStringExtra("ip");
-        //SERVER_IP = "192.168.1.9";
-
         rl1 = (RelativeLayout) findViewById(R.id.rl5g);
         rl2 = (RelativeLayout) findViewById(R.id.rl4g);
         rl3 = (RelativeLayout) findViewById(R.id.rl3g);
@@ -195,6 +200,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         tvinfo = (TextView) findViewById(R.id.tvinfo);
+        tvfanspeed = (TextView) findViewById(R.id.faninfotv);
         System.out.println("ip & port : " + SERVER_IP + " " + SERVER_PORT);
 
         this.Thread1bg = new Thread(new Thread1bg());
@@ -703,9 +709,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public boolean onSwipe(Direction direction) {
                 if (direction == Direction.up) {
 
+                    int devicemodelARszie = devicemodelAR.size();
+                    System.out.println("check size :" + devicemodelARszie);
 
-                    //if (v == 0) {
+                    if (v >= devicemodelARszie - 1){
+                        Toast.makeText(Home.this, "No more Devices!", Toast.LENGTH_SHORT).show();
+                    }else {
                         ++v;
+                    }
                         System.out.println(v);
                         try {
                             String value = devicenameAR.get(v);
@@ -837,7 +848,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
                 if (direction == Direction.down) {
                     System.out.println(v);
-                    --v;
+                    int devicemodelARszie = devicemodelAR.size();
+                    System.out.println("check size :" + devicemodelARszie);
+
+                    if (v <= 0){
+                        Toast.makeText(Home.this, "No more Devices!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        --v;
+                    }
                     try{
                         String value = devicenameAR.get(v);
                         String value2 = areaAR.get(v);
@@ -1271,8 +1289,15 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 Thread2 commThread = new Thread2(socket);
                 new Thread(commThread).start();
                 return;
-            } catch (Exception e) {
+            }catch (NoRouteToHostException e){
                 e.printStackTrace();
+                SendCmnd sc = new SendCmnd();
+                sc.execute("H001","79","01","02");
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("ffff");
+
             }
         }
     }
@@ -2972,8 +2997,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnonfan(View view) {
         btnofffan.setVisibility(View.VISIBLE);
         btnonfan.setVisibility(View.GONE);
-        //btnplusfan.setEnabled(false);
-        //btnminusfan.setEnabled(false);
+        btnplusfan.setEnabled(false);
+        btnminusfan.setEnabled(false);
+        progressbarfan.setProgress(0);
+        fan = 0;
+        tvfanspeed.setText("");
 
         int point = v;
         System.out.println("btnonfan");
@@ -2990,7 +3018,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         // ]
 
         //Controller : [
-        int point2 = 0;
+        int point2 = 6;
         String  v8=pidfkARDB.get(point2);
         String  v9=contrlidARDB.get(point2);
         String  v10=internalidARDB.get(point2);
@@ -3018,15 +3046,15 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnplusfan(View view) {
 
         int point = v;
-        System.out.println("btnplusfan");
+        System.out.println("btnplusfan" + fan);
         click = "btnplusfan";
         getcontroller();
-        ++fan;
         if (fan == 5){
             Toast.makeText(Home.this, "Fan at Maximum speed", Toast.LENGTH_SHORT).show();
         }else{
-
+            ++fan;
             progressbarfan.setProgress(fan);
+            tvfanspeed.setText("Fan speed : " + fan);
              //Device : [
             String v1 = devicenameAR.get(point);
             String v2 = areaAR.get(point);
@@ -3039,11 +3067,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             //Controller : [
             int point2 = 0;
-            String v8 = pidfkARDB.get(point2);
-            String v9 = contrlidARDB.get(point2);
-            String v10 = internalidARDB.get(point2);
-            String v11 = contrltypeARDB.get(point2);
-            String v12 = contrlstatusARDB.get(point2);
+            String v8 = pidfkARDB.get(fan);
+            String v9 = contrlidARDB.get(fan);
+            String v10 = internalidARDB.get(fan);
+            String v11 = contrltypeARDB.get(fan);
+            String v12 = contrlstatusARDB.get(fan);
             // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
             String v4c1 = dectohex(v4);
             String v7c1 = dectohex(v7);
@@ -3068,7 +3096,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnminusfan(View view) {
 
         int point = v;
-        System.out.println("btnminusfan");
+        System.out.println("btnminusfan" + fan);
         click = "btnminusfan";
         getcontroller();
 
@@ -3077,6 +3105,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         } else {
             --fan;
             progressbarfan.setProgress(fan);
+            tvfanspeed.setText("Fan speed : " + fan);
             // Device : [
             String v1 = devicenameAR.get(point);
             String v2 = areaAR.get(point);
@@ -3089,11 +3118,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             //Controller : [
             int point2 = 0;
-            String v8 = pidfkARDB.get(point2);
-            String v9 = contrlidARDB.get(point2);
-            String v10 = internalidARDB.get(point2);
-            String v11 = contrltypeARDB.get(point2);
-            String v12 = contrlstatusARDB.get(point2);
+            String v8 = pidfkARDB.get(fan);
+            String v9 = contrlidARDB.get(fan);
+            String v10 = internalidARDB.get(fan);
+            String v11 = contrltypeARDB.get(fan);
+            String v12 = contrlstatusARDB.get(fan);
             // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
             String v4c1 = dectohex(v4);
             String v7c1 = dectohex(v7);
@@ -3118,8 +3147,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnofffan(View view) {
         btnofffan.setVisibility(View.GONE);
         btnonfan.setVisibility(View.VISIBLE);
-        //btnplusfan.setEnabled(true);
-        //btnminusfan.setEnabled(true);
+        btnplusfan.setEnabled(true);
+        btnminusfan.setEnabled(true);
+        tvfanspeed.setText("");
 
         int point = v;
         System.out.println("btnofffan");
@@ -3136,7 +3166,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         // ]
 
         //Controller : [
-        int point2 = 0;
+        int point2 = 6;
         String  v8=pidfkARDB.get(point2);
         String  v9=contrlidARDB.get(point2);
         String  v10=internalidARDB.get(point2);
@@ -3240,6 +3270,65 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class SendCmnd extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String homeid = params[0];
+            String powerline_id = params[0];
+            String internal_id = params[0];
+            String event = params[0];
+            String data = "";
+            int tmp;
+
+            try {
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
+                String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                OutputStream os = httpURLConnection.getOutputStream();
+                os.write(urlParams.getBytes());
+                os.flush();
+                os.close();
+                InputStream is = httpURLConnection.getInputStream();
+                while ((tmp = is.read()) != -1) {
+                    data += (char) tmp;
+                }
+                is.close();
+                httpURLConnection.disconnect();
+
+                return data;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            String err = null;
+            if (s.equals("")) {
+                s = "Data saved successfully.";
+            }
+            try {
+                JSONObject user_data = new JSONObject(s);
+                String statusvalidateinfo = user_data.getString("STATUS");
+                String validateip = user_data.getString("DESC");
+                System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                err = "Exception: " + e.getMessage();
+            }
+
+        }
+
     }
 
 
