@@ -43,12 +43,14 @@ public class Dashboard extends AppCompatActivity {
     private String mActivityTitle;
     int i;
     ArrayAdapter<String> adapter;
-    String devname,status,siteid = "H001",selected,itemTouched,statusOfDevice;
+    String devname,status,siteid = "H001",selected,itemTouched,statusOfDevice,powerlineid,internalid;
     List<String> devicenameAR = new ArrayList<String>(); //stores all devices
     List<String> devicenameAR_ON = new ArrayList<String>(); //stores devices which are only on
     List<String> devicenameAR_OFF = new ArrayList<String>(); //stores devices which are only off
     List<String> statusAR = new ArrayList<String>(); //stores statuses of devices example: on or off , 01= ON // 02=OFF
     Map<String, String> deviceandstatus = new HashMap<String, String>(); //hashmap which stroes both device name and status
+    Map<String, String> deviceandPowerlineid = new HashMap<String, String>();
+    Map<String, String> deviceandInternalid = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,18 @@ public class Dashboard extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        if (devicenameAR.size()>0 ||devicenameAR_ON.size()>0 ||devicenameAR_OFF.size()>0 ||statusAR.size()>0 ||deviceandstatus.size()>0 ||deviceandPowerlineid.size()>0 ||deviceandInternalid.size()>0){
+            devicenameAR.clear();
+            devicenameAR_ON.clear();
+            devicenameAR_OFF.clear();
+            statusAR.clear();
+            deviceandstatus.clear();
+            deviceandPowerlineid.clear();
+            deviceandInternalid.clear();
+            System.out.println("All data arrays cleared!");
+        }
+
         checkfordevice cfd = new checkfordevice();
         cfd.execute(siteid);
 
@@ -113,52 +127,70 @@ public class Dashboard extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, final int position, long id) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Dashboard.this);
-                if (selected.equals("ON")) {
-                    alertDialogBuilder.setMessage("This device is currently ON,do you want to OFF this device?");
-                }else if (selected.equals("OFF")) {
-                    alertDialogBuilder.setMessage("This device is currently OFF,do you want to ON this device?");
-                }else{
-                    String deviceIdentifier = devicenameAR.get(position);
-                    statusOfDevice = deviceandstatus.get(deviceIdentifier);
-                    if (statusOfDevice.equals("1")){
+                switch (selected){
+                    case "ON" : //if selecting device from ON section
                         alertDialogBuilder.setMessage("This device is currently ON,do you want to OFF this device?");
-                    }else if (statusOfDevice.equals("2")){
+                        break;
+                    case "OFF" : //if selecting device from OFF section
                         alertDialogBuilder.setMessage("This device is currently OFF,do you want to ON this device?");
-                    }
+                        break;
+                    default: //if selecting device from SHOW ALL section we first check if its on or off to produce suitable message
+                        String deviceIdentifier = devicenameAR.get(position);
+                        statusOfDevice = deviceandstatus.get(deviceIdentifier);
+                        switch (statusOfDevice){
+                            case "1" :
+                                alertDialogBuilder.setMessage("This device is currently ON,do you want to OFF this device?");
+                                break;
+                            case "2" :
+                                alertDialogBuilder.setMessage("This device is currently OFF,do you want to ON this device?");
+                                break;
+                            default:
+                                alertDialogBuilder.setMessage("This device status cannot be changed");
+                                break;
+                        }
+
                 }
                     alertDialogBuilder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
                                     if (selected.equals("ON")){
                                         itemTouched = devicenameAR_ON.get(position);
+                                        String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
+                                        String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                         devicenameAR_OFF.add(itemTouched);
                                         devicenameAR_ON.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(itemTouched,"02");
+                                        sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
                                         adapter.notifyDataSetChanged();
                                     }else if (selected.equals("OFF")){
                                         itemTouched = devicenameAR_OFF.get(position);
+                                        String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
+                                        String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                         devicenameAR_ON.add(itemTouched);
                                         devicenameAR_OFF.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(itemTouched,"01");
+                                        sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
                                         adapter.notifyDataSetChanged();
                                     }else{
                                         if (statusOfDevice.equals("1")){
                                             itemTouched = devicenameAR_ON.get(position);
+                                            String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
+                                            String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                             devicenameAR_OFF.add(itemTouched);
                                             devicenameAR_ON.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(itemTouched,"02");
+                                            sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
                                             adapter.notifyDataSetChanged();
                                         }else if (statusOfDevice.equals("2")){
                                             itemTouched = devicenameAR_OFF.get(position);
+                                            String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
+                                            String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                             devicenameAR_ON.add(itemTouched);
                                             devicenameAR_OFF.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(itemTouched,"01");
+                                            sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
                                             adapter.notifyDataSetChanged();
                                         }
                                     }
@@ -230,19 +262,24 @@ public class Dashboard extends AppCompatActivity {
                     try {
                         JSONObject oneObject = jArray.getJSONObject(i);
                         // Pulling items from the array
+                        powerlineid = oneObject.getString("powerline_id");
+                        internalid = oneObject.getString("internal_id");
                         devname = oneObject.getString("dev_name");
                         status = oneObject.getString("current_status");
+
+                        deviceandPowerlineid.put(devname,powerlineid);
+                        deviceandInternalid.put(devname,internalid);
                         deviceandstatus.put(devname,status);
                         devicenameAR.add(devname);
                         statusAR.add(status);
-                        if (status =="2"){
+                        if (status.equals("2")){
                             devicenameAR_OFF.add(devname);
                             System.out.println("status of OFF devices : " + devname + ":" + status);
                         }else if (status.equals("1")){
                             devicenameAR_ON.add(devname);
                             System.out.println("status of ON devices : " + devname + ":" + status);
                         }
-                        System.out.println("status of devices : " + devname + ":" + status);
+                        System.out.println("status of devices : " + devname + ":" + status + ":" + powerlineid + ":" + internalid);
                     } catch (JSONException e) {
                         // Oops
                     }
@@ -264,12 +301,15 @@ public class Dashboard extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String homeid = params[0];
+            String powerline_id = params[0];
+            String internal_id = params[0];
+            String event = params[0];
             String data = "";
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //service used for testing purpose
-                String urlParams = "HomeID="+homeid;
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
+                String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -304,7 +344,7 @@ public class Dashboard extends AppCompatActivity {
             try {
                 JSONObject user_data = new JSONObject(s);
                 String statusvalidateinfo = user_data.getString("STATUS");
-                String validateip = user_data.getString("MODEM_IP");
+                String validateip = user_data.getString("DESC");
                 System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
             } catch (JSONException e) {
                 e.printStackTrace();
