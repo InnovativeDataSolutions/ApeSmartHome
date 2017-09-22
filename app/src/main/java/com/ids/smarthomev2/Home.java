@@ -38,7 +38,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR,areanameVAR,devicenameVAR,devicemodelVAR,powerlineidVAR,cmmndidVAR,masteridVAR,devicecodeVAR,physicalidVAR,contridVAR,internalidVAR,contrnameVAR,contrtypeVAR,contrstatusVAR,pidfk;
-    String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
+    String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,v4c,v10c,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
     int i,fan;
     Handler UIhandler;
     Context cx = this;
@@ -1275,29 +1274,29 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 socket = new Socket(serverAddr, SERVER_PORT);
                 OutputStream out = socket.getOutputStream();
                 if (click.contains("5GoneOFF") || click.contains("5GtwoOFF") || click.contains("5GthreeOFF") || click.contains("5GfourOFF") || click.contains("5GfiveOFF")) {
-                    byte[] by = hexStringToByteArray(protocolOFF.replaceAll(" ", ""));
+                    byte[] by = hexStringToByteArray(protocolOFF.toUpperCase().replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
                 } else if (click.contains("5GoneON") || click.contains("5GtwoON") || click.contains("5GthreeON") || click.contains("5GfourON") || click.contains("5GfiveON")) {
-                    byte[] by = hexStringToByteArray(protocolON.replaceAll(" ", ""));
+                    byte[] by = hexStringToByteArray(protocolON.toUpperCase().replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
                 }else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
-
                 Thread2 commThread = new Thread2(socket);
                 new Thread(commThread).start();
                 return;
-            }catch (NoRouteToHostException e){
-                e.printStackTrace();
-                SendCmnd sc = new SendCmnd();
-                sc.execute("H001","79","01","02");
             }
             catch (Exception e) {
+                if (click.contains("OFF")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "01");
+                }else{
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "02");
+                }
                 e.printStackTrace();
-                System.out.println("ffff");
-
             }
         }
     }
@@ -1469,12 +1468,12 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     class updateUIThread implements Runnable {
         private String message;
-        int pin = v;
-        int pin2 =j;
-        String val = powerlineidAR.get(pin);
-        String val2 = powerlineidAR.get(pin2);
-        String val3 = dectohex(val);
-        String val4 = dectohex(val2);
+        String val = powerlineidAR.get(v);//get powerline id to match with message recieved from device acknowledgment
+        String val2 = powerlineidAR.get(j);//get powerline id to match with message recieved from device acknowledgment
+        String val3 = dectohex(val);//convert powerline to hex value
+        String val4 = dectohex(val2);//convert powerline to hex value
+        String pwline = ("00" + val3).substring(val3.length());//substring powerline to 2 values if its originally only 1
+        String pwlinej = ("00" + val4).substring(val4.length());//substring powerline to 2 values if its originally only 1
 
         public updateUIThread(String str) {
             this.message = str;
@@ -1482,9 +1481,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
-            System.out.println("thread reply0 :" + message + " " + val);
+            System.out.println("updateUIThread reply :" + message + " " + val+":"+pwline); //used for checking
 
-            if (message.matches("(.*)"+val3+"(.*)") || message.matches("(.*)"+val4+"(.*)")){
+            if (message.matches("(.*)"+pwline.toUpperCase()+"(.*)") || message.matches("(.*)"+pwlinej.toUpperCase()+"(.*)")){
                 System.out.println("thread reply :" + click);
                 if (click.equals("2GoneON")){
                     btnon1_2g.setVisibility(View.GONE);
@@ -1658,10 +1657,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
@@ -1700,10 +1699,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON);
         devicestatus = v1;
@@ -3284,6 +3283,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             int tmp;
 
             try {
+                System.out.println("running send cmnd" + v4c + " : " + v10c);
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
                 String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
 
