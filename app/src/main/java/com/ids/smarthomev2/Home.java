@@ -74,7 +74,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR,areanameVAR,devicenameVAR,devicemodelVAR,powerlineidVAR,cmmndidVAR,masteridVAR,devicecodeVAR,physicalidVAR,contridVAR,internalidVAR,contrnameVAR,contrtypeVAR,contrstatusVAR,pidfk;
-    String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,v4c,v10c,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
+    String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,v4c,v10c,fanintid,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
     int i,fan;
     Handler UIhandler;
     Context cx = this;
@@ -1292,9 +1292,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute("H001", v4c, v10c, "01");
+                    System.out.println("overTheNet : " + v4c + v10c);
                 }else{
                     SendCmnd sc = new SendCmnd();
                     sc.execute("H001", v4c, v10c, "02");
+                    System.out.println("overTheNet : " + v4c + v10c);
                 }
                 e.printStackTrace();
             }
@@ -1324,6 +1326,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                if (click.contains("OFF")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "01");
+                }else{
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "02");
+                }
                 e.printStackTrace();
             }
         }
@@ -1352,6 +1361,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                if (click.contains("OFF")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "01");
+                }else{
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "02");
+                }
                 e.printStackTrace();
             }
         }
@@ -1412,6 +1428,23 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                if (click.contains("OFF") || click.contains("off")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "01");
+                    System.out.println("overTheNet : " + v4c + v10c);
+                }else if(click.contains("ON") || click.contains("on")){
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, v10c, "02");
+                    System.out.println("overTheNet : " + v4c + v10c);
+                }else if(click.contains("plusfan")){
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, fanintid, "02");
+                    System.out.println("overTheNet : " + v4c + v10c);
+                }else if(click.contains("minusfan")){
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute("H001", v4c, fanintid, "02");
+                    System.out.println("overTheNet : " + v4c + v10c);
+                }
                 e.printStackTrace();
             }
         }
@@ -1741,10 +1774,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
@@ -1783,10 +1816,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON);
         devicestatus = v1;
@@ -1825,10 +1858,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
@@ -1867,10 +1900,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
 
@@ -1908,10 +1941,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
@@ -1950,10 +1983,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON);
         devicestatus = v1;
@@ -1992,10 +2025,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
@@ -2034,10 +2067,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON);
         devicestatus = v1;
@@ -2076,10 +2109,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
@@ -2117,10 +2150,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
@@ -2159,10 +2192,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
@@ -2200,10 +2233,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
@@ -2242,10 +2275,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
@@ -2284,10 +2317,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
@@ -2326,10 +2359,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
@@ -2368,10 +2401,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
@@ -2410,10 +2443,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
@@ -2452,10 +2485,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
@@ -2494,10 +2527,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
@@ -2536,10 +2569,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
@@ -2578,10 +2611,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
@@ -2620,10 +2653,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
@@ -2662,10 +2695,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON2G);
         devicestatus = v1;
@@ -2704,10 +2737,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF2G);
         devicestatus = v1;
@@ -2745,10 +2778,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON2G);
@@ -2788,10 +2821,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF2G);
@@ -2835,10 +2868,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFF1G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFF1G);
 
@@ -2887,10 +2920,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolON1G = String.format("02 0%s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s 0%s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolON1G);
 
@@ -2936,10 +2969,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFFPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFFPLUG);
         devicestatus = v1;
@@ -2980,10 +3013,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolONPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolONPLUG);
         devicestatus = v1;
@@ -3029,10 +3062,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolONFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolONFAN);
         devicestatus = v1;
@@ -3077,11 +3110,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String v6c1 = dectohex(v6);
             String v10c1 = dectohex(v10);
 
-            String v4c = ("00" + v4c1).substring(v4c1.length());
+            v4c = ("00" + v4c1).substring(v4c1.length());
             String v7c = ("00" + v7c1).substring(v7c1.length());
             String v6c = ("00" + v6c1).substring(v6c1.length());
-            String v10c = ("00" + v10c1).substring(v10c1.length());
-            String fanintid = String.format("%02d", fan);
+            v10c = ("00" + v10c1).substring(v10c1.length());
+            fanintid = String.format("%02d", fan);
             protocolPLUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, fanintid);
             System.out.println(protocolPLUSFAN);
             devicestatus = v1;
@@ -3128,11 +3161,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String v6c1 = dectohex(v6);
             String v10c1 = dectohex(v10);
 
-            String v4c = ("00" + v4c1).substring(v4c1.length());
+            v4c = ("00" + v4c1).substring(v4c1.length());
             String v7c = ("00" + v7c1).substring(v7c1.length());
             String v6c = ("00" + v6c1).substring(v6c1.length());
-            String v10c = ("00" + v10c1).substring(v10c1.length());
-            String fanintid = String.format("%02d", fan);
+            v10c = ("00" + v10c1).substring(v10c1.length());
+            fanintid = String.format("%02d", fan);
             protocolMINUSFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, fanintid);
             System.out.println(protocolMINUSFAN);
             devicestatus = v1;
@@ -3177,10 +3210,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c1 = dectohex(v6);
         String v10c1 = dectohex(v10);
 
-        String v4c = ("00" + v4c1).substring(v4c1.length());
+        v4c = ("00" + v4c1).substring(v4c1.length());
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
-        String v10c = ("00" + v10c1).substring(v10c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
         protocolOFFFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
         System.out.println(protocolOFFFAN);
         devicestatus = v1;
