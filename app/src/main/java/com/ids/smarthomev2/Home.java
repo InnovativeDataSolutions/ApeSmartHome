@@ -1283,6 +1283,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR, v4c, v10c, "01");
@@ -1320,6 +1321,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR, v4c, v10c, "01");
@@ -1355,6 +1357,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR, v4c, v10c, "01");
@@ -1448,7 +1451,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     class UpdateButtonState implements Runnable {
         /*
         This method is used activate the button which was deactivated onclick while message was still pending from the device,
-        this method shuld be used in exceptions.
+        this method shuld be used in exceptions. this method is used to combat the delay wen button is pressed.
+         so the user doesnt press button many times.
          */
         String state;
 
@@ -1470,6 +1474,58 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 on_1plug.setEnabled(true);
             } else if (click.equals("1PLUGoneOFF")) {
                 off_1plug.setEnabled(true);
+            }else if (click.equals("1GoneOFF")) {
+                off_1g.setEnabled(true);
+            } else if (click.equals("1GoneON")) {
+                on_1g.setEnabled(true);
+            } else if (click.equals("3GoneOFF")) {
+                off_3g.setEnabled(true);
+            } else if (click.equals("3GoneON")) {
+                on_3g.setEnabled(true);
+            } else if (click.equals("3GtwoOFF")) {
+                off2_3g.setEnabled(true);
+            } else if (click.equals("3GtwoON")) {
+                on2_3g.setEnabled(true);
+            } else if (click.equals("3GthreeOFF")) {
+                off3_3g.setEnabled(true);
+            } else if (click.equals("3GthreeON")) {
+                on3_3g.setEnabled(true);
+            }else if (click.equals("4GoneOFF")) {
+                off_4g.setEnabled(true);
+            } else if (click.equals("4GoneON")) {
+                on_4g.setEnabled(true);
+            } else if (click.equals("4GtwoOFF")) {
+                off2_4g.setEnabled(true);
+            } else if (click.equals("4GtwoON")) {
+                on2_4g.setEnabled(true);
+            } else if (click.equals("4GthreeOFF")) {
+                off3_4g.setEnabled(true);
+            } else if (click.equals("4GthreeON")) {
+                on3_4g.setEnabled(true);
+            } else if (click.equals("4GfourOFF")) {
+                off4_4g.setEnabled(true);
+            } else if (click.equals("4GfourON")) {
+                on4_4g.setEnabled(true);
+            } else if (click.equals("5GoneOFF")) {
+                off_5g.setEnabled(true);
+            } else if (click.equals("5GoneON")) {
+                on_5g.setEnabled(true);
+            } else if (click.equals("5GtwoOFF")) {
+                off2_5g.setEnabled(true);
+            } else if (click.equals("5GtwoON")) {
+                on2_5g.setEnabled(true);
+            } else if (click.equals("5GthreeOFF")) {
+                off3_5g.setEnabled(true);
+            } else if (click.equals("5GthreeON")) {
+                on3_5g.setEnabled(true);
+            } else if (click.equals("5GfourOFF")) {
+                off4_5g.setEnabled(true);
+            } else if (click.equals("5GfourON")) {
+                on4_5g.setEnabled(true);
+            } else if (click.equals("5GfiveOFF")) {
+                off5_5g.setEnabled(true);
+            } else if (click.equals("5GfiveON")) {
+                on5_5g.setEnabled(true);
             }
         }
     }
@@ -1543,27 +1599,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
                 System.out.println("thread reply :" + click);
                 if (click.equals("2GoneON")) {
-                    btnon1_2g.setEnabled(true);
                     btnon1_2g.setVisibility(View.GONE);
                     btnoff1_2g.setVisibility(View.VISIBLE);
                 } else if (click.equals("2GoneOFF")) {
                     btnon1_2g.setVisibility(View.VISIBLE);
-                    btnoff1_2g.setEnabled(true);
                     btnoff1_2g.setVisibility(View.GONE);
                 } else if (click.equals("2GtwoON")) {
-                    btnon2_2g.setEnabled(true);
                     btnon2_2g.setVisibility(View.GONE);
                     btnoff2_2g.setVisibility(View.VISIBLE);
                 } else if (click.equals("2GtwoOFF")) {
                     btnon2_2g.setVisibility(View.VISIBLE);
-                    btnoff2_2g.setEnabled(true);
                     btnoff2_2g.setVisibility(View.GONE);
                 } else if (click.equals("1PLUGoneON")) {
                     off_1plug.setVisibility(View.VISIBLE);
-                    on_1plug.setEnabled(true);
                     on_1plug.setVisibility(View.GONE);
                 } else if (click.equals("1PLUGoneOFF")) {
-                    off_1plug.setEnabled(true);
                     off_1plug.setVisibility(View.GONE);
                     on_1plug.setVisibility(View.VISIBLE);
                 } else if (click.equals("1GoneOFF")) {
@@ -1645,6 +1695,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     on5_5g.setVisibility(View.GONE);
                     off5_5g.setVisibility(View.VISIBLE);
                 }
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
             }
         }
     }
@@ -1686,7 +1737,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff5g(View view) {
 //        on_5g.setVisibility(View.VISIBLE);
-        // off_5g.setEnabled(false);
+        off_5g.setEnabled(false);
         System.out.println("5g1off");
         point = v;
         int point2 = 1;
@@ -1728,7 +1779,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon5g(View view) {
 //        off_5g.setVisibility(View.VISIBLE);
-//        on_5g.setVisibility(View.GONE);
+        on_5g.setEnabled(false);
         System.out.println("5g1on");
         click = "5GoneON";
         int point = v;
@@ -1770,7 +1821,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off5g(View view) {
 //        on2_5g.setVisibility(View.VISIBLE);
-//        off2_5g.setVisibility(View.GONE);
+        off2_5g.setEnabled(false);
         System.out.println("5g2off");
         click = "5GtwoOFF";
         int point = v;
@@ -1812,7 +1863,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on5g(View view) {
 //        off2_5g.setVisibility(View.VISIBLE);
-//        on2_5g.setVisibility(View.GONE);
+        on2_5g.setEnabled(false);
         System.out.println("5g2on");
         click = "5GtwoON";
         int point = v;
@@ -1854,7 +1905,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off5g(View view) {
 //        on3_5g.setVisibility(View.VISIBLE);
-//        off3_5g.setVisibility(View.GONE);
+        off3_5g.setEnabled(false);
         System.out.println("5g3off");
         click = "5GthreeOFF";
         int point = v;
@@ -1896,7 +1947,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on5g(View view) {
 //        off3_5g.setVisibility(View.VISIBLE);
-//        on3_5g.setVisibility(View.GONE);
+        on3_5g.setEnabled(false);
         System.out.println("5g3on");
         click = "5GthreeON";
         int point = v;
@@ -1937,7 +1988,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3off5g(View view) {
 //        on4_5g.setVisibility(View.VISIBLE);
-//        off4_5g.setVisibility(View.GONE);
+        off4_5g.setEnabled(false);
         System.out.println("5g4off");
         click = "5GfourOFF";
         int point = v;
@@ -1979,7 +2030,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3on5g(View view) {
 //        off4_5g.setVisibility(View.VISIBLE);
-//        on4_5g.setVisibility(View.GONE);
+        on4_5g.setEnabled(false);
         System.out.println("5g4on");
         click = "5GfourON";
         int point = v;
@@ -2021,7 +2072,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn4off5g(View view) {
 //        on5_5g.setVisibility(View.VISIBLE);
-//        off5_5g.setVisibility(View.GONE);
+        off5_5g.setEnabled(false);
         System.out.println("5g5off");
         click = "5GfiveOFF";
         int point = v;
@@ -2063,7 +2114,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn4on5g(View view) {
 //        off5_5g.setVisibility(View.VISIBLE);
-//        on5_5g.setVisibility(View.GONE);
+        on5_5g.setEnabled(false);
         System.out.println("5g5on");
         click = "5GfiveON";
         int point = v;
@@ -2105,7 +2156,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff4g(View view) {
 //        on_4g.setVisibility(View.VISIBLE);
-//        off_4g.setVisibility(View.GONE);
+        off_4g.setEnabled(false);
         int point = v;
         int point2 = 1;
         System.out.println("4g1off");
@@ -2147,7 +2198,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon4g(View view) {
 //        off_4g.setVisibility(View.VISIBLE);
-//        on_4g.setVisibility(View.GONE);
+        on_4g.setEnabled(false);
         int point = v;
         System.out.println("4g1on");
         click = "4GoneON";
@@ -2188,7 +2239,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off4g(View view) {
 //        on2_4g.setVisibility(View.VISIBLE);
-//        off2_4g.setVisibility(View.GONE);
+        off2_4g.setEnabled(false);
         int point = v;
         System.out.println("4g2off");
         click = "4GtwoOFF";
@@ -2229,7 +2280,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on4g(View view) {
 //        off2_4g.setVisibility(View.VISIBLE);
-//        on2_4g.setVisibility(View.GONE);
+        on2_4g.setEnabled(false);
         int point = v;
         System.out.println("4g2on");
         click = "4GtwoON";
@@ -2271,7 +2322,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off4g(View view) {
 //        on3_4g.setVisibility(View.VISIBLE);
-//        off3_4g.setVisibility(View.GONE);
+        off3_4g.setEnabled(false);
         int point = v;
         System.out.println("4g3off");
         click = "4GthreeOFF";
@@ -2313,7 +2364,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on4g(View view) {
 //        off3_4g.setVisibility(View.VISIBLE);
-//        on3_4g.setVisibility(View.GONE);
+        on3_4g.setEnabled(false);
         int point = v;
         System.out.println("4g3on");
         click = "4GthreeON";
@@ -2355,7 +2406,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3off4g(View view) {
 //        on4_4g.setVisibility(View.VISIBLE);
-//        off4_4g.setVisibility(View.GONE);
+        off4_4g.setEnabled(false);
         int point = v;
         System.out.println("4g4off");
         click = "4GfourOFF";
@@ -2397,7 +2448,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3on4g(View view) {
 //        off4_4g.setVisibility(View.VISIBLE);
-//        on4_4g.setVisibility(View.GONE);
+        on4_4g.setEnabled(false);
         int point = v;
         System.out.println("4g4on");
         click = "4GfourON";
@@ -2439,7 +2490,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff3g(View view) {
 //        on_3g.setVisibility(View.VISIBLE);
-//        off_3g.setVisibility(View.GONE);
+        off_3g.setEnabled(false);
         int point = v;
         System.out.println("3g1off");
         click = "3GoneOFF";
@@ -2481,7 +2532,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon3g(View view) {
 //        off_3g.setVisibility(View.VISIBLE);
-//        on_3g.setVisibility(View.GONE);
+        on_3g.setEnabled(false);
         int point = v;
         System.out.println("3g1oN");
         click = "3GoneON";
@@ -2523,7 +2574,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off3g(View view) {
 //        on2_3g.setVisibility(View.VISIBLE);
-//        off2_3g.setVisibility(View.GONE);
+        off2_3g.setEnabled(false);
         int point = v;
         System.out.println("3g2off");
         click = "3GtwoOFF";
@@ -2565,7 +2616,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on3g(View view) {
 //        off2_3g.setVisibility(View.VISIBLE);
-//        on2_3g.setVisibility(View.GONE);
+        on2_3g.setEnabled(false);
         int point = v;
         System.out.println("3g2oN");
         click = "3GtwoON";
@@ -2607,7 +2658,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off3g(View view) {
 //        on3_3g.setVisibility(View.VISIBLE);
-//        off3_3g.setVisibility(View.GONE);
+        off3_3g.setEnabled(false);
         int point = v;
         System.out.println("3g3off");
         click = "3GthreeOFF";
@@ -2649,7 +2700,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on3g(View view) {
 //        off3_3g.setVisibility(View.VISIBLE);
-//        on3_3g.setVisibility(View.GONE);
+        on3_3g.setEnabled(false);
         int point = v;
         System.out.println("3g3oN");
         click = "3GthreeON";
@@ -2859,8 +2910,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btn1off1g(View view) {
-
-//        off_1g.setVisibility(View.GONE);
+        off_1g.setEnabled(false);
 //        on_1g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("1g1off");
@@ -2915,7 +2965,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on1g(View view) {
 //        off_1g.setVisibility(View.VISIBLE);
-//        on_1g.setVisibility(View.GONE);
+        on_1g.setEnabled(false);
         int point = v;
         System.out.println("1g1on");
         click = "1GoneON";
@@ -3403,6 +3453,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String statusvalidateinfo = user_data.getString("STATUS");
                 String validateip = user_data.getString("DESC");
                 System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
             } catch (JSONException e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();
