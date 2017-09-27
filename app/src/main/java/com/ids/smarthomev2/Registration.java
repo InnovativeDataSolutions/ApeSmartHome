@@ -30,7 +30,7 @@ public class Registration extends AppCompatActivity {
     Context ctx = this;
     long count;
     Database db = new Database(ctx);
-    String homeid, un, pw, siteid = "H001", oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8, oneObjectsItem9, oneObjectsItem10, oneObjectsItem11, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16, ip, gateway, statussubmitinfo, statusvalidateinfo, validateip;
+    String homeid, un, pw, oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8, oneObjectsItem9, oneObjectsItem10, oneObjectsItem11, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16, ip, gateway, statussubmitinfo, statusvalidateinfo, validateip;
     int i, j;
 
     @Override
@@ -114,7 +114,7 @@ public class Registration extends AppCompatActivity {
                 err = "Exception: " + e.getMessage();
             }
 
-            Toast.makeText(Registration.this, s, Toast.LENGTH_SHORT).show();
+            Toast.makeText(Registration.this, "Registration Succesful!", Toast.LENGTH_SHORT).show();
 
             if (statussubmitinfo.contains("AVAILABLE")) {
                 tv.setText("Verify IP with gateway");
@@ -189,11 +189,11 @@ public class Registration extends AppCompatActivity {
                 err = "Exception: " + e.getMessage();
             }
 
-            Toast.makeText(Registration.this, s, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Registration.this, s, Toast.LENGTH_SHORT).show();
 
             if (statusvalidateinfo.contains("AVAILABLE")) {
                 checkfordevice cfd = new checkfordevice();
-                cfd.execute(siteid);
+                cfd.execute(homeid);
                 tv.setText("Home IP & Gateway succesfully verified!");
                 gatewayET.setEnabled(false);
                 ipET.setEnabled(false);
