@@ -198,6 +198,16 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public boolean deleteAll()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from "+ table);
+        db.execSQL("delete from "+ table2);
+        db.execSQL("delete from "+ table3);
+        db.close();
+        return true;
+    }
+
 
 
     public Cursor gethomeinfo() {

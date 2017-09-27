@@ -1,6 +1,7 @@
 package com.ids.smarthomev2;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -46,38 +48,35 @@ import java.util.List;
 
 public class Home extends AppCompatActivity implements View.OnTouchListener {
 
-    private RelativeLayout someLayout, rl1, rl2, rl3, rl4, rl5,rlplug,rlfan;
+    private RelativeLayout someLayout, rl1, rl2, rl3, rl4, rl5, rlplug, rlfan;
     Button on_5g, off_5g, on2_5g, off2_5g, on3_5g, off3_5g, on4_5g, off4_5g, on5_5g, off5_5g;
     Button on_4g, off_4g, on2_4g, off2_4g, on3_4g, off3_4g, on4_4g, off4_4g;
     Button on_3g, off_3g, on2_3g, off2_3g, on3_3g, off3_3g;
     Button btnon1_2g, btnoff1_2g, btnon2_2g, btnoff2_2g;
-    Button on_1g, off_1g, on_1plug, off_1plug,btnplusfan,btnminusfan,btnonfan,btnofffan;
+    Button on_1g, off_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan, btnofffan;
     Spinner sp1, sp2;
     ProgressBar progressbarfan;
-    TextView tvinfo,tvfanspeed;
+    TextView tvinfo, tvfanspeed;
     private static final String TAG = "motion";
     GestureDetector gestureDetector;
     private String SERVER_IP; //server IP address192.168.1.9 // port = 8081
     public static final int SERVER_PORT = 8081;
-    int v = 0,j=0,point=0;
+    int v = 0, j = 0, point = 0;
     int count = 0;
-    String click = null,cntrlstatus=null;
+    String click = null, cntrlstatus = null;
     Context ctx = this;
     Database db = new Database(ctx);
     SQLiteDatabase sqLiteDatabase;
-    Cursor cursor,cursor2,cursor3,cursor4;
-    String devicemodelVAR2;
-    Long countdev;
+    Cursor cursor, cursor2, cursor3, cursor4;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-    String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR,areanameVAR,devicenameVAR,devicemodelVAR,powerlineidVAR,cmmndidVAR,masteridVAR,devicecodeVAR,physicalidVAR,contridVAR,internalidVAR,contrnameVAR,contrtypeVAR,contrstatusVAR,pidfk;
-    String pidfkDB,contrlidDB,internalidDB,contrlnameDB,cntrlstatusDB,v4c,v10c,fanintid,cntrltypeDB,pidcs,modelcs,switchidcs,devicestatus = null,switchstatusid;
-    int i,fan;
+    String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
+    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate, devicestatus = null, switchstatusid;
+    int i, fan;
     Handler UIhandler;
-    Context cx = this;
     Socket socket = null;
     Thread Thread1 = null;
     Thread Thread14G = null;
@@ -86,7 +85,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Thread Thread2 = null;
     Thread Thread1bg = null;
     String btnclick = null;
-    String protocolON, protocolOFF,protocolON2G,protocolON4G, protocolOFF4G,protocolON1G, protocolOFF1G,protocolONPLUG, protocolOFFPLUG, protocolOFF2G,protocolON3G, protocolOFF3G, protocolONM, protocolOFFM,protocolOFFFAN,protocolONFAN,protocolMINUSFAN,protocolPLUSFAN;
+    String protocolON, protocolOFF, protocolON2G, protocolON4G, protocolOFF4G, protocolON1G, protocolOFF1G, protocolONPLUG, protocolOFFPLUG, protocolOFF2G, protocolON3G, protocolOFF3G, protocolONM, protocolOFFM, protocolOFFFAN, protocolONFAN, protocolMINUSFAN, protocolPLUSFAN;
     List<String> devicenameAR = new ArrayList<String>();
     List<String> areaAR = new ArrayList<String>();
     List<String> masteridAR = new ArrayList<String>();
@@ -124,6 +123,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     List<String> cntrlnameARDB = new ArrayList<String>();
     List<String> contrlstatusARDB = new ArrayList<String>();
     List<String> contrltypeARDB = new ArrayList<String>();
+
     // ]
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,8 +174,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnoff2_2g = (Button) findViewById(R.id.btn1off2g);
         btnplusfan = (Button) findViewById(R.id.btnplusfan);
         btnminusfan = (Button) findViewById(R.id.btnminusfan);
-        btnonfan= (Button) findViewById(R.id.btnonfan);
-        btnofffan= (Button) findViewById(R.id.btnofffan);
+        btnonfan = (Button) findViewById(R.id.btnonfan);
+        btnofffan = (Button) findViewById(R.id.btnofffan);
         progressbarfan = (ProgressBar) findViewById(R.id.progressbarfan);
         progressbarfan.setScaleY(3.5f);
         progressbarfan.setMax(5);
@@ -188,8 +188,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         on_1plug = (Button) findViewById(R.id.btn1onplug);
         off_1plug = (Button) findViewById(R.id.btn1offplug);
 
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -201,9 +201,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         tvinfo = (TextView) findViewById(R.id.tvinfo);
         tvfanspeed = (TextView) findViewById(R.id.faninfotv);
         System.out.println("ip & port : " + SERVER_IP + " " + SERVER_PORT);
-
-        this.Thread1bg = new Thread(new Thread1bg());
-        this.Thread1bg.start();
 
         cursor = db.gethomeinfo();
         try {
@@ -222,10 +219,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 devicecodeVAR = cursor.getString(9);
                 cmmndidVAR = cursor.getString(10);
                 masteridVAR = cursor.getString(11);
-                System.out.println("db info HOME - HOME : "  + homeidVAR + " " + usernameVAR+ " " + gatewayVAR + " " + ipaddressVAR + " " + physicalidVAR + " " + powerlineidVAR + " " + devicenameVAR + " " + areanameVAR + " " + devicemodelVAR + " " + devicecodeVAR + " " + cmmndidVAR + " " + masteridVAR );
+                System.out.println("db info HOME - HOME : " + homeidVAR + " " + usernameVAR + " " + gatewayVAR + " " + ipaddressVAR + " " + physicalidVAR + " " + powerlineidVAR + " " + devicenameVAR + " " + areanameVAR + " " + devicemodelVAR + " " + devicecodeVAR + " " + cmmndidVAR + " " + masteridVAR);
                 devicenameAR.add(devicemodelVAR);
                 areaAR.add(areanameVAR);
-                area_devname.put(areanameVAR,devicemodelVAR);
+                area_devname.put(areanameVAR, devicemodelVAR);
                 ipaddress.add(ipaddressVAR);
                 physicalidAR.add(physicalidVAR);
                 powerlineidAR.add(powerlineidVAR);
@@ -235,7 +232,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 devicemodelAR.add(devicenameVAR);
             }
             while (cursor.moveToNext());
-        }catch (Exception e ){
+        } catch (Exception e) {
             System.out.println("Home exception : " + e);
         }
 
@@ -251,7 +248,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 contrnameVAR = cursor.getString(3);
                 contrtypeVAR = cursor.getString(4);
                 contrstatusVAR = cursor.getString(5);
-                System.out.println("db info CONTROLLER - HOME : "  + pidfk + " " + contridVAR + " " + internalidVAR + " " + contrnameVAR + " " + contrtypeVAR + " " + contrstatusVAR );
+                System.out.println("db info CONTROLLER - HOME : " + pidfk + " " + contridVAR + " " + internalidVAR + " " + contrnameVAR + " " + contrtypeVAR + " " + contrstatusVAR);
                 pidfkAR.add(pidfk);
                 contrlidAR.add(contridVAR);
                 internalidAR.add(internalidVAR);
@@ -260,9 +257,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 contrlstatusAR.add(contrstatusVAR);
             }
             while (cursor.moveToNext());
-        }catch (Exception e ){
+        } catch (Exception e) {
             System.out.println("CONTROLLER exception : " + e);
         }
+
+        this.Thread1bg = new Thread(new Thread1bg());
+        this.Thread1bg.start();
+        UIhandler = new Handler();
 // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, areaAR);
         // Drop down layout style - list view with radio button
@@ -276,8 +277,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 // Apply the adapter to the spinner
         sp2.setAdapter(dataAdapter2);
 
-        UIhandler = new Handler();
-
         sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -287,8 +286,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String value3 = devicemodelAR.get(position);
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
                 sp2.setSelection(position);
-                v= position;
-                j= position;
+                v = position;
+                j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
                     getcntrlstatus();
@@ -308,7 +307,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("TS3G")) {
+                } else if (value.contains("TS3G")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -326,7 +325,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("Dimmer")) {
+                } else if (value.contains("Dimmer")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -362,7 +361,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.VISIBLE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("METER")) {
+                } else if (value.contains("METER")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -371,7 +370,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.VISIBLE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("FC")) {
+                } else if (value.contains("FC")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -390,7 +389,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
 
 
-
         });
 
         sp2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -402,8 +400,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String value3 = devicemodelAR.get(position);
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
                 sp1.setSelection(position);
-                v= position;
-                j= position;
+                v = position;
+                j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
                     getcntrlstatus();
@@ -423,7 +421,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("TS3G")) {
+                } else if (value.contains("TS3G")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -441,7 +439,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("2")) {
+                } else if (value.contains("2")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -485,7 +483,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.VISIBLE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("METER")) {
+                } else if (value.contains("METER")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -494,7 +492,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.VISIBLE);
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
-                }else if (value.contains("FC")) {
+                } else if (value.contains("FC")) {
                     getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
@@ -515,7 +513,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
 
-
     public String bytesToHex(byte[] in) {
         final StringBuilder builder = new StringBuilder();
         for (byte b : in) {
@@ -534,14 +531,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         return data;
     }
 
-    public void getcntrlstatus(){
+    public void getcntrlstatus() {
 
-        String  v4=devicenameAR.get(v);
+        String v4 = devicenameAR.get(v);
 
-        if (devicestatus == null){
+        if (devicestatus == null) {
             System.out.println("devicestatus null");
-        }
-        else {
+        } else {
             if (devicestatus.equals("")) {
 //                off_1g.setVisibility(View.VISIBLE);
 //                on_1g.setVisibility(View.GONE);
@@ -551,49 +547,49 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.GONE);
                     on_1g.setVisibility(View.VISIBLE);
-                }else if (click == "1PLUGoneOFF") {
+                } else if (click == "1PLUGoneOFF") {
                     off_1plug.setVisibility(View.GONE);
                     on_1plug.setVisibility(View.VISIBLE);
-                }else if (click == "2GoneOFF") {
+                } else if (click == "2GoneOFF") {
                     btnoff1_2g.setVisibility(View.GONE);
                     btnon1_2g.setVisibility(View.VISIBLE);
-                }else if (click == "2GtwoOFF") {
+                } else if (click == "2GtwoOFF") {
                     btnoff2_2g.setVisibility(View.GONE);
                     btnon2_2g.setVisibility(View.VISIBLE);
-                }else if (click == "3GoneOFF") {
+                } else if (click == "3GoneOFF") {
                     off_3g.setVisibility(View.GONE);
                     on_3g.setVisibility(View.VISIBLE);
-                }else if (click == "3GtwoOFF") {
+                } else if (click == "3GtwoOFF") {
                     off2_3g.setVisibility(View.GONE);
                     on2_3g.setVisibility(View.VISIBLE);
-                }else if (click == "3GthreeOFF") {
+                } else if (click == "3GthreeOFF") {
                     off3_3g.setVisibility(View.GONE);
                     on3_3g.setVisibility(View.VISIBLE);
-                }else if (click == "4GoneOFF") {
+                } else if (click == "4GoneOFF") {
                     off_4g.setVisibility(View.GONE);
                     on_4g.setVisibility(View.VISIBLE);
-                }else if (click == "4GtwoOFF") {
+                } else if (click == "4GtwoOFF") {
                     off2_4g.setVisibility(View.GONE);
                     on2_4g.setVisibility(View.VISIBLE);
-                }else if (click == "4GthreeOFF") {
+                } else if (click == "4GthreeOFF") {
                     off3_4g.setVisibility(View.GONE);
                     on3_4g.setVisibility(View.VISIBLE);
-                }else if (click == "4GfourOFF") {
+                } else if (click == "4GfourOFF") {
                     off4_4g.setVisibility(View.GONE);
                     on4_4g.setVisibility(View.VISIBLE);
                 } else if (click == "5GoneOFF") {
                     off_5g.setVisibility(View.GONE);
                     on_5g.setVisibility(View.VISIBLE);
-                }else if (click == "5GtwoOFF") {
+                } else if (click == "5GtwoOFF") {
                     off2_5g.setVisibility(View.GONE);
                     on2_5g.setVisibility(View.VISIBLE);
-                }else if (click == "5GthreeOFF") {
+                } else if (click == "5GthreeOFF") {
                     off3_5g.setVisibility(View.GONE);
                     on3_5g.setVisibility(View.VISIBLE);
-                }else if (click == "5GfourOFF") {
+                } else if (click == "5GfourOFF") {
                     off4_5g.setVisibility(View.GONE);
                     on4_5g.setVisibility(View.VISIBLE);
-                }else if (click == "5GfiveOFF") {
+                } else if (click == "5GfiveOFF") {
                     off5_5g.setVisibility(View.GONE);
                     on5_5g.setVisibility(View.VISIBLE);
                 }
@@ -605,16 +601,16 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
-    public String dectohex(String dec){
+    public String dectohex(String dec) {
         int i = Integer.valueOf(dec);
         String hex = Integer.toHexString(i);
         System.out.println("Hex value is " + hex);
         return hex;
     }
 
-    public void getDeviceModel(){
+    public void getDeviceModel() {
 
-        if (devicemodelARDB.size() > 0){
+        if (devicemodelARDB.size() > 0) {
             devicemodelARDB.clear();
             areaARDB.clear();
             physicalidARDB.clear();
@@ -625,8 +621,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
 
         sqLiteDatabase = db.getReadableDatabase();
-        String  v4=devicenameAR.get(v);
-        cursor4 = db.getDevModels(v4,sqLiteDatabase);
+        String v4 = devicenameAR.get(v);
+        cursor4 = db.getDevModels(v4, sqLiteDatabase);
 
         cursor4.moveToFirst();
         do {
@@ -642,7 +638,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String devicecodeVAR = cursor4.getString(9);
             String cmmndidVAR = cursor4.getString(10);
             String masteridVAR = cursor4.getString(11);
-            System.out.println("get device model info DB: "  + homeidVAR + " " + usernameVAR+ " " + gatewayVAR + " " + ipaddressVAR + " " + physicalidVAR + " " + powerlineidVAR + " " + devicenameVAR + " " + areanameVAR + " " + devicemodelVAR + " " + devicecodeVAR + " " + cmmndidVAR + " " + masteridVAR );
+            System.out.println("get device model info DB: " + homeidVAR + " " + usernameVAR + " " + gatewayVAR + " " + ipaddressVAR + " " + physicalidVAR + " " + powerlineidVAR + " " + devicenameVAR + " " + areanameVAR + " " + devicemodelVAR + " " + devicecodeVAR + " " + cmmndidVAR + " " + masteridVAR);
 
             devicemodelARDB.add(devicemodelVAR);
             areaARDB.add(areanameVAR);
@@ -652,7 +648,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             commandidARDB.add(cmmndidVAR);
             masteridARDB.add(masteridVAR);
 
-        }while(cursor4.moveToNext());
+        } while (cursor4.moveToNext());
     }
 
     @Override
@@ -666,6 +662,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 //here you must put your computer's IP address.
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVER_PORT);
+
                 Thread2 commThread2 = new Thread2(socket);
                 new Thread(commThread2).start();
                 return;
@@ -711,138 +708,136 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     int devicemodelARszie = devicemodelAR.size();
                     System.out.println("check size :" + devicemodelARszie);
 
-                    if (v >= devicemodelARszie - 1){
+                    if (v >= devicemodelARszie - 1) {
                         Toast.makeText(Home.this, "No more Devices!", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         ++v;
                     }
-                        System.out.println(v);
-                        try {
-                            String value = devicenameAR.get(v);
-                            String value2 = areaAR.get(v);
-                            String value3 = contrlstatusAR.get(v);
-                            String value4 = devicemodelAR.get(v);
-                            tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
-                            sp1.setSelection(v);
-                            sp2.setSelection(v);
-                            //get values from array based on value of v and assign them to the protocol.
-                            if (value.contains("TS1G")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl5);
-                            } else if (value.contains("TS2G")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl4);
-                            }else if (value.contains("TS3G")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl3);
-                            } else if (value.contains("TS4G")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl2);
-                            }else if (value.contains("2")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl4);
-                            } else if (value.contains("Dimmer")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl3);
-                            } else if (value.contains("BC")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                btmToUp(rl2);
-                            } else if (value.contains("TS5G")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.VISIBLE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                btmToUp(rl1);
-                            } else if (value.contains("PS")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.VISIBLE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rlplug);
-                            }else if (value.contains("METER")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                btmToUp(rl5);
-                            }else if (value.contains("FC")) {
-                                getcntrlstatus();
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.VISIBLE);
-                                btmToUp(rlfan);
-                            }
-                            System.out.println("Page B: " + v);
-                            Log.d(TAG, "onSwipe: up" + v);
-                        } catch (IndexOutOfBoundsException e) {
-                            System.out.println(String.valueOf(e));
+                    System.out.println(v);
+                    try {
+                        String value = devicenameAR.get(v);
+                        String value2 = areaAR.get(v);
+                        String value3 = contrlstatusAR.get(v);
+                        String value4 = devicemodelAR.get(v);
+                        tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
+                        sp1.setSelection(v);
+                        sp2.setSelection(v);
+                        //get values from array based on value of v and assign them to the protocol.
+                        if (value.contains("TS1G")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.VISIBLE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl5);
+                        } else if (value.contains("TS2G")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.VISIBLE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl4);
+                        } else if (value.contains("TS3G")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.VISIBLE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl3);
+                        } else if (value.contains("TS4G")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.VISIBLE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl2);
+                        } else if (value.contains("2")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.VISIBLE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl4);
+                        } else if (value.contains("Dimmer")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.VISIBLE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl3);
+                        } else if (value.contains("BC")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.VISIBLE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            btmToUp(rl2);
+                        } else if (value.contains("TS5G")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.VISIBLE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            btmToUp(rl1);
+                        } else if (value.contains("PS")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.VISIBLE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rlplug);
+                        } else if (value.contains("METER")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.VISIBLE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.GONE);
+                            btmToUp(rl5);
+                        } else if (value.contains("FC")) {
+                            getcntrlstatus();
+                            rl1.setVisibility(View.GONE);
+                            rl2.setVisibility(View.GONE);
+                            rl3.setVisibility(View.GONE);
+                            rl4.setVisibility(View.GONE);
+                            rl5.setVisibility(View.GONE);
+                            rlplug.setVisibility(View.GONE);
+                            rlfan.setVisibility(View.VISIBLE);
+                            btmToUp(rlfan);
                         }
+                        System.out.println("Page B: " + v);
+                        Log.d(TAG, "onSwipe: up" + v);
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println(String.valueOf(e));
                     }
-
-
+                }
 
 
                 if (direction == Direction.down) {
@@ -850,12 +845,12 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     int devicemodelARszie = devicemodelAR.size();
                     System.out.println("check size :" + devicemodelARszie);
 
-                    if (v <= 0){
+                    if (v <= 0) {
                         Toast.makeText(Home.this, "No more Devices!", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         --v;
                     }
-                    try{
+                    try {
                         String value = devicenameAR.get(v);
                         String value2 = areaAR.get(v);
                         String value4 = devicemodelAR.get(v);
@@ -883,7 +878,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl4);
-                        }else if (value.contains("TS3G")) {
+                        } else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -903,7 +898,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl2);
-                        }else if (value.contains("2")) {
+                        } else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -953,7 +948,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rlplug);
-                        }else if (value.contains("METER")) {
+                        } else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -963,7 +958,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl5);
-                        }else if (value.contains("FC")) {
+                        } else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -976,8 +971,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         }
                         System.out.println("Page A down: " + v);
 
-                    Log.d(TAG, "onSwipe: down" + v);
-                    }catch (IndexOutOfBoundsException e){
+                        Log.d(TAG, "onSwipe: down" + v);
+                    } catch (IndexOutOfBoundsException e) {
                         System.out.println(String.valueOf(e));
                     }
 
@@ -989,9 +984,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     getDeviceModel();
                     System.out.println(j);
                     ++j;
-                    try{
+                    try {
 
-                        if (devicemodelARDB.size() <= 1){
+                        if (devicemodelARDB.size() <= 1) {
                             Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
                         }
                         String value = devicemodelARDB.get(j);
@@ -1021,7 +1016,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             rightToLeft(rl4);
-                        }else if (value.contains("TS3G")) {
+                        } else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1041,7 +1036,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             rightToLeft(rl2);
-                        }else if (value.contains("2")) {
+                        } else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1091,7 +1086,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
                             rightToLeft(rlplug);
-                        }else if (value.contains("METER")) {
+                        } else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1101,7 +1096,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             rightToLeft(rl5);
-                        }else if (value.contains("FC")) {
+                        } else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1112,8 +1107,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.VISIBLE);
                             rightToLeft(rlfan);
                         }
-                    Log.d(TAG, "onSwipe: left" + j);
-                    }catch (IndexOutOfBoundsException e){
+                        Log.d(TAG, "onSwipe: left" + j);
+                    } catch (IndexOutOfBoundsException e) {
                         System.out.println(String.valueOf(e));
                     }
                 }
@@ -1123,8 +1118,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     getDeviceModel();
                     System.out.println(j);
                     --j;
-                    try{
-                        if (devicemodelARDB.size() <= 1){
+                    try {
+                        if (devicemodelARDB.size() <= 1) {
                             Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
                         }
                         String value = devicemodelARDB.get(v);
@@ -1154,7 +1149,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             leftToRight(rl4);
-                        }else if (value.contains("TS3G")) {
+                        } else if (value.contains("TS3G")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1174,7 +1169,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             leftToRight(rl2);
-                        }else if (value.contains("2")) {
+                        } else if (value.contains("2")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1224,7 +1219,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.VISIBLE);
                             rlfan.setVisibility(View.GONE);
                             leftToRight(rlplug);
-                        }else if (value.contains("METER")) {
+                        } else if (value.contains("METER")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1234,7 +1229,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             rlfan.setVisibility(View.GONE);
                             leftToRight(rl5);
-                        }else if (value.contains("FC")) {
+                        } else if (value.contains("FC")) {
                             getcntrlstatus();
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
@@ -1246,7 +1241,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             leftToRight(rlfan);
                         }
                         Log.d(TAG, "onSwipe: right" + j);
-                    }catch (IndexOutOfBoundsException e){
+                    } catch (IndexOutOfBoundsException e) {
                         System.out.println(String.valueOf(e));
                     }
 
@@ -1281,21 +1276,20 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolON.toUpperCase().replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else {
+                } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
                 Thread2 commThread = new Thread2(socket);
                 new Thread(commThread).start();
                 return;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "01");
+                    sc.execute(homeidVAR, v4c, v10c, "01");
                     System.out.println("overTheNet : " + v4c + v10c);
-                }else{
+                } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "02");
+                    sc.execute(homeidVAR, v4c, v10c, "02");
                     System.out.println("overTheNet : " + v4c + v10c);
                 }
                 e.printStackTrace();
@@ -1318,7 +1312,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolON4G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else {
+                } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
 
@@ -1328,10 +1322,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             } catch (Exception e) {
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "01");
-                }else{
+                    sc.execute(homeidVAR, v4c, v10c, "01");
+                } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "02");
+                    sc.execute(homeidVAR, v4c, v10c, "02");
                 }
                 e.printStackTrace();
             }
@@ -1353,7 +1347,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolON3G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else {
+                } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
 
@@ -1363,10 +1357,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             } catch (Exception e) {
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "01");
-                }else{
+                    sc.execute(homeidVAR, v4c, v10c, "01");
+                } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "02");
+                    sc.execute(homeidVAR, v4c, v10c, "02");
                 }
                 e.printStackTrace();
             }
@@ -1380,7 +1374,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVER_PORT);
                 OutputStream out = socket.getOutputStream();
-                if (click.contains("2GoneOFF") || click.contains("2GtwoOFF")){
+                if (click.contains("2GoneOFF") || click.contains("2GtwoOFF")) {
                     byte[] by = hexStringToByteArray(protocolOFF2G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
@@ -1388,39 +1382,39 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolON2G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("1GoneON")) {
+                } else if (click.contains("1GoneON")) {
                     byte[] by = hexStringToByteArray(protocolON1G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("1GoneOFF")) {
+                } else if (click.contains("1GoneOFF")) {
                     byte[] by = hexStringToByteArray(protocolOFF1G.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("1PLUGoneON")) {
+                } else if (click.contains("1PLUGoneON")) {
                     byte[] by = hexStringToByteArray(protocolONPLUG.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("1PLUGoneOFF")) {
+                } else if (click.contains("1PLUGoneOFF")) {
                     byte[] by = hexStringToByteArray(protocolOFFPLUG.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("btnonfan")) {
+                } else if (click.contains("btnonfan")) {
                     byte[] by = hexStringToByteArray(protocolONFAN.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("btnofffan")) {
+                } else if (click.contains("btnofffan")) {
                     byte[] by = hexStringToByteArray(protocolOFFFAN.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("btnplusfan")) {
+                } else if (click.contains("btnplusfan")) {
                     byte[] by = hexStringToByteArray(protocolPLUSFAN.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else if (click.contains("btnminusfan")) {
+                } else if (click.contains("btnminusfan")) {
                     byte[] by = hexStringToByteArray(protocolMINUSFAN.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
-                }else {
+                } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
 
@@ -1428,24 +1422,54 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 new Thread(commThread).start();
                 return;
             } catch (Exception e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 if (click.contains("OFF") || click.contains("off")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "01");
+                    sc.execute(homeidVAR, v4c, v10c, "01");
                     System.out.println("overTheNet : " + v4c + v10c);
-                }else if(click.contains("ON") || click.contains("on")){
+                } else if (click.contains("ON") || click.contains("on")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, v10c, "02");
+                    sc.execute(homeidVAR, v4c, v10c, "02");
                     System.out.println("overTheNet : " + v4c + v10c);
-                }else if(click.contains("plusfan")){
+                } else if (click.contains("plusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, fanintid, "02");
+                    sc.execute(homeidVAR, v4c, fanintid, "02");
                     System.out.println("overTheNet : " + v4c + v10c);
-                }else if(click.contains("minusfan")){
+                } else if (click.contains("minusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute("H001", v4c, fanintid, "02");
+                    sc.execute(homeidVAR, v4c, fanintid, "02");
                     System.out.println("overTheNet : " + v4c + v10c);
                 }
                 e.printStackTrace();
+            }
+        }
+    }
+
+    class UpdateButtonState implements Runnable {
+        /*
+        This method is used activate the button which was deactivated onclick while message was still pending from the device,
+        this method shuld be used in exceptions.
+         */
+        String state;
+
+        public UpdateButtonState(String str) {
+            this.state = str;
+        }
+
+        @Override
+        public void run() {
+            if (click.equals("2GoneON")) {
+                btnon1_2g.setEnabled(true);
+            } else if (click.equals("2GoneOFF")) {
+                btnoff1_2g.setEnabled(true);
+            } else if (click.equals("2GtwoON")) {
+                btnon2_2g.setEnabled(true);
+            } else if (click.equals("2GtwoOFF")) {
+                btnoff2_2g.setEnabled(true);
+            } else if (click.equals("1PLUGoneON")) {
+                on_1plug.setEnabled(true);
+            } else if (click.equals("1PLUGoneOFF")) {
+                off_1plug.setEnabled(true);
             }
         }
     }
@@ -1514,110 +1538,110 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
-            System.out.println("updateUIThread reply :" + message + " " + val+":"+pwline); //used for checking
+            System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
 
-            if (message.matches("(.*)"+pwline.toUpperCase()+"(.*)") || message.matches("(.*)"+pwlinej.toUpperCase()+"(.*)")){
+            if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
                 System.out.println("thread reply :" + click);
-                if (click.equals("2GoneON")){
+                if (click.equals("2GoneON")) {
+                    btnon1_2g.setEnabled(true);
                     btnon1_2g.setVisibility(View.GONE);
                     btnoff1_2g.setVisibility(View.VISIBLE);
-                }else if (click.equals("2GoneOFF")){
+                } else if (click.equals("2GoneOFF")) {
                     btnon1_2g.setVisibility(View.VISIBLE);
+                    btnoff1_2g.setEnabled(true);
                     btnoff1_2g.setVisibility(View.GONE);
-                }else if (click.equals("2GtwoON")){
+                } else if (click.equals("2GtwoON")) {
+                    btnon2_2g.setEnabled(true);
                     btnon2_2g.setVisibility(View.GONE);
                     btnoff2_2g.setVisibility(View.VISIBLE);
-                }else if (click.equals("2GtwoOFF")){
+                } else if (click.equals("2GtwoOFF")) {
                     btnon2_2g.setVisibility(View.VISIBLE);
+                    btnoff2_2g.setEnabled(true);
                     btnoff2_2g.setVisibility(View.GONE);
-                }else if (click.equals("1PLUGoneON")){
+                } else if (click.equals("1PLUGoneON")) {
                     off_1plug.setVisibility(View.VISIBLE);
+                    on_1plug.setEnabled(true);
                     on_1plug.setVisibility(View.GONE);
-                }else if (click.equals("1PLUGoneOFF")){
+                } else if (click.equals("1PLUGoneOFF")) {
+                    off_1plug.setEnabled(true);
                     off_1plug.setVisibility(View.GONE);
                     on_1plug.setVisibility(View.VISIBLE);
-                }else if (click.equals("1PLUGoneON")){
-                    off_1plug.setVisibility(View.VISIBLE);
-                    on_1plug.setVisibility(View.GONE);
-                }else if (click.equals("1PLUGoneOFF")){
-                    off_1plug.setVisibility(View.GONE);
-                    on_1plug.setVisibility(View.VISIBLE);
-                }else if (click.equals("1GoneOFF")){
+                } else if (click.equals("1GoneOFF")) {
                     on_1g.setVisibility(View.VISIBLE);
                     off_1g.setVisibility(View.GONE);
-                }else if (click.equals("1GoneON")){
+                } else if (click.equals("1GoneON")) {
                     on_1g.setVisibility(View.GONE);
                     off_1g.setVisibility(View.VISIBLE);
-                }else if (click.equals("3GoneOFF")){
+                } else if (click.equals("3GoneOFF")) {
                     on_3g.setVisibility(View.VISIBLE);
                     off_3g.setVisibility(View.GONE);
-                }else if (click.equals("3GoneON")){
+                } else if (click.equals("3GoneON")) {
                     on_3g.setVisibility(View.GONE);
                     off_3g.setVisibility(View.VISIBLE);
-                }else if (click.equals("3GtwoOFF")){
+                } else if (click.equals("3GtwoOFF")) {
                     on2_3g.setVisibility(View.VISIBLE);
                     off2_3g.setVisibility(View.GONE);
-                }else if (click.equals("3GtwoON")){
+                } else if (click.equals("3GtwoON")) {
                     on2_3g.setVisibility(View.GONE);
                     off2_3g.setVisibility(View.VISIBLE);
-                }else if (click.equals("3GthreeOFF")){
+                } else if (click.equals("3GthreeOFF")) {
                     on3_3g.setVisibility(View.VISIBLE);
                     off3_3g.setVisibility(View.GONE);
-                }else if (click.equals("3GthreeON")){
+                } else if (click.equals("3GthreeON")) {
                     on3_3g.setVisibility(View.GONE);
                     off3_3g.setVisibility(View.VISIBLE);
-                }else if (click.equals("4GoneOFF")){
+                } else if (click.equals("4GoneOFF")) {
                     off_4g.setVisibility(View.GONE);
                     on_4g.setVisibility(View.VISIBLE);
-                }else if (click.equals("4GoneON")){
+                } else if (click.equals("4GoneON")) {
                     off_4g.setVisibility(View.VISIBLE);
                     on_4g.setVisibility(View.GONE);
-                }else if (click.equals("4GtwoOFF")){
+                } else if (click.equals("4GtwoOFF")) {
                     off2_4g.setVisibility(View.GONE);
                     on2_4g.setVisibility(View.VISIBLE);
-                }else if (click.equals("4GtwoON")){
+                } else if (click.equals("4GtwoON")) {
                     off2_4g.setVisibility(View.VISIBLE);
                     on2_4g.setVisibility(View.GONE);
-                }else if (click.equals("4GthreeOFF")){
+                } else if (click.equals("4GthreeOFF")) {
                     off3_4g.setVisibility(View.GONE);
                     on3_4g.setVisibility(View.VISIBLE);
-                }else if (click.equals("4GthreeON")){
+                } else if (click.equals("4GthreeON")) {
                     off3_4g.setVisibility(View.VISIBLE);
                     on3_4g.setVisibility(View.GONE);
-                }else if (click.equals("4GfourOFF")){
+                } else if (click.equals("4GfourOFF")) {
                     off4_4g.setVisibility(View.GONE);
                     on4_4g.setVisibility(View.VISIBLE);
-                }else if (click.equals("4GfourON")){
+                } else if (click.equals("4GfourON")) {
                     off4_4g.setVisibility(View.VISIBLE);
                     on4_4g.setVisibility(View.GONE);
-                }else if (click.equals("5GoneOFF")){
+                } else if (click.equals("5GoneOFF")) {
                     on_5g.setVisibility(View.VISIBLE);
                     off_5g.setVisibility(View.GONE);
-                }else if (click.equals("5GoneON")){
+                } else if (click.equals("5GoneON")) {
                     on_5g.setVisibility(View.GONE);
                     off_5g.setVisibility(View.VISIBLE);
-                }else if (click.equals("5GtwoOFF")){
+                } else if (click.equals("5GtwoOFF")) {
                     on2_5g.setVisibility(View.VISIBLE);
                     off2_5g.setVisibility(View.GONE);
-                }else if (click.equals("5GtwoON")){
+                } else if (click.equals("5GtwoON")) {
                     on2_5g.setVisibility(View.GONE);
                     off2_5g.setVisibility(View.VISIBLE);
-                }else if (click.equals("5GthreeOFF")){
+                } else if (click.equals("5GthreeOFF")) {
                     on3_5g.setVisibility(View.VISIBLE);
                     off3_5g.setVisibility(View.GONE);
-                }else if (click.equals("5GthreeON")){
+                } else if (click.equals("5GthreeON")) {
                     on3_5g.setVisibility(View.GONE);
                     off3_5g.setVisibility(View.VISIBLE);
-                }else if (click.equals("5GfourOFF")){
+                } else if (click.equals("5GfourOFF")) {
                     on4_5g.setVisibility(View.VISIBLE);
                     off4_5g.setVisibility(View.GONE);
-                }else if (click.equals("5GfourON")){
+                } else if (click.equals("5GfourON")) {
                     on4_5g.setVisibility(View.GONE);
                     off4_5g.setVisibility(View.VISIBLE);
-                }else if (click.equals("5GfiveOFF")){
+                } else if (click.equals("5GfiveOFF")) {
                     on5_5g.setVisibility(View.VISIBLE);
                     off5_5g.setVisibility(View.GONE);
-                }else if (click.equals("5GfiveON")){
+                } else if (click.equals("5GfiveON")) {
                     on5_5g.setVisibility(View.GONE);
                     off5_5g.setVisibility(View.VISIBLE);
                 }
@@ -1625,7 +1649,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
-    public void getcontroller(){
+    public void getcontroller() {
 
         if (pidfkARDB.size() > 0) {
             pidfkARDB.clear();
@@ -1637,53 +1661,53 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
 
         sqLiteDatabase = db.getReadableDatabase();
-        String  v4=powerlineidAR.get(v);
+        String v4 = powerlineidAR.get(v);
         SERVER_IP = ipaddress.get(v);
-        cursor3 = db.getController(v4,sqLiteDatabase);
+        cursor3 = db.getController(v4, sqLiteDatabase);
 
         cursor3.moveToFirst();
         do {
             pidfkDB = cursor3.getString(0);
             contrlidDB = cursor3.getString(1);
-            internalidDB= cursor3.getString(2);
+            internalidDB = cursor3.getString(2);
             contrlnameDB = cursor3.getString(3);
             cntrlstatusDB = cursor3.getString(4);
             String v1 = cursor3.getString(5);
 
-            System.out.println("getcontroller info through PID : " + pidfkDB + " " + contrlidDB +  " " + internalidDB +  " " + contrlnameDB +  " " + cntrlstatusDB + " " + v1 );
+            System.out.println("getcontroller info through PID : " + pidfkDB + " " + contrlidDB + " " + internalidDB + " " + contrlnameDB + " " + cntrlstatusDB + " " + v1);
             pidfkARDB.add(pidfkDB);
             contrlidARDB.add(contrlidDB);
             internalidARDB.add(internalidDB);
             cntrlnameARDB.add(contrlnameDB);
             contrltypeARDB.add(contrtypeVAR);
             contrlstatusARDB.add(cntrlstatusDB);
-        }while(cursor3.moveToNext());
+        } while (cursor3.moveToNext());
     }
 
     public void btnoff5g(View view) {
 //        on_5g.setVisibility(View.VISIBLE);
-//        off_5g.setVisibility(View.GONE);
+        // off_5g.setEnabled(false);
         System.out.println("5g1off");
         point = v;
         int point2 = 1;
         click = "5GoneOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1694,7 +1718,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
 
@@ -1711,21 +1735,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 1;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1736,7 +1760,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON);
         devicestatus = v1;
 
@@ -1753,21 +1777,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 2;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1778,7 +1802,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
 
@@ -1795,21 +1819,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 2;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1820,7 +1844,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON);
         devicestatus = v1;
 
@@ -1837,21 +1861,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 3;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1862,7 +1886,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
 
@@ -1879,21 +1903,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 3;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1904,7 +1928,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
 
         this.Thread1 = new Thread(new Thread1());
@@ -1920,21 +1944,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 4;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1945,7 +1969,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
 
@@ -1962,21 +1986,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 4;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -1987,7 +2011,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON);
         devicestatus = v1;
 
@@ -2004,21 +2028,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 5;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2029,7 +2053,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF);
         devicestatus = v1;
 
@@ -2046,21 +2070,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         int point2 = 5;
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2071,7 +2095,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON);
         devicestatus = v1;
 
@@ -2088,21 +2112,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GoneOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2113,7 +2137,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
 
@@ -2129,21 +2153,21 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GoneON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2154,7 +2178,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
 
@@ -2170,22 +2194,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GtwoOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2196,7 +2220,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
         this.Thread14G = new Thread(new Thread14G());
@@ -2211,22 +2235,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GtwoON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2237,7 +2261,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
 
@@ -2253,22 +2277,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GthreeOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 3;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2279,7 +2303,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
 
@@ -2295,22 +2319,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GthreeON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 3;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2321,7 +2345,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
 
@@ -2337,22 +2361,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GfourOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 4;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2363,7 +2387,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF4G);
         devicestatus = v1;
 
@@ -2379,22 +2403,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "4GfourON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 4;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2405,7 +2429,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON4G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON4G);
         devicestatus = v1;
 
@@ -2421,22 +2445,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GoneOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2447,7 +2471,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
 
@@ -2463,22 +2487,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GoneON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2489,7 +2513,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
 
@@ -2505,22 +2529,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GtwoOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2531,7 +2555,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
 
@@ -2547,22 +2571,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GtwoON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2573,7 +2597,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
 
@@ -2589,22 +2613,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GthreeOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 3;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2615,7 +2639,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF3G);
         devicestatus = v1;
 
@@ -2631,22 +2655,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "3GthreeON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 3;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2657,7 +2681,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON3G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON3G);
         devicestatus = v1;
 
@@ -2666,29 +2690,29 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btnon2g(View view) {
-//        btnon1_2g.setVisibility(View.GONE);
+        btnon1_2g.setEnabled(false);
 //        btnoff1_2g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("2g1oN");
         click = "2GoneON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2699,7 +2723,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON2G);
         devicestatus = v1;
 
@@ -2709,28 +2733,28 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff2g(View view) {
 //        btnon1_2g.setVisibility(View.VISIBLE);
-//        btnoff1_2g.setVisibility(View.GONE);
+        btnoff1_2g.setEnabled(false);
         int point = v;
         System.out.println("2g1off");
         click = "2GoneOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2741,7 +2765,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF2G);
         devicestatus = v1;
 
@@ -2750,29 +2774,29 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btn1on2g(View view) {
-//        btnon2_2g.setVisibility(View.GONE);
+        btnon2_2g.setEnabled(false);
 //        btnoff2_2g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("2g2oN");
         click = "2GtwoON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
         String v6c1 = dectohex(v6);
@@ -2783,7 +2807,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-        protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON2G);
         devicestatus = v1;
 
@@ -2793,28 +2817,28 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off2g(View view) {
 //        btnon2_2g.setVisibility(View.VISIBLE);
-//        btnoff2_2g.setVisibility(View.GONE);
+        btnoff2_2g.setEnabled(false);
         int point = v;
         System.out.println("2g2off");
         click = "2GtwoOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 2;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
 
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2826,7 +2850,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
-        protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF2G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF2G);
         devicestatus = v1;
 
@@ -2843,23 +2867,23 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "1GoneOFF";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
         String switch_num = "one";
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
 
         cntrlstatus = "on";
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
@@ -2872,7 +2896,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFF1G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFF1G = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFF1G);
 
 //        boolean reply = db.insertcontrollerstatus(v4,v1,switch_num);
@@ -2897,22 +2921,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "1GoneON";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 1;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         cntrlstatus = "off";
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
@@ -2924,7 +2948,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolON1G = String.format("02 0%s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s 0%s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolON1G = String.format("02 0%s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s 0%s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolON1G);
 
 //        sqLiteDatabase = db.getReadableDatabase();
@@ -2940,29 +2964,29 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1offplug(View view) {
 
-//        off_1plug.setVisibility(View.GONE);
+        off_1plug.setEnabled(false);
 //        on_1plug.setVisibility(View.VISIBLE);
         int point = v;
         click = "1PLUGoneOFF";
         getcontroller();
         System.out.println("plug1off " + SERVER_IP);
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 0;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
 
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -2973,7 +2997,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFFPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFFPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFFPLUG);
         devicestatus = v1;
 
@@ -2985,28 +3009,28 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1onplug(View view) {
 //        off_1plug.setVisibility(View.VISIBLE);
-//        on_1plug.setVisibility(View.GONE);
+        on_1plug.setEnabled(false);
         int point = v;
         click = "1PLUGoneON";
         getcontroller();
         System.out.println("1plug1on " + SERVER_IP);
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 0;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -3017,7 +3041,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolONPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolONPLUG = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolONPLUG);
         devicestatus = v1;
 
@@ -3040,22 +3064,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "btnonfan";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 6;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -3066,7 +3090,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolONFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03",v7c,v4c,v6c,v10c);
+        protocolONFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolONFAN);
         devicestatus = v1;
 
@@ -3081,13 +3105,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("btnplusfan" + fan);
         click = "btnplusfan";
         getcontroller();
-        if (fan == 5){
+        if (fan == 5) {
             Toast.makeText(Home.this, "Fan at Maximum speed", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             ++fan;
             progressbarfan.setProgress(fan);
             tvfanspeed.setText("Fan speed : " + fan);
-             //Device : [
+            //Device : [
             String v1 = devicenameAR.get(point);
             String v2 = areaAR.get(point);
             String v3 = physicalidAR.get(point);
@@ -3188,22 +3212,22 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         click = "btnofffan";
         getcontroller();
         // Device : [
-        String  v1 = devicenameAR.get(point);
-        String  v2=areaAR.get(point);
-        String  v3=physicalidAR.get(point);
-        String  v4=powerlineidAR.get(point);
-        String  v5=devicecodeAR.get(point);
-        String  v6=commandidAR.get(point);
-        String  v7=masteridAR.get(point);
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
         // ]
 
         //Controller : [
         int point2 = 6;
-        String  v8=pidfkARDB.get(point2);
-        String  v9=contrlidARDB.get(point2);
-        String  v10=internalidARDB.get(point2);
-        String  v11=contrltypeARDB.get(point2);
-        String  v12=contrlstatusARDB.get(point2);
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
         // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
         String v4c1 = dectohex(v4);
         String v7c1 = dectohex(v7);
@@ -3214,7 +3238,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String v7c = ("00" + v7c1).substring(v7c1.length());
         String v6c = ("00" + v6c1).substring(v6c1.length());
         v10c = ("00" + v10c1).substring(v10c1.length());
-        protocolOFFFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03",v7c,v4c,v6c,v10c);
+        protocolOFFFAN = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
         System.out.println(protocolOFFFAN);
         devicestatus = v1;
 
@@ -3224,17 +3248,17 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     private void addDrawerItems() {
-        String[] osArray = { "Home", "Dashboard"};
+        String[] osArray = {"Home", "Dashboard"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
+                if (position == 0) {
                     Intent go = new Intent(Home.this, Home.class); //if home already exist proceed to controller page
                     startActivity(go);
-                }else if (position == 1){
+                } else if (position == 1) {
                     Intent go = new Intent(Home.this, Dashboard.class); //if home already exist proceed to controller page
                     startActivity(go);
                 }
@@ -3293,6 +3317,28 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Home.this);
+            alertDialogBuilder.setMessage("All data will be lost for this Home and will be reset/update to new data on the server,are you sure you want to continue?");
+            alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    boolean deleteall = db.deleteAll();
+                    if (deleteall == true){
+                        Intent i = new Intent(Home.this,Welcome.class);
+                        startActivity(i);
+                    }else{
+                        Toast.makeText(Home.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
             return true;
         }
 
@@ -3316,7 +3362,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             int tmp;
 
             try {
-                System.out.println("running send cmnd" + v4c + " : " + v10c);
+                System.out.println("running send cmnd" + homeidVAR + " : " + v4c + " : " + v10c);
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
                 String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
 
@@ -3336,9 +3382,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return data;
 
             } catch (MalformedURLException e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
             } catch (IOException e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();
                 return "Exception: " + e.getMessage();
             }
@@ -3356,6 +3404,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String validateip = user_data.getString("DESC");
                 System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
             } catch (JSONException e) {
+                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
             }

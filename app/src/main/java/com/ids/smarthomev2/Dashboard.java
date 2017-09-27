@@ -1,8 +1,12 @@
 package com.ids.smarthomev2;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +47,9 @@ public class Dashboard extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     int i;
+    TextView dashboardconn;
     ArrayAdapter<String> adapter;
-    String devname,status,siteid = "H001",selected,itemTouched,statusOfDevice,powerlineid,internalid;
+    String devname,status,selected,itemTouched,statusOfDevice,powerlineid,internalid,homeid;
     List<String> devicenameAR = new ArrayList<String>(); //stores all devices
     List<String> devicenameAR_ON = new ArrayList<String>(); //stores devices which are only on
     List<String> devicenameAR_OFF = new ArrayList<String>(); //stores devices which are only off
@@ -51,6 +57,9 @@ public class Dashboard extends AppCompatActivity {
     Map<String, String> deviceandstatus = new HashMap<String, String>(); //hashmap which stroes both device name and status
     Map<String, String> deviceandPowerlineid = new HashMap<String, String>();
     Map<String, String> deviceandInternalid = new HashMap<String, String>();
+    Context ctx = this;
+    Database db = new Database(ctx);
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class Dashboard extends AppCompatActivity {
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         spdash = (Spinner)findViewById(R.id.spdash);
+        dashboardconn = (TextView)findViewById(R.id.dashboardconn);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -69,6 +79,27 @@ public class Dashboard extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (!mWifi.isConnected()) {
+            dashboardconn.setVisibility(View.VISIBLE);
+        }
+
+        cursor = db.gethomeinfo();
+        try {
+
+            cursor.moveToFirst();
+            do {
+                homeid = cursor.getString(0);
+                System.out.println("homeid : " + homeid); //get homeid from database
+            }
+        while (cursor.moveToNext());
+    }catch (Exception e ){
+        System.out.println("Home exception : " + e);
+    }
+
+        //clear array oncreate of page if array already contain previous value.
         if (devicenameAR.size()>0 ||devicenameAR_ON.size()>0 ||devicenameAR_OFF.size()>0 ||statusAR.size()>0 ||deviceandstatus.size()>0 ||deviceandPowerlineid.size()>0 ||deviceandInternalid.size()>0){
             devicenameAR.clear();
             devicenameAR_ON.clear();
@@ -81,7 +112,7 @@ public class Dashboard extends AppCompatActivity {
         }
 
         checkfordevice cfd = new checkfordevice();
-        cfd.execute(siteid);
+        cfd.execute(homeid);
 
 
         listView = (ListView) findViewById(R.id.dashboardlv);
@@ -160,7 +191,7 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_OFF.add(itemTouched);
                                         devicenameAR_ON.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
                                         adapter.notifyDataSetChanged();
                                     }else if (selected.equals("OFF")){
                                         itemTouched = devicenameAR_OFF.get(position);
@@ -169,7 +200,7 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_ON.add(itemTouched);
                                         devicenameAR_OFF.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
                                         adapter.notifyDataSetChanged();
                                     }else{
                                         if (statusOfDevice.equals("1")){
@@ -180,7 +211,7 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_ON.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
                                             adapter.notifyDataSetChanged();
                                         }else if (statusOfDevice.equals("2")){
                                             itemTouched = devicenameAR_OFF.get(position);
@@ -190,7 +221,7 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_OFF.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(siteid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
                                             adapter.notifyDataSetChanged();
                                         }
                                     }
@@ -343,9 +374,9 @@ public class Dashboard extends AppCompatActivity {
             }
             try {
                 JSONObject user_data = new JSONObject(s);
-                String statusvalidateinfo = user_data.getString("STATUS");
-                String validateip = user_data.getString("DESC");
-                System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
+                String status = user_data.getString("STATUS");
+                String desc = user_data.getString("DESC");
+                System.out.println("Status: " + status + desc);
             } catch (JSONException e) {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
@@ -423,6 +454,8 @@ public class Dashboard extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+           Intent i = new Intent(Dashboard.this,Dashboard.class);
+            startActivity(i);
             return true;
         }
 

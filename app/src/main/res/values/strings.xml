@@ -3,7 +3,7 @@
     <string name="title_activity_home">Home</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Refresh</string>
+    <string name="action_settings">Update Home</string>
     <string-array name="planets_array">
         <item>Kitchen</item>
         <item>Master Bed</item>

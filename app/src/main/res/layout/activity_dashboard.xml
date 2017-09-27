@@ -25,6 +25,16 @@
 
     </RelativeLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/dashboardconn"
+            android:text="Please connect to the internet and click update home to refresh!"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:visibility="gone"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_marginBottom="10dp"
