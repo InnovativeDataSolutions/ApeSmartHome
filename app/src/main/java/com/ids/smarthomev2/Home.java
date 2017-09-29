@@ -74,7 +74,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
-    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate, devicestatus = null, switchstatusid;
+    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate, devicestatus = null, switchstatusid,on="1",off="2";
     int i, fan;
     Handler UIhandler;
     Socket socket = null;
@@ -1284,14 +1284,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
+                String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
+                int iid = Integer.parseInt(v10c, 16); // " internal id
+                String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "01");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,iid2,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "02");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,iid2,off);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 }
                 e.printStackTrace();
             }
@@ -1322,12 +1326,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
+                String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
+                int iid = Integer.parseInt(v10c, 16); // " internal id
+                String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "01");
+                    sc.execute(homeidVAR,pid2,iid2,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "02");
+                    sc.execute(homeidVAR,pid2,iid2,off);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 }
                 e.printStackTrace();
             }
@@ -1358,12 +1368,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
+                String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
+                int iid = Integer.parseInt(v10c, 16); // " internal id
+                String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "01");
+                    sc.execute(homeidVAR,pid2,iid2,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "02");
+                    sc.execute(homeidVAR,pid2,iid2,off);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 }
                 e.printStackTrace();
             }
@@ -1426,22 +1442,26 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
+                String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
+                int iid = Integer.parseInt(v10c, 16); // " internal id
+                String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF") || click.contains("off")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "01");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,iid2,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("ON") || click.contains("on")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, v10c, "02");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,iid2,off);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("plusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, fanintid, "02");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,fanintid,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("minusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR, v4c, fanintid, "02");
-                    System.out.println("overTheNet : " + v4c + v10c);
+                    sc.execute(homeidVAR,pid2,fanintid,on);
+                    System.out.println("overTheNet : " + pid2 + iid2);
                 }
                 e.printStackTrace();
             }
@@ -3405,16 +3425,16 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         @Override
         protected String doInBackground(String... params) {
             String homeid = params[0];
-            String powerline_id = params[0];
-            String internal_id = params[0];
-            String event = params[0];
+            String powerline_id = params[1];
+            String internal_id = params[2];
+            String event = params[3];
             String data = "";
             int tmp;
 
             try {
                 System.out.println("running send cmnd" + homeidVAR + " : " + v4c + " : " + v10c);
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
-                String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
+                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -3452,8 +3472,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 JSONObject user_data = new JSONObject(s);
                 String statusvalidateinfo = user_data.getString("STATUS");
                 String validateip = user_data.getString("DESC");
-                System.out.println("Staus of validate info : " + statusvalidateinfo + validateip);
-                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                System.out.println("Staus of validate info : " + s);
+                UIhandler.post(new UpdateButtonState(click.toUpperCase())); //to update state of button (ex:disbaled or enabled) by sending click value
+                UIhandler.post(new updateUIThread(v4c.toUpperCase())); //to update value of button(ex: on or off) by sending powerlineid
             } catch (JSONException e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();

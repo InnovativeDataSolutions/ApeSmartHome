@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +50,7 @@ public class Dashboard extends AppCompatActivity {
     int i;
     TextView dashboardconn;
     ArrayAdapter<String> adapter;
-    String devname,status,selected,itemTouched,statusOfDevice,powerlineid,internalid,homeid;
+    String devname,status,selected,itemTouched,statusOfDevice,powerlineid,internalid,homeid,on="1",off="2";
     List<String> devicenameAR = new ArrayList<String>(); //stores all devices
     List<String> devicenameAR_ON = new ArrayList<String>(); //stores devices which are only on
     List<String> devicenameAR_OFF = new ArrayList<String>(); //stores devices which are only off
@@ -191,7 +192,8 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_OFF.add(itemTouched);
                                         devicenameAR_ON.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off);
+                                        System.out.println("ComndExec OFF: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + off);
                                         adapter.notifyDataSetChanged();
                                     }else if (selected.equals("OFF")){
                                         itemTouched = devicenameAR_OFF.get(position);
@@ -200,7 +202,8 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_ON.add(itemTouched);
                                         devicenameAR_OFF.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on);
+                                        System.out.println("ComndExec ON: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + on);
                                         adapter.notifyDataSetChanged();
                                     }else{
                                         if (statusOfDevice.equals("1")){
@@ -211,7 +214,8 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_ON.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"02");
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off);
+                                            System.out.println("ComndExec off: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + off);
                                             adapter.notifyDataSetChanged();
                                         }else if (statusOfDevice.equals("2")){
                                             itemTouched = devicenameAR_OFF.get(position);
@@ -221,7 +225,8 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_OFF.remove(position);
                                             devicenameAR.remove(position);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,"01");
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on);
+                                            System.out.println("ComndExec ON: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + on);
                                             adapter.notifyDataSetChanged();
                                         }
                                     }
@@ -252,7 +257,7 @@ public class Dashboard extends AppCompatActivity {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //SERVICE USED FOR TESTING PURPOSE
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //to get device list
                 String urlParams = "HomeID="+homeid;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -332,16 +337,15 @@ public class Dashboard extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String homeid = params[0];
-            String powerline_id = params[0];
-            String internal_id = params[0];
-            String event = params[0];
+            String powerline_id = params[1];
+            String internal_id = params[2];
+            String event = params[3];
             String data = "";
             int tmp;
 
             try {
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
-                String urlParams = "HomeID="+homeid+"&powerline_id ="+powerline_id+"&internal_id ="+internal_id+"&action_event="+event;
-
+                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event;
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 OutputStream os = httpURLConnection.getOutputStream();
@@ -376,11 +380,12 @@ public class Dashboard extends AppCompatActivity {
                 JSONObject user_data = new JSONObject(s);
                 String status = user_data.getString("STATUS");
                 String desc = user_data.getString("DESC");
-                System.out.println("Status: " + status + desc);
+                System.out.println("Status: "+ s);
             } catch (JSONException e) {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
             }
+            Toast.makeText(Dashboard.this, "Succesfully changed!", Toast.LENGTH_SHORT).show();
 
         }
 
