@@ -55,6 +55,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Button btnon1_2g, btnoff1_2g, btnon2_2g, btnoff2_2g;
     Button on_1g, off_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan, btnofffan;
     Spinner sp1, sp2;
+    ProgressBar spinner;
+    TextView resp;
     ProgressBar progressbarfan;
     TextView tvinfo, tvfanspeed;
     private static final String TAG = "motion";
@@ -63,6 +65,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public static final int SERVER_PORT = 8081;
     int v = 0, j = 0, point = 0;
     int count = 0;
+    boolean bgthread=false;
     String click = null, cntrlstatus = null;
     Context ctx = this;
     Database db = new Database(ctx);
@@ -74,7 +77,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
-    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate, devicestatus = null, switchstatusid,on="1",off="2";
+    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
     int i, fan;
     Handler UIhandler;
     Socket socket = null;
@@ -188,6 +191,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         on_1plug = (Button) findViewById(R.id.btn1onplug);
         off_1plug = (Button) findViewById(R.id.btn1offplug);
 
+        resp = (TextView)findViewById(R.id.resp);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
@@ -287,7 +293,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
                 sp2.setSelection(position);
                 v = position;
-                j = position;
+                //j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
                     getcntrlstatus();
@@ -401,7 +407,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
                 sp1.setSelection(position);
                 v = position;
-                j = position;
+                //j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
                     getcntrlstatus();
@@ -612,6 +618,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         if (devicemodelARDB.size() > 0) {
             devicemodelARDB.clear();
+            devicenameARDB.clear();
             areaARDB.clear();
             physicalidARDB.clear();
             powerlineidARDB.clear();
@@ -641,6 +648,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             System.out.println("get device model info DB: " + homeidVAR + " " + usernameVAR + " " + gatewayVAR + " " + ipaddressVAR + " " + physicalidVAR + " " + powerlineidVAR + " " + devicenameVAR + " " + areanameVAR + " " + devicemodelVAR + " " + devicecodeVAR + " " + cmmndidVAR + " " + masteridVAR);
 
             devicemodelARDB.add(devicemodelVAR);
+            devicenameARDB.add(devicenameVAR);
             areaARDB.add(areanameVAR);
             physicalidARDB.add(physicalidVAR);
             powerlineidARDB.add(powerlineidVAR);
@@ -662,7 +670,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 //here you must put your computer's IP address.
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVER_PORT);
-
                 Thread2 commThread2 = new Thread2(socket);
                 new Thread(commThread2).start();
                 return;
@@ -980,269 +987,285 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 }
 
                 if (direction == Direction.left) {
-                    //do your stuff
                     getDeviceModel();
-                    System.out.println(j);
-                    ++j;
-                    try {
-
-                        if (devicemodelARDB.size() <= 1) {
+                    if (devicemodelARDB.size() <= 1) { //check to see if device of same model exists
+                        Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
+                    }else { //if yes
+                        if (j >= devicemodelARDB.size() - 1){ //allow only to swipe to maximum value of array list
                             Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
+                        }else {
+                            ++j; //add j
                         }
-                        String value = devicemodelARDB.get(j);
-                        String value2 = areaARDB.get(j);
-                        String value4 = devicemodelAR.get(j);
-                        tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
-//                        sp1.setSelection(j);
-//                        sp2.setSelection(j);
-                        //get values from array based on value of v and assign them to the protocol.
-                        if (value.contains("TS1G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl5);
-                        } else if (value.contains("TS2G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl4);
-                        } else if (value.contains("TS3G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl3);
-                        } else if (value.contains("TS4G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl2);
-                        } else if (value.contains("2")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl4);
-                        } else if (value.contains("Dimmer")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl3);
-                        } else if (value.contains("BC")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl2);
-                        } else if (value.contains("TS5G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.VISIBLE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl1);
-                        } else if (value.contains("PS")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.VISIBLE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rlplug);
-                        } else if (value.contains("METER")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            rightToLeft(rl5);
-                        } else if (value.contains("FC")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.VISIBLE);
-                            rightToLeft(rlfan);
+                        System.out.println(j + " device model size : " + devicemodelARDB.size());
+                        try {
+                            String value = devicemodelARDB.get(j); //get associated values for j from temporary array list which contains infomation of devices of same type only when swiped left or right
+                            String value2 = areaARDB.get(j);
+                            String value4 = devicenameARDB.get(j);
+                            int indexofsecnddevice = devicemodelAR.indexOf(value4); //assign value of j to main array to get protocol info.
+                            v=indexofsecnddevice;//assign value to v..
+                            tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
+                            System.out.println("indexOf ardb : " + indexofsecnddevice);
+                            sp1.setSelection(indexofsecnddevice);
+                            sp2.setSelection(indexofsecnddevice);
+                            //get values from array based on value of v and assign them to the protocol.
+                            if (value.contains("TS1G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.VISIBLE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl5);
+                            } else if (value.contains("TS2G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.VISIBLE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl4);
+                            } else if (value.contains("TS3G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.VISIBLE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl3);
+                            } else if (value.contains("TS4G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.VISIBLE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl2);
+                            } else if (value.contains("2")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.VISIBLE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl4);
+                            } else if (value.contains("Dimmer")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.VISIBLE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl3);
+                            } else if (value.contains("BC")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.VISIBLE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl2);
+                            } else if (value.contains("TS5G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.VISIBLE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl1);
+                            } else if (value.contains("PS")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.VISIBLE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rlplug);
+                            } else if (value.contains("METER")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.VISIBLE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                rightToLeft(rl5);
+                            } else if (value.contains("FC")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.VISIBLE);
+                                rightToLeft(rlfan);
+                            }
+                            System.out.println("page left swipe : " + j);
+                            Log.d(TAG, "onSwipe: left" + j);
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(String.valueOf(e));
                         }
-                        Log.d(TAG, "onSwipe: left" + j);
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(String.valueOf(e));
                     }
                 }
 
                 if (direction == Direction.right) {
                     //do your stuff
                     getDeviceModel();
-                    System.out.println(j);
-                    --j;
-                    try {
-                        if (devicemodelARDB.size() <= 1) {
+                    if (devicemodelARDB.size() <= 1) {
+                        Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        System.out.println(j);
+                        if (j == 0) {
                             Toast.makeText(Home.this, "No more device of same model!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            --j;
                         }
-                        String value = devicemodelARDB.get(v);
-                        String value2 = areaARDB.get(v);
-                        String value4 = devicemodelAR.get(j);
-                        tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
-//                        sp1.setSelection(j);
-//                        sp2.setSelection(j);
-                        //get values from array based on value of v and assign them to the protocol.
-                        if (value.contains("TS1G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl5);
-                        } else if (value.contains("TS2G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl4);
-                        } else if (value.contains("TS3G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl3);
-                        } else if (value.contains("TS4G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl2);
-                        } else if (value.contains("2")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl4);
-                        } else if (value.contains("Dimmer")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl3);
-                        } else if (value.contains("BC")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl2);
-                        } else if (value.contains("TS5G")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.VISIBLE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl1);
-                        } else if (value.contains("PS")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.VISIBLE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rlplug);
-                        } else if (value.contains("METER")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            leftToRight(rl5);
-                        } else if (value.contains("FC")) {
-                            getcntrlstatus();
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.VISIBLE);
-                            leftToRight(rlfan);
+                        System.out.println(j + " device model size : " + devicemodelARDB.size());
+                        try {
+                            String value = devicemodelARDB.get(j);
+                            String value2 = areaARDB.get(j);
+                            String value4 = devicenameARDB.get(j);
+                            int indexofsecnddevice = devicemodelAR.indexOf(value4);
+                            v=indexofsecnddevice;
+                            tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
+                            System.out.println("indexOf ardb : " + indexofsecnddevice);
+                            sp1.setSelection(indexofsecnddevice);
+                            sp2.setSelection(indexofsecnddevice);
+                            //get values from array based on value of v and assign them to the protocol.
+                            if (value.contains("TS1G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.VISIBLE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl5);
+                            } else if (value.contains("TS2G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.VISIBLE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl4);
+                            } else if (value.contains("TS3G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.VISIBLE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl3);
+                            } else if (value.contains("TS4G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.VISIBLE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl2);
+                            } else if (value.contains("2")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.VISIBLE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl4);
+                            } else if (value.contains("Dimmer")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.VISIBLE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl3);
+                            } else if (value.contains("BC")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.VISIBLE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl2);
+                            } else if (value.contains("TS5G")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.VISIBLE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl1);
+                            } else if (value.contains("PS")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.VISIBLE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rlplug);
+                            } else if (value.contains("METER")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.VISIBLE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.GONE);
+                                leftToRight(rl5);
+                            } else if (value.contains("FC")) {
+                                getcntrlstatus();
+                                rl1.setVisibility(View.GONE);
+                                rl2.setVisibility(View.GONE);
+                                rl3.setVisibility(View.GONE);
+                                rl4.setVisibility(View.GONE);
+                                rl5.setVisibility(View.GONE);
+                                rlplug.setVisibility(View.GONE);
+                                rlfan.setVisibility(View.VISIBLE);
+                                leftToRight(rlfan);
+                            }
+                            Log.d(TAG, "onSwipe: right" + j);
+                        } catch (IndexOutOfBoundsException e) {
+                            System.out.println(String.valueOf(e));
                         }
-                        Log.d(TAG, "onSwipe: right" + j);
-                    } catch (IndexOutOfBoundsException e) {
-                        System.out.println(String.valueOf(e));
                     }
 
                 }
@@ -1436,7 +1459,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
-
                 Thread2 commThread = new Thread2(socket);
                 new Thread(commThread).start();
                 return;
@@ -1555,6 +1577,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         public Thread2(Socket socket) {
             InputStream in = null;
             try {
+                socket.setSoTimeout(4000);
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -1574,6 +1597,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         input_str += temp_curr;
 
                         System.out.print(input_str.toUpperCase());
+                        clientrply = input_str;
                         UIhandler.post(new updateUIThread(input_str.toUpperCase()));
                         input_str += temp_curr;
                         input_str = "";
@@ -1586,8 +1610,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             } catch (Exception ex) {
                 try {
-                    socket.close();
-                    System.out.println("Socket Closed [in]");
+                    if (clientrply == null) {
+                        socket.close();
+                        System.out.println("Socket Closed [in]");
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                //spinner.setVisibility(View.GONE);
+                                //resp.setText("");
+                                Toast.makeText(getApplicationContext(), "Something wrong with your device!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                    }
                 } catch (IOException ex1) {
                     System.exit(0);
                 }
@@ -1614,6 +1648,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
+            //spinner.setVisibility(View.GONE);
+            //resp.setText("");
             System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
@@ -3476,6 +3512,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase())); //to update state of button (ex:disbaled or enabled) by sending click value
                 UIhandler.post(new updateUIThread(v4c.toUpperCase())); //to update value of button(ex: on or off) by sending powerlineid
             } catch (JSONException e) {
+                runOnUiThread(new Runnable(){
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Connection lost! Please connect to the internet or try again later!",Toast.LENGTH_LONG).show();
+                    }
+                });
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
@@ -3485,6 +3526,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     }
 
+    public void getsamedevcontrols(){
+
+    }
 
 
 }

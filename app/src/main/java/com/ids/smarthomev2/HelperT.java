@@ -99,6 +99,7 @@ public class HelperT {
 //        rl2.setVisibility(View.VISIBLE);
 //        rl3.setVisibility(View.GONE);
 //        rl4.setVisibility(View.GONE);
+    //android:layout_alignParentEnd="true"
 //        rl5.setVisibility(View.GONE);
 //    } else if (v == 3) {
 //        rl1.setVisibility(View.GONE);
