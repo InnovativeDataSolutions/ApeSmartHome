@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Home extends AppCompatActivity implements View.OnTouchListener {
 
@@ -108,8 +109,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     List<String> devicecodeARDB = new ArrayList<String>();
     List<String> devicemodelARDB = new ArrayList<String>();
 
-    List<String> cntrlstatusinfo = new ArrayList<String>();
-
+    //List<String> cntrlstatusinfo = new ArrayList<String>();
+    HashMap<String, String> cntrlstatusinfo = new HashMap<String, String>();
     HashMap<String, String> area_devname = new HashMap<String, String>();
 
     //Contrller:[
@@ -296,7 +297,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 //j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -305,7 +306,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS2G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -314,7 +315,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS3G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.VISIBLE);
@@ -323,7 +324,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS4G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.VISIBLE);
                     rl3.setVisibility(View.GONE);
@@ -332,7 +333,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("Dimmer")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.VISIBLE);
@@ -341,7 +342,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("BC")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.VISIBLE);
                     rl3.setVisibility(View.GONE);
@@ -350,7 +351,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS5G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.VISIBLE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -359,7 +360,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("PS")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -368,7 +369,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.VISIBLE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("METER")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -377,7 +378,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("FC")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -386,6 +387,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.VISIBLE);
                 }
+                getcntrlstate(value3);
 
             }
 
@@ -410,7 +412,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 //j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -419,7 +421,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS2G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -428,7 +430,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS3G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.VISIBLE);
@@ -437,7 +439,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS4G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.VISIBLE);
                     rl3.setVisibility(View.GONE);
@@ -446,7 +448,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("2")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -454,7 +456,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rl5.setVisibility(View.GONE);
                     rlplug.setVisibility(View.GONE);
                 } else if (value.contains("Dimmer")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.VISIBLE);
@@ -463,7 +465,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("BC")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.VISIBLE);
                     rl3.setVisibility(View.GONE);
@@ -472,7 +474,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("TS5G")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.VISIBLE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -481,7 +483,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("PS")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -490,7 +492,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.VISIBLE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("METER")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -499,7 +501,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.GONE);
                 } else if (value.contains("FC")) {
-                    getcntrlstatus();
+                    //getcntrlstatus();
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.GONE);
                     rl3.setVisibility(View.GONE);
@@ -508,6 +510,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     rlplug.setVisibility(View.GONE);
                     rlfan.setVisibility(View.VISIBLE);
                 }
+                getcntrlstate(value3);
             }
 
             @Override
@@ -537,75 +540,73 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         return data;
     }
 
-    public void getcntrlstatus() {
-
-        String v4 = devicenameAR.get(v);
-
-        if (devicestatus == null) {
-            System.out.println("devicestatus null");
-        } else {
-            if (devicestatus.equals("")) {
+//    public void getcntrlstatus() {
+//
+//        String v4 = devicenameAR.get(v);
+//
+//        if (devicestatus == null) { //check if any device got used
+//            System.out.println("devicestatus null");
+//        } else {
+//            if (devicestatus.equals("")) {
+//                System.out.println(devicestatus + " -1- " + v4 + " " + switchstatusid);
+//            } else if (devicestatus == v4) {
+//                System.out.println(devicestatus + " -2- " + v4 + " " + switchstatusid);
+//                if (click == "1GoneOFF") {
+//                    off_1g.setVisibility(View.GONE);
+//                    on_1g.setVisibility(View.VISIBLE);
+//                } else if (click == "1PLUGoneOFF") {
+//                    off_1plug.setVisibility(View.GONE);
+//                    on_1plug.setVisibility(View.VISIBLE);
+//                } else if (click == "2GoneOFF") {
+//                    btnoff1_2g.setVisibility(View.GONE);
+//                    btnon1_2g.setVisibility(View.VISIBLE);
+//                } else if (click == "2GtwoOFF") {
+//                    btnoff2_2g.setVisibility(View.GONE);
+//                    btnon2_2g.setVisibility(View.VISIBLE);
+//                } else if (click == "3GoneOFF") {
+//                    off_3g.setVisibility(View.GONE);
+//                    on_3g.setVisibility(View.VISIBLE);
+//                } else if (click == "3GtwoOFF") {
+//                    off2_3g.setVisibility(View.GONE);
+//                    on2_3g.setVisibility(View.VISIBLE);
+//                } else if (click == "3GthreeOFF") {
+//                    off3_3g.setVisibility(View.GONE);
+//                    on3_3g.setVisibility(View.VISIBLE);
+//                } else if (click == "4GoneOFF") {
+//                    off_4g.setVisibility(View.GONE);
+//                    on_4g.setVisibility(View.VISIBLE);
+//                } else if (click == "4GtwoOFF") {
+//                    off2_4g.setVisibility(View.GONE);
+//                    on2_4g.setVisibility(View.VISIBLE);
+//                } else if (click == "4GthreeOFF") {
+//                    off3_4g.setVisibility(View.GONE);
+//                    on3_4g.setVisibility(View.VISIBLE);
+//                } else if (click == "4GfourOFF") {
+//                    off4_4g.setVisibility(View.GONE);
+//                    on4_4g.setVisibility(View.VISIBLE);
+//                } else if (click == "5GoneOFF") {
+//                    off_5g.setVisibility(View.GONE);
+//                    on_5g.setVisibility(View.VISIBLE);
+//                } else if (click == "5GtwoOFF") {
+//                    off2_5g.setVisibility(View.GONE);
+//                    on2_5g.setVisibility(View.VISIBLE);
+//                } else if (click == "5GthreeOFF") {
+//                    off3_5g.setVisibility(View.GONE);
+//                    on3_5g.setVisibility(View.VISIBLE);
+//                } else if (click == "5GfourOFF") {
+//                    off4_5g.setVisibility(View.GONE);
+//                    on4_5g.setVisibility(View.VISIBLE);
+//                } else if (click == "5GfiveOFF") {
+//                    off5_5g.setVisibility(View.GONE);
+//                    on5_5g.setVisibility(View.VISIBLE);
+//                }
+//            } else if (!(devicestatus == v4)) {
 //                off_1g.setVisibility(View.VISIBLE);
 //                on_1g.setVisibility(View.GONE);
-                System.out.println(devicestatus + " -1- " + v4 + " " + switchstatusid);
-            } else if (devicestatus == v4) {
-                System.out.println(devicestatus + " -2- " + v4 + " " + switchstatusid);
-                if (click == "1GoneOFF") {
-                    off_1g.setVisibility(View.GONE);
-                    on_1g.setVisibility(View.VISIBLE);
-                } else if (click == "1PLUGoneOFF") {
-                    off_1plug.setVisibility(View.GONE);
-                    on_1plug.setVisibility(View.VISIBLE);
-                } else if (click == "2GoneOFF") {
-                    btnoff1_2g.setVisibility(View.GONE);
-                    btnon1_2g.setVisibility(View.VISIBLE);
-                } else if (click == "2GtwoOFF") {
-                    btnoff2_2g.setVisibility(View.GONE);
-                    btnon2_2g.setVisibility(View.VISIBLE);
-                } else if (click == "3GoneOFF") {
-                    off_3g.setVisibility(View.GONE);
-                    on_3g.setVisibility(View.VISIBLE);
-                } else if (click == "3GtwoOFF") {
-                    off2_3g.setVisibility(View.GONE);
-                    on2_3g.setVisibility(View.VISIBLE);
-                } else if (click == "3GthreeOFF") {
-                    off3_3g.setVisibility(View.GONE);
-                    on3_3g.setVisibility(View.VISIBLE);
-                } else if (click == "4GoneOFF") {
-                    off_4g.setVisibility(View.GONE);
-                    on_4g.setVisibility(View.VISIBLE);
-                } else if (click == "4GtwoOFF") {
-                    off2_4g.setVisibility(View.GONE);
-                    on2_4g.setVisibility(View.VISIBLE);
-                } else if (click == "4GthreeOFF") {
-                    off3_4g.setVisibility(View.GONE);
-                    on3_4g.setVisibility(View.VISIBLE);
-                } else if (click == "4GfourOFF") {
-                    off4_4g.setVisibility(View.GONE);
-                    on4_4g.setVisibility(View.VISIBLE);
-                } else if (click == "5GoneOFF") {
-                    off_5g.setVisibility(View.GONE);
-                    on_5g.setVisibility(View.VISIBLE);
-                } else if (click == "5GtwoOFF") {
-                    off2_5g.setVisibility(View.GONE);
-                    on2_5g.setVisibility(View.VISIBLE);
-                } else if (click == "5GthreeOFF") {
-                    off3_5g.setVisibility(View.GONE);
-                    on3_5g.setVisibility(View.VISIBLE);
-                } else if (click == "5GfourOFF") {
-                    off4_5g.setVisibility(View.GONE);
-                    on4_5g.setVisibility(View.VISIBLE);
-                } else if (click == "5GfiveOFF") {
-                    off5_5g.setVisibility(View.GONE);
-                    on5_5g.setVisibility(View.VISIBLE);
-                }
-            } else if (!(devicestatus == v4)) {
-                off_1g.setVisibility(View.VISIBLE);
-                on_1g.setVisibility(View.GONE);
-                System.out.println(devicestatus + " -3- " + v4 + " " + switchstatusid);
-            }
-        }
-    }
+//                System.out.println(devicestatus + " -3- " + v4 + " " + switchstatusid);
+//            }
+//        }
+//    }
 
     public String dectohex(String dec) {
         int i = Integer.valueOf(dec);
@@ -711,7 +712,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             @Override
             public boolean onSwipe(Direction direction) {
                 if (direction == Direction.up) {
-
+                    j=0;
                     int devicemodelARszie = devicemodelAR.size();
                     System.out.println("check size :" + devicemodelARszie);
 
@@ -731,7 +732,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         sp2.setSelection(v);
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -741,7 +743,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl5);
                         } else if (value.contains("TS2G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -751,7 +754,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl4);
                         } else if (value.contains("TS3G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.VISIBLE);
@@ -761,7 +765,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl3);
                         } else if (value.contains("TS4G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.VISIBLE);
                             rl3.setVisibility(View.GONE);
@@ -771,7 +776,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl2);
                         } else if (value.contains("2")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -781,7 +787,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl4);
                         } else if (value.contains("Dimmer")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.VISIBLE);
@@ -791,7 +798,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl3);
                         } else if (value.contains("BC")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.VISIBLE);
                             rl3.setVisibility(View.GONE);
@@ -800,7 +808,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             btmToUp(rl2);
                         } else if (value.contains("TS5G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.VISIBLE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -809,7 +818,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlplug.setVisibility(View.GONE);
                             btmToUp(rl1);
                         } else if (value.contains("PS")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -819,7 +829,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rlplug);
                         } else if (value.contains("METER")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -829,7 +840,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             btmToUp(rl5);
                         } else if (value.contains("FC")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -849,6 +861,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
                 if (direction == Direction.down) {
                     System.out.println(v);
+                    j=0;
                     int devicemodelARszie = devicemodelAR.size();
                     System.out.println("check size :" + devicemodelARszie);
 
@@ -866,7 +879,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         sp2.setSelection(v);
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -876,7 +890,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl5);
                         } else if (value.contains("TS2G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -886,7 +901,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl4);
                         } else if (value.contains("TS3G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.VISIBLE);
@@ -896,7 +912,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl3);
                         } else if (value.contains("TS4G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.VISIBLE);
                             rl3.setVisibility(View.GONE);
@@ -906,7 +923,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl2);
                         } else if (value.contains("2")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -916,7 +934,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl4);
                         } else if (value.contains("Dimmer")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.VISIBLE);
@@ -926,7 +945,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl3);
                         } else if (value.contains("BC")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.VISIBLE);
                             rl3.setVisibility(View.GONE);
@@ -936,7 +956,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl2);
                         } else if (value.contains("TS5G")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.VISIBLE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -946,7 +967,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl1);
                         } else if (value.contains("PS")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -956,7 +978,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rlplug);
                         } else if (value.contains("METER")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -966,7 +989,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             rlfan.setVisibility(View.GONE);
                             topToBtm(rl5);
                         } else if (value.contains("FC")) {
-                            getcntrlstatus();
+                            //getcntrlstatus();
+                            getcntrlstate(value4);
                             rl1.setVisibility(View.GONE);
                             rl2.setVisibility(View.GONE);
                             rl3.setVisibility(View.GONE);
@@ -1009,7 +1033,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             sp2.setSelection(indexofsecnddevice);
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1019,7 +1044,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl5);
                             } else if (value.contains("TS2G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1029,7 +1055,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl4);
                             } else if (value.contains("TS3G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.VISIBLE);
@@ -1039,7 +1066,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl3);
                             } else if (value.contains("TS4G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.VISIBLE);
                                 rl3.setVisibility(View.GONE);
@@ -1049,7 +1077,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl2);
                             } else if (value.contains("2")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1059,7 +1088,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl4);
                             } else if (value.contains("Dimmer")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.VISIBLE);
@@ -1069,7 +1099,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl3);
                             } else if (value.contains("BC")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.VISIBLE);
                                 rl3.setVisibility(View.GONE);
@@ -1079,7 +1110,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl2);
                             } else if (value.contains("TS5G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.VISIBLE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1089,7 +1121,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl1);
                             } else if (value.contains("PS")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1099,7 +1132,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rlplug);
                             } else if (value.contains("METER")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1109,7 +1143,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 rightToLeft(rl5);
                             } else if (value.contains("FC")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1152,7 +1187,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             sp2.setSelection(indexofsecnddevice);
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1162,7 +1198,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl5);
                             } else if (value.contains("TS2G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1172,7 +1209,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl4);
                             } else if (value.contains("TS3G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.VISIBLE);
@@ -1182,7 +1220,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl3);
                             } else if (value.contains("TS4G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.VISIBLE);
                                 rl3.setVisibility(View.GONE);
@@ -1192,7 +1231,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl2);
                             } else if (value.contains("2")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1202,7 +1242,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl4);
                             } else if (value.contains("Dimmer")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.VISIBLE);
@@ -1212,7 +1253,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl3);
                             } else if (value.contains("BC")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.VISIBLE);
                                 rl3.setVisibility(View.GONE);
@@ -1222,7 +1264,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl2);
                             } else if (value.contains("TS5G")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.VISIBLE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1232,7 +1275,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl1);
                             } else if (value.contains("PS")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1242,7 +1286,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rlplug);
                             } else if (value.contains("METER")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1252,7 +1297,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                                 rlfan.setVisibility(View.GONE);
                                 leftToRight(rl5);
                             } else if (value.contains("FC")) {
-                                getcntrlstatus();
+                                //getcntrlstatus();
+                                getcntrlstate(value4);
                                 rl1.setVisibility(View.GONE);
                                 rl2.setVisibility(View.GONE);
                                 rl3.setVisibility(View.GONE);
@@ -1641,6 +1687,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String val4 = dectohex(val2);//convert powerline to hex value
         String pwline = ("00" + val3).substring(val3.length());//substring powerline to 2 values if its originally only 1
         String pwlinej = ("00" + val4).substring(val4.length());//substring powerline to 2 values if its originally only 1
+        String devname = devicemodelAR.get(v); //to get what device name was activated
 
         public updateUIThread(String str) {
             this.message = str;
@@ -1654,6 +1701,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
                 System.out.println("thread reply :" + click);
+                getsamedevcontrols(devname,click); //entering which device got on or off to keep in track of statuses.
                 if (click.equals("2GoneON")) {
                     btnon1_2g.setVisibility(View.GONE);
                     btnoff1_2g.setVisibility(View.VISIBLE);
@@ -3526,7 +3574,137 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     }
 
-    public void getsamedevcontrols(){
+    public void getsamedevcontrols(String devname,String status){
+
+        String checkdev = cntrlstatusinfo.get(devname);
+        String checkstate = cntrlstatusinfo.get(status);
+
+        if (checkdev==null && checkstate==null){
+            cntrlstatusinfo.put(devname, status);
+        }else {
+            if (devname.matches(checkdev) && status.matches(checkstate)) { // check if dev name and status already exist before entering to hash map
+                System.out.println("both true so dont input");
+            }else {
+                cntrlstatusinfo.put(devname, status);
+                System.out.println("values to cntrlstatusinfo : " + devname + " " + status);
+            }
+        }
+        for (Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {
+            String key = entry.getKey();
+            String click = entry.getValue();
+            System.out.println("getsamedevcontrols : " + "(Key : " + key + ") (Click :" + click);
+        }
+    }
+
+    public void getcntrlstate(String devname){
+
+        for ( Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {
+            String key = entry.getKey();
+            String click = entry.getValue();
+            System.out.println("getcntrlstate : " + "Key :" + key  + " Devname :" + devname +  " Click :" + click);
+            if (key.matches(devname)) {
+                if (click == "1GoneOFF") {
+                    off_1g.setVisibility(View.GONE);
+                    on_1g.setVisibility(View.VISIBLE);
+                } else if (click == "1PLUGoneOFF") {
+                    off_1plug.setVisibility(View.GONE);
+                    on_1plug.setVisibility(View.VISIBLE);
+                } else if (click == "2GoneOFF") {
+                    btnoff1_2g.setVisibility(View.GONE);
+                    btnon1_2g.setVisibility(View.VISIBLE);
+                } else if (click == "2GtwoOFF") {
+                    btnoff2_2g.setVisibility(View.GONE);
+                    btnon2_2g.setVisibility(View.VISIBLE);
+                } else if (click == "3GoneOFF") {
+                    off_3g.setVisibility(View.GONE);
+                    on_3g.setVisibility(View.VISIBLE);
+                } else if (click == "3GtwoOFF") {
+                    off2_3g.setVisibility(View.GONE);
+                    on2_3g.setVisibility(View.VISIBLE);
+                } else if (click == "3GthreeOFF") {
+                    off3_3g.setVisibility(View.GONE);
+                    on3_3g.setVisibility(View.VISIBLE);
+                } else if (click == "4GoneOFF") {
+                    off_4g.setVisibility(View.GONE);
+                    on_4g.setVisibility(View.VISIBLE);
+                } else if (click == "4GtwoOFF") {
+                    off2_4g.setVisibility(View.GONE);
+                    on2_4g.setVisibility(View.VISIBLE);
+                } else if (click == "4GthreeOFF") {
+                    off3_4g.setVisibility(View.GONE);
+                    on3_4g.setVisibility(View.VISIBLE);
+                } else if (click == "4GfourOFF") {
+                    off4_4g.setVisibility(View.GONE);
+                    on4_4g.setVisibility(View.VISIBLE);
+                } else if (click == "5GoneOFF") {
+                    off_5g.setVisibility(View.GONE);
+                    on_5g.setVisibility(View.VISIBLE);
+                } else if (click == "5GtwoOFF") {
+                    off2_5g.setVisibility(View.GONE);
+                    on2_5g.setVisibility(View.VISIBLE);
+                } else if (click == "5GthreeOFF") {
+                    off3_5g.setVisibility(View.GONE);
+                    on3_5g.setVisibility(View.VISIBLE);
+                } else if (click == "5GfourOFF") {
+                    off4_5g.setVisibility(View.GONE);
+                    on4_5g.setVisibility(View.VISIBLE);
+                } else if (click == "5GfiveOFF") {
+                    off5_5g.setVisibility(View.GONE);
+                    on5_5g.setVisibility(View.VISIBLE);
+                }
+            }else{
+                System.out.println("Reset to ealier");
+                if (click == "1GoneOFF") {
+                    off_1g.setVisibility(View.VISIBLE);
+                    on_1g.setVisibility(View.GONE);
+                } else if (click == "1PLUGoneOFF") {
+                    off_1plug.setVisibility(View.VISIBLE);
+                    on_1plug.setVisibility(View.GONE);
+                } else if (click == "2GoneOFF") {
+                    btnoff1_2g.setVisibility(View.VISIBLE);
+                    btnon1_2g.setVisibility(View.GONE);
+                } else if (click == "2GtwoOFF") {
+                    btnoff2_2g.setVisibility(View.VISIBLE);
+                    btnon2_2g.setVisibility(View.GONE);
+                } else if (click == "3GoneOFF") {
+                    off_3g.setVisibility(View.VISIBLE);
+                    on_3g.setVisibility(View.GONE);
+                } else if (click == "3GtwoOFF") {
+                    off2_3g.setVisibility(View.VISIBLE);
+                    on2_3g.setVisibility(View.GONE);
+                } else if (click == "3GthreeOFF") {
+                    off3_3g.setVisibility(View.VISIBLE);
+                    on3_3g.setVisibility(View.GONE);
+                } else if (click == "4GoneOFF") {
+                    off_4g.setVisibility(View.VISIBLE);
+                    on_4g.setVisibility(View.GONE);
+                } else if (click == "4GtwoOFF") {
+                    off2_4g.setVisibility(View.VISIBLE);
+                    on2_4g.setVisibility(View.GONE);
+                } else if (click == "4GthreeOFF") {
+                    off3_4g.setVisibility(View.VISIBLE);
+                    on3_4g.setVisibility(View.GONE);
+                } else if (click == "4GfourOFF") {
+                    off4_4g.setVisibility(View.VISIBLE);
+                    on4_4g.setVisibility(View.GONE);
+                } else if (click == "5GoneOFF") {
+                    off_5g.setVisibility(View.VISIBLE);
+                    on_5g.setVisibility(View.GONE);
+                } else if (click == "5GtwoOFF") {
+                    off2_5g.setVisibility(View.VISIBLE);
+                    on2_5g.setVisibility(View.GONE);
+                } else if (click == "5GthreeOFF") {
+                    off3_5g.setVisibility(View.VISIBLE);
+                    on3_5g.setVisibility(View.GONE);
+                } else if (click == "5GfourOFF") {
+                    off4_5g.setVisibility(View.VISIBLE);
+                    on4_5g.setVisibility(View.GONE);
+                } else if (click == "5GfiveOFF") {
+                    off5_5g.setVisibility(View.VISIBLE);
+                    on5_5g.setVisibility(View.GONE);
+                }
+            }
+        }
 
     }
 
