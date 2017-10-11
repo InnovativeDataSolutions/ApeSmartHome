@@ -5,4 +5,5 @@ package com.ids.smarthomev2;
  */
 public class HelperT {
 
+    //keep for future purpose
 }
