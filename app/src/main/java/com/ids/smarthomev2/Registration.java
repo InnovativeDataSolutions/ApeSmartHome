@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +28,11 @@ public class Registration extends AppCompatActivity {
     EditText unET, pwET, homeidET, gatewayET, ipET;
     TextView tv;
     boolean dbcheck1, dbcheck2;
+    LinearLayout progressLL;
     Button regBUT, submitBUT,enterBUT;
     Context ctx = this;
     long count;
+    ImageButton sq_explain_ip;
     Database db = new Database(ctx);
     String homeid, un, pw, oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8, oneObjectsItem9, oneObjectsItem10, oneObjectsItem11, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16, ip, gateway, statussubmitinfo, statusvalidateinfo, validateip;
     int i, j;
@@ -47,6 +51,8 @@ public class Registration extends AppCompatActivity {
         submitBUT = (Button) findViewById(R.id.submitbtn);
         enterBUT = (Button) findViewById(R.id.enter);
         tv = (TextView) findViewById(R.id.tvinfo);
+        sq_explain_ip = (ImageButton)findViewById(R.id.sq_explain_ip);
+        progressLL = (LinearLayout)findViewById(R.id.progressLL);
 
         count = db.check2(); //check if home already registered
 
@@ -114,19 +120,25 @@ public class Registration extends AppCompatActivity {
                 err = "Exception: " + e.getMessage();
             }
 
-            Toast.makeText(Registration.this, "Registration Succesful!", Toast.LENGTH_SHORT).show();
-
-            if (statussubmitinfo.contains("AVAILABLE")) {
-                tv.setText("Verify IP with gateway");
+            if(statussubmitinfo == null){
+                Toast.makeText(Registration.this, "Please check your internet connection!", Toast.LENGTH_SHORT).show();
+                progressLL.setVisibility(View.GONE);
+            } else if (statussubmitinfo.contains("AVAILABLE")) {
+                Toast.makeText(Registration.this, "Registration Succesful!", Toast.LENGTH_SHORT).show();
+                progressLL.setVisibility(View.GONE);
+                tv.setText("Corresponding IP for your gateway recieved please verify if necessary");
+                tv.setTextSize(16);
                 submitBUT.setVisibility(View.GONE);
                 homeidET.setVisibility(View.GONE);
                 unET.setVisibility(View.GONE);
                 pwET.setVisibility(View.GONE);
                 ipET.setVisibility(View.VISIBLE);
+                sq_explain_ip.setVisibility(View.VISIBLE);
                 regBUT.setVisibility(View.VISIBLE);
                 ipET.setText(ip);
             } else {
                 Toast.makeText(Registration.this, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                progressLL.setVisibility(View.GONE);
             }
         }
 
@@ -195,11 +207,14 @@ public class Registration extends AppCompatActivity {
                 checkfordevice cfd = new checkfordevice();
                 cfd.execute(homeid);
                 tv.setText("Home IP & Gateway succesfully verified!");
+                progressLL.setVisibility(View.GONE);
                 gatewayET.setEnabled(false);
                 ipET.setEnabled(false);
                 regBUT.setVisibility(View.GONE);
                 enterBUT.setVisibility(View.VISIBLE);
-
+            }else if(statusvalidateinfo == null){
+                progressLL.setVisibility(View.GONE);
+                Toast.makeText(Registration.this, "Please check your internet connection or try again!", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -324,8 +339,9 @@ public class Registration extends AppCompatActivity {
         if (ip == "" || gateway == "") {
             Toast.makeText(Registration.this, "Please enter all infomation", Toast.LENGTH_SHORT).show();
         } else{
-                validateinfo vi = new validateinfo();
-                vi.execute(homeid, ip, gateway);
+            validateinfo vi = new validateinfo();
+            vi.execute(homeid, ip, gateway);
+            progressLL.setVisibility(View.VISIBLE);
 
         }
 
@@ -348,6 +364,7 @@ public class Registration extends AppCompatActivity {
 
             submitinfo si = new submitinfo();
             si.execute(homeid, un, pw, gateway);
+            progressLL.setVisibility(View.VISIBLE);
         }
         //c.execute(homeid,un,pw,gateway);
     }
@@ -359,5 +376,21 @@ public class Registration extends AppCompatActivity {
         Intent i = new Intent(Registration.this,Home.class);
         //i.putExtra("ip",ip);
         startActivity(i);
+    }
+
+    public void explainSequnces (View view) {
+
+        String title = "Gateway Address";
+        String message = "Explanation for gateway address";
+
+        HelperT.showExplanationAlertDialog(message, title, Registration.this);
+    }
+
+    public void explainSequncesIP(View view) {
+
+        String title = "IP Address";
+        String message = "Explanation for IP address";
+
+        HelperT.showExplanationAlertDialog(message, title, Registration.this);
     }
 }
