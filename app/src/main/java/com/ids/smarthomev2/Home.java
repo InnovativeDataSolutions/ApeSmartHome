@@ -79,7 +79,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
     String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
-    int i, fan;
+    int i, fan = 1;
     Handler UIhandler;
     Socket socket = null;
     Thread Thread1 = null;
@@ -184,8 +184,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         progressbarfan = (ProgressBar) findViewById(R.id.progressbarfan);
         progressbarfan.setScaleY(3.5f);
         progressbarfan.setMax(5);
-        btnplusfan.setEnabled(false);
-        btnminusfan.setEnabled(false);
+        progressbarfan.setProgress(fan);
+        btnplusfan.setEnabled(true);
+        btnminusfan.setEnabled(true);
 
         on_1g = (Button) findViewById(R.id.btn1on1g);
         off_1g = (Button) findViewById(R.id.btn1off1g);
@@ -205,6 +206,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+//        WifiManager wifiMgr = (WifiManager).getSystemService(Context.WIFI_SERVICE);
+//        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+//        String name = wifiInfo.getSSID();
 
         tvinfo = (TextView) findViewById(R.id.tvinfo);
         tvfanspeed = (TextView) findViewById(R.id.faninfotv);
@@ -3117,11 +3122,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnonfan(View view) {
         btnofffan.setVisibility(View.VISIBLE);
         btnonfan.setVisibility(View.GONE);
-        btnplusfan.setEnabled(false);
-        btnminusfan.setEnabled(false);
-        progressbarfan.setProgress(0);
-        fan = 0;
-        tvfanspeed.setText("");
+        progressbarfan.setProgress(fan);
+        //tvfanspeed.setText("");
 
         int point = v;
         System.out.println("btnonfan");
@@ -3267,9 +3269,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnofffan(View view) {
         btnofffan.setVisibility(View.GONE);
         btnonfan.setVisibility(View.VISIBLE);
-        btnplusfan.setEnabled(true);
-        btnminusfan.setEnabled(true);
-        tvfanspeed.setText("");
+//        btnplusfan.setEnabled(true);
+//        btnminusfan.setEnabled(true);
+        //tvfanspeed.setText("");
 
         int point = v;
         System.out.println("btnofffan");
