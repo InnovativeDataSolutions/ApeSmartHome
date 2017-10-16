@@ -1539,6 +1539,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             InputStream in = null;
             try {
                 socket.setSoTimeout(4000);
+                System.out.println("Timer started ");
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -3493,9 +3494,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         if (checkdev==null && checkstate==null){
             cntrlstatusinfo.put(devname, status);
+            System.out.println("both null");
         }else {
             if (devname.matches(checkdev) && status.matches(checkstate)) { // check if dev name and status already exist before entering to hash map
-                System.out.println("both true so dont input");
+                System.out.println("both true so dont input already exist");
             }else {
                 cntrlstatusinfo.put(devname, status);
                 System.out.println("values to cntrlstatusinfo : " + devname + " " + status);
@@ -3619,6 +3621,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
 
     }
+
+
 
 
 }

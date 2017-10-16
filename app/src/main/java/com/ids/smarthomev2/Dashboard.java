@@ -207,23 +207,21 @@ public class Dashboard extends AppCompatActivity {
                                         adapter.notifyDataSetChanged();
                                     }else{
                                         if (statusOfDevice.equals("1")){
-                                            itemTouched = devicenameAR_ON.get(position);
+                                            itemTouched = devicenameAR.get(position);
                                             String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
                                             String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                             devicenameAR_OFF.add(itemTouched);
-                                            devicenameAR_ON.remove(position);
-                                            devicenameAR.remove(position);
+                                            devicenameAR_ON.remove(itemTouched);
                                             SendCmnd sc = new SendCmnd();
                                             sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off);
                                             System.out.println("ComndExec off: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + off);
                                             adapter.notifyDataSetChanged();
                                         }else if (statusOfDevice.equals("2")){
-                                            itemTouched = devicenameAR_OFF.get(position);
+                                            itemTouched = devicenameAR.get(position);
                                             String itemTouchedPowerlineid = deviceandPowerlineid.get(itemTouched);
                                             String itemTouchedInternalid = deviceandInternalid.get(itemTouched);
                                             devicenameAR_ON.add(itemTouched);
-                                            devicenameAR_OFF.remove(position);
-                                            devicenameAR.remove(position);
+                                            devicenameAR_OFF.remove(itemTouched);
                                             SendCmnd sc = new SendCmnd();
                                             sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on);
                                             System.out.println("ComndExec ON: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + on);
