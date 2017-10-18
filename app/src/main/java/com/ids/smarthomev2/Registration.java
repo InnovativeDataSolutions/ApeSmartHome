@@ -381,7 +381,7 @@ public class Registration extends AppCompatActivity {
     public void explainSequnces (View view) {
 
         String title = "Gateway Address";
-        String message = "Explanation for gateway address";
+        String message = "Used for the device to connect to the internet";
 
         HelperT.showExplanationAlertDialog(message, title, Registration.this);
     }
@@ -389,7 +389,7 @@ public class Registration extends AppCompatActivity {
     public void explainSequncesIP(View view) {
 
         String title = "IP Address";
-        String message = "Explanation for IP address";
+        String message = "This is the address of your device";
 
         HelperT.showExplanationAlertDialog(message, title, Registration.this);
     }

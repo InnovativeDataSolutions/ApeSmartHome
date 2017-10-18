@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -546,6 +547,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
 
         });
+
+        checkdevstatus cds = new checkdevstatus();
+        cds.execute(homeidVAR);
     }
 
 
@@ -1241,6 +1245,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Log.d(TAG, "onTouch: ");
+        activateallbuttons();
         gestureDetector.onTouchEvent(event);
         return true;
     }
@@ -1538,8 +1543,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         public Thread2(Socket socket) {
             InputStream in = null;
             try {
-                socket.setSoTimeout(4000);
-                System.out.println("Timer started ");
+                socket.setSoTimeout(3000);
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -1716,6 +1720,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     off5_5g.setVisibility(View.VISIBLE);
                 }
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                activateallbuttons();
             }
         }
     }
@@ -3506,7 +3511,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         for (Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {  //checking in hash map if data has been input
             String key = entry.getKey();
             String click = entry.getValue();
-            System.out.println("getsamedevcontrols : " + "(Key : " + key + ") (Click :" + click);
+            System.out.println("getsamedevcontrols : " + "(Key : " + key + ") (Click :" + click + ")");
         }
     }
 
@@ -3622,8 +3627,135 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     }
 
+    class checkdevstatus extends AsyncTask<String, String, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            String homeid = params[0];
+            String data = "";
+            int tmp;
 
+            try {
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //to get device list
+                String urlParams = "HomeID="+homeid;
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                OutputStream os = httpURLConnection.getOutputStream();
+                os.write(urlParams.getBytes());
+                os.flush();
+                os.close();
+                InputStream is = httpURLConnection.getInputStream();
+                while ((tmp = is.read()) != -1) {
+                    data += (char) tmp;
+                }
+                is.close();
+                httpURLConnection.disconnect();
+
+                return data;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            String err = null;
+            if (s.equals("")) {
+                s = "Data saved successfully.";
+            }
+            try {
+                JSONObject jObject = new JSONObject(s);
+
+                final JSONArray jArray = jObject.getJSONArray("DEVICES");
+                for (i = 0; i < jArray.length(); i++) {
+                    try {
+                        JSONObject oneObject = jArray.getJSONObject(i);
+                        // Pulling items from the array
+                        String devname = oneObject.getString("name");
+                        String status = oneObject.getString("current_status");
+                        String internalid = oneObject.getString("internal_id");
+                        String devmodel = oneObject.getString("device_model");
+                        System.out.println("Raw device list : " + devname + " " + status + " " + internalid);
+
+                        if (status.equals("1")){
+                            if (devmodel.equals("PS")) {
+                                cntrlstatusinfo.put(devname, "1PLUGoneOFF");
+                            }else if(devmodel.equals("TS2G")){
+                                switch (internalid){
+                                    case "1":
+                                        cntrlstatusinfo.put(devname, "2GoneOFF");
+                                        break;
+                                    case "2":
+                                        cntrlstatusinfo.put(devname, "2GtwoOFF");
+                                        break;
+                                }
+                            }
+                        }else{
+                            System.out.println("MOve on");
+                        }
+                    } catch (JSONException e) {
+                        // Oops
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                err = "Exception: " + e.getMessage();
+            }
+            String model = devicemodelAR.get(v);
+            getcntrlstate(model);
+            System.out.println(model);
+
+            for (Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {  //checking in hash map if data has been input
+                String key = entry.getKey();
+                String click = entry.getValue();
+                System.out.println("getsamedevcontrols : " + "(Key : " + key + ") (Click :" + click + ")");
+            }
+
+        }
+
+    }
+
+    public void activateallbuttons(){
+        btnon1_2g.setEnabled(true);
+        btnoff1_2g.setEnabled(true);
+        btnon2_2g.setEnabled(true);
+        btnoff2_2g.setEnabled(true);
+        on_1plug.setEnabled(true);
+        off_1plug.setEnabled(true);
+        off_1g.setEnabled(true);
+        on_1g.setEnabled(true);
+        off_3g.setEnabled(true);
+        on_3g.setEnabled(true);
+        off2_3g.setEnabled(true);
+        on2_3g.setEnabled(true);
+        off3_3g.setEnabled(true);
+        on3_3g.setEnabled(true);
+        off_4g.setEnabled(true);
+        on_4g.setEnabled(true);
+        off2_4g.setEnabled(true);
+        on2_4g.setEnabled(true);
+        off3_4g.setEnabled(true);
+        on3_4g.setEnabled(true);
+        off4_4g.setEnabled(true);
+        on4_4g.setEnabled(true);
+        off_5g.setEnabled(true);
+        on_5g.setEnabled(true);
+        off2_5g.setEnabled(true);
+        on2_5g.setEnabled(true);
+        off3_5g.setEnabled(true);
+        on3_5g.setEnabled(true);
+        off4_5g.setEnabled(true);
+        on4_5g.setEnabled(true);
+        off5_5g.setEnabled(true);
+        on5_5g.setEnabled(true);
+        }
 
 }
 
