@@ -59,6 +59,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Spinner sp1, sp2;
     ProgressBar spinner;
     TextView resp;
+    HelperT helperT;
     ProgressBar progressbarfan;
     TextView tvinfo, tvfanspeed;
     private static final String TAG = "motion";
@@ -79,7 +80,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
-    String pidfkDB, contrlidDB, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
+    String pidfkDB, contrlidDB,manualup, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
     int i, fan = 1;
     Handler UIhandler;
     Socket socket = null;
@@ -550,6 +551,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         checkdevstatus cds = new checkdevstatus();
         cds.execute(homeidVAR);
+        helperT = new HelperT(ctx);
     }
 
 
@@ -632,7 +634,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             //Socket socket = null;
             try {
                 //here you must put your computer's IP address.
-                InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+                System.out.println("bACKGROUND THREAD ; " + SERVER_IP + SERVER_PORT + ipaddressVAR);
+                InetAddress serverAddr = InetAddress.getByName(ipaddressVAR);
                 socket = new Socket(serverAddr, SERVER_PORT);
                 Thread2 commThread2 = new Thread2(socket);
                 new Thread(commThread2).start();
@@ -1543,7 +1546,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         public Thread2(Socket socket) {
             InputStream in = null;
             try {
-                socket.setSoTimeout(3000);
+                //socket.setSoTimeout(3000);
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -1608,6 +1611,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         String pwline = ("00" + val3).substring(val3.length());//substring powerline to 2 values if its originally only 1
         String pwlinej = ("00" + val4).substring(val4.length());//substring powerline to 2 values if its originally only 1
         String devname = devicemodelAR.get(v); //to get what device name was activated
+        String devmodel = devicenameAR.get(v);
 
         public updateUIThread(String str) {
             this.message = str;
@@ -1615,112 +1619,88 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
-            //spinner.setVisibility(View.GONE);
-            //resp.setText("");
-            System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
+            System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline + "controller name : "); //used for checking
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
-                System.out.println("thread reply :" + click);
-                getsamedevcontrols(devname,click); //entering which device got on or off to keep in track of statuses.
-                if (click.equals("2GoneON")) {
-                    btnon1_2g.setVisibility(View.GONE);
-                    btnoff1_2g.setVisibility(View.VISIBLE);
-                } else if (click.equals("2GoneOFF")) {
-                    btnon1_2g.setVisibility(View.VISIBLE);
-                    btnoff1_2g.setVisibility(View.GONE);
-                } else if (click.equals("2GtwoON")) {
-                    btnon2_2g.setVisibility(View.GONE);
-                    btnoff2_2g.setVisibility(View.VISIBLE);
-                } else if (click.equals("2GtwoOFF")) {
-                    btnon2_2g.setVisibility(View.VISIBLE);
-                    btnoff2_2g.setVisibility(View.GONE);
-                } else if (click.equals("1PLUGoneON")) {
-                    off_1plug.setVisibility(View.VISIBLE);
-                    on_1plug.setVisibility(View.GONE);
-                } else if (click.equals("1PLUGoneOFF")) {
-                    off_1plug.setVisibility(View.GONE);
-                    on_1plug.setVisibility(View.VISIBLE);
-                } else if (click.equals("1GoneOFF")) {
-                    on_1g.setVisibility(View.VISIBLE);
-                    off_1g.setVisibility(View.GONE);
-                } else if (click.equals("1GoneON")) {
-                    on_1g.setVisibility(View.GONE);
-                    off_1g.setVisibility(View.VISIBLE);
-                } else if (click.equals("3GoneOFF")) {
-                    on_3g.setVisibility(View.VISIBLE);
-                    off_3g.setVisibility(View.GONE);
-                } else if (click.equals("3GoneON")) {
-                    on_3g.setVisibility(View.GONE);
-                    off_3g.setVisibility(View.VISIBLE);
-                } else if (click.equals("3GtwoOFF")) {
-                    on2_3g.setVisibility(View.VISIBLE);
-                    off2_3g.setVisibility(View.GONE);
-                } else if (click.equals("3GtwoON")) {
-                    on2_3g.setVisibility(View.GONE);
-                    off2_3g.setVisibility(View.VISIBLE);
-                } else if (click.equals("3GthreeOFF")) {
-                    on3_3g.setVisibility(View.VISIBLE);
-                    off3_3g.setVisibility(View.GONE);
-                } else if (click.equals("3GthreeON")) {
-                    on3_3g.setVisibility(View.GONE);
-                    off3_3g.setVisibility(View.VISIBLE);
-                } else if (click.equals("4GoneOFF")) {
-                    off_4g.setVisibility(View.GONE);
-                    on_4g.setVisibility(View.VISIBLE);
-                } else if (click.equals("4GoneON")) {
-                    off_4g.setVisibility(View.VISIBLE);
-                    on_4g.setVisibility(View.GONE);
-                } else if (click.equals("4GtwoOFF")) {
-                    off2_4g.setVisibility(View.GONE);
-                    on2_4g.setVisibility(View.VISIBLE);
-                } else if (click.equals("4GtwoON")) {
-                    off2_4g.setVisibility(View.VISIBLE);
-                    on2_4g.setVisibility(View.GONE);
-                } else if (click.equals("4GthreeOFF")) {
-                    off3_4g.setVisibility(View.GONE);
-                    on3_4g.setVisibility(View.VISIBLE);
-                } else if (click.equals("4GthreeON")) {
-                    off3_4g.setVisibility(View.VISIBLE);
-                    on3_4g.setVisibility(View.GONE);
-                } else if (click.equals("4GfourOFF")) {
-                    off4_4g.setVisibility(View.GONE);
-                    on4_4g.setVisibility(View.VISIBLE);
-                } else if (click.equals("4GfourON")) {
-                    off4_4g.setVisibility(View.VISIBLE);
-                    on4_4g.setVisibility(View.GONE);
-                } else if (click.equals("5GoneOFF")) {
-                    on_5g.setVisibility(View.VISIBLE);
-                    off_5g.setVisibility(View.GONE);
-                } else if (click.equals("5GoneON")) {
-                    on_5g.setVisibility(View.GONE);
-                    off_5g.setVisibility(View.VISIBLE);
-                } else if (click.equals("5GtwoOFF")) {
-                    on2_5g.setVisibility(View.VISIBLE);
-                    off2_5g.setVisibility(View.GONE);
-                } else if (click.equals("5GtwoON")) {
-                    on2_5g.setVisibility(View.GONE);
-                    off2_5g.setVisibility(View.VISIBLE);
-                } else if (click.equals("5GthreeOFF")) {
-                    on3_5g.setVisibility(View.VISIBLE);
-                    off3_5g.setVisibility(View.GONE);
-                } else if (click.equals("5GthreeON")) {
-                    on3_5g.setVisibility(View.GONE);
-                    off3_5g.setVisibility(View.VISIBLE);
-                } else if (click.equals("5GfourOFF")) {
-                    on4_5g.setVisibility(View.VISIBLE);
-                    off4_5g.setVisibility(View.GONE);
-                } else if (click.equals("5GfourON")) {
-                    on4_5g.setVisibility(View.GONE);
-                    off4_5g.setVisibility(View.VISIBLE);
-                } else if (click.equals("5GfiveOFF")) {
-                    on5_5g.setVisibility(View.VISIBLE);
-                    off5_5g.setVisibility(View.GONE);
-                } else if (click.equals("5GfiveON")) {
-                    on5_5g.setVisibility(View.GONE);
-                    off5_5g.setVisibility(View.VISIBLE);
+
+                if (message.length()>48) { //if message > 48 check if manual update else it must be reply frm server
+                    manualup = message.substring(46, 48);
                 }
-                UIhandler.post(new UpdateButtonState(click.toUpperCase()));
-                activateallbuttons();
+                if (manualup == null){ //if manual update digit is null then its normal response
+                    System.out.println("manual is null" + devname + click);
+                    changebuttonfunc(devname,click); //chnage btn func accrdingly
+                }
+                else if (manualup.equals("00")) { //if manual update check for 00
+                        String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
+                        String status = message.substring(44, 46); //get status of that device
+                        System.out.println("Click is null ps 01" + val + devmodel + getinternalid + status + " " + manualup);
+
+                        if (devmodel.equals("PS")) {
+                            switch (status) {
+                                case "01":
+                                    click = "1PLUGoneOFF";
+                                    changebuttonfunc(devname, click);
+                                    break;
+                                case "02":
+                                    click = "1PLUGoneON";
+                                    changebuttonfunc(devname, click);
+                                    break;
+                            }
+
+                        } else if (devmodel.equals("TS2G")) {
+                            switch (getinternalid) {
+                                case "01":
+                                    if (status.equals("01")) {
+                                        click = "2GoneOFF";
+                                        changebuttonfunc(devname, click);
+                                    } else if (status.equals("02")) {
+                                        click = "2GoneON";
+                                        changebuttonfunc(devname, click);
+                                    }
+                                    break;
+                                case "02":
+                                    if (status.equals("01")) {
+                                        click = "2GtwoOFF";
+                                        changebuttonfunc(devname, click);
+                                    } else if (status.equals("02")) {
+                                        click = "2GtwoON";
+                                        changebuttonfunc(devname, click);
+                                    }
+                                    break;
+                            }
+                        }else if (devmodel.equals("FC")){
+                            click = "FCon";
+                            System.out.println("Fan controls :" + devname + click);
+                            changebuttonfunc(devname, click);
+                        }
+                    } else {
+                    System.out.println("gr8r than 48 :" + devname + click); //not manaul update not server update,ordinary update with AB in the end
+                    if (click == null){ //if click null can mean that another device tried to control the switch u are in.
+                        String getinternalid = message.substring(42, 44);
+                        String status = message.substring(44, 46);
+                        if (devname.equals("Touch switch -2G")){
+                            if (getinternalid.equals("01")){
+                                if (status.equals("01")) {
+                                    click = "2GoneOFF";
+                                    changebuttonfunc(devname, click);
+                                }else if(status.equals("02")){
+                                    click = "2GoneON";
+                                    changebuttonfunc(devname, click);
+                                }
+                            }else if (getinternalid.equals("02")){
+                                if (status.equals("01")) {
+                                    click = "2GtwoOFF";
+                                    changebuttonfunc(devname, click);
+                                }else if(status.equals("02")){
+                                    click = "2GtwoON";
+                                    changebuttonfunc(devname, click);
+                                }
+                            }}}
+                            changebuttonfunc(devname, click); //else normal update
+                        UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                    }
+
+                    activateallbuttons();
             }
         }
     }
@@ -3756,6 +3736,110 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         off5_5g.setEnabled(true);
         on5_5g.setEnabled(true);
         }
+
+    public void changebuttonfunc(String devname,String click){
+        getsamedevcontrols(devname,click);
+        if (click.equals("2GoneON")) {
+            btnon1_2g.setVisibility(View.GONE);
+            btnoff1_2g.setVisibility(View.VISIBLE);
+        } else if (click.equals("2GoneOFF")) {
+            btnon1_2g.setVisibility(View.VISIBLE);
+            btnoff1_2g.setVisibility(View.GONE);
+        } else if (click.equals("2GtwoON")) {
+            btnon2_2g.setVisibility(View.GONE);
+            btnoff2_2g.setVisibility(View.VISIBLE);
+        } else if (click.equals("2GtwoOFF")) {
+            btnon2_2g.setVisibility(View.VISIBLE);
+            btnoff2_2g.setVisibility(View.GONE);
+        } else if (click.equals("1PLUGoneON")) {
+            off_1plug.setVisibility(View.VISIBLE);
+            on_1plug.setVisibility(View.GONE);
+        } else if (click.equals("1PLUGoneOFF")) {
+            off_1plug.setVisibility(View.GONE);
+            on_1plug.setVisibility(View.VISIBLE);
+        } else if (click.equals("1GoneOFF")) {
+            on_1g.setVisibility(View.VISIBLE);
+            off_1g.setVisibility(View.GONE);
+        } else if (click.equals("1GoneON")) {
+            on_1g.setVisibility(View.GONE);
+            off_1g.setVisibility(View.VISIBLE);
+        } else if (click.equals("3GoneOFF")) {
+            on_3g.setVisibility(View.VISIBLE);
+            off_3g.setVisibility(View.GONE);
+        } else if (click.equals("3GoneON")) {
+            on_3g.setVisibility(View.GONE);
+            off_3g.setVisibility(View.VISIBLE);
+        } else if (click.equals("3GtwoOFF")) {
+            on2_3g.setVisibility(View.VISIBLE);
+            off2_3g.setVisibility(View.GONE);
+        } else if (click.equals("3GtwoON")) {
+            on2_3g.setVisibility(View.GONE);
+            off2_3g.setVisibility(View.VISIBLE);
+        } else if (click.equals("3GthreeOFF")) {
+            on3_3g.setVisibility(View.VISIBLE);
+            off3_3g.setVisibility(View.GONE);
+        } else if (click.equals("3GthreeON")) {
+            on3_3g.setVisibility(View.GONE);
+            off3_3g.setVisibility(View.VISIBLE);
+        } else if (click.equals("4GoneOFF")) {
+            off_4g.setVisibility(View.GONE);
+            on_4g.setVisibility(View.VISIBLE);
+        } else if (click.equals("4GoneON")) {
+            off_4g.setVisibility(View.VISIBLE);
+            on_4g.setVisibility(View.GONE);
+        } else if (click.equals("4GtwoOFF")) {
+            off2_4g.setVisibility(View.GONE);
+            on2_4g.setVisibility(View.VISIBLE);
+        } else if (click.equals("4GtwoON")) {
+            off2_4g.setVisibility(View.VISIBLE);
+            on2_4g.setVisibility(View.GONE);
+        } else if (click.equals("4GthreeOFF")) {
+            off3_4g.setVisibility(View.GONE);
+            on3_4g.setVisibility(View.VISIBLE);
+        } else if (click.equals("4GthreeON")) {
+            off3_4g.setVisibility(View.VISIBLE);
+            on3_4g.setVisibility(View.GONE);
+        } else if (click.equals("4GfourOFF")) {
+            off4_4g.setVisibility(View.GONE);
+            on4_4g.setVisibility(View.VISIBLE);
+        } else if (click.equals("4GfourON")) {
+            off4_4g.setVisibility(View.VISIBLE);
+            on4_4g.setVisibility(View.GONE);
+        } else if (click.equals("5GoneOFF")) {
+            on_5g.setVisibility(View.VISIBLE);
+            off_5g.setVisibility(View.GONE);
+        } else if (click.equals("5GoneON")) {
+            on_5g.setVisibility(View.GONE);
+            off_5g.setVisibility(View.VISIBLE);
+        } else if (click.equals("5GtwoOFF")) {
+            on2_5g.setVisibility(View.VISIBLE);
+            off2_5g.setVisibility(View.GONE);
+        } else if (click.equals("5GtwoON")) {
+            on2_5g.setVisibility(View.GONE);
+            off2_5g.setVisibility(View.VISIBLE);
+        } else if (click.equals("5GthreeOFF")) {
+            on3_5g.setVisibility(View.VISIBLE);
+            off3_5g.setVisibility(View.GONE);
+        } else if (click.equals("5GthreeON")) {
+            on3_5g.setVisibility(View.GONE);
+            off3_5g.setVisibility(View.VISIBLE);
+        } else if (click.equals("5GfourOFF")) {
+            on4_5g.setVisibility(View.VISIBLE);
+            off4_5g.setVisibility(View.GONE);
+        } else if (click.equals("5GfourON")) {
+            on4_5g.setVisibility(View.GONE);
+            off4_5g.setVisibility(View.VISIBLE);
+        } else if (click.equals("5GfiveOFF")) {
+            on5_5g.setVisibility(View.VISIBLE);
+            off5_5g.setVisibility(View.GONE);
+        } else if (click.equals("5GfiveON")) {
+            on5_5g.setVisibility(View.GONE);
+            off5_5g.setVisibility(View.VISIBLE);
+        }else if(click.equals("FCon")){
+            btnofffan.setVisibility(View.GONE);
+            btnonfan.setVisibility(View.VISIBLE);
+        }
+    }
 
 }
 

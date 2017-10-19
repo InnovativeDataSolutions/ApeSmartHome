@@ -92,6 +92,15 @@ public class Database extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getdevmodel(String powerln,SQLiteDatabase sqLiteDatabase){
+        String [] devicename = {col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12};
+        String selection = col6+" LIKE ?";
+        String [] selectionargs = {powerln};
+
+        Cursor cursor = sqLiteDatabase.query(table,devicename,selection,selectionargs,null,null,null);
+        return cursor;
+    }
+
     public Cursor getController(String pid,SQLiteDatabase sqLiteDatabase){
         String [] devicename = {colfk,col13,col14,col15,col16,col17};
         String selection = colfk+" LIKE ?";
