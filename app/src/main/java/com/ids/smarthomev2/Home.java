@@ -54,11 +54,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Button on_5g, off_5g, on2_5g, off2_5g, on3_5g, off3_5g, on4_5g, off4_5g, on5_5g, off5_5g;
     Button on_4g, off_4g, on2_4g, off2_4g, on3_4g, off3_4g, on4_4g, off4_4g;
     Button on_3g, off_3g, on2_3g, off2_3g, on3_3g, off3_3g;
-    Button btnon1_2g, btnoff1_2g, btnon2_2g, btnoff2_2g;
+    Button btnon1_2g, btnoff1_2g, btnon2_2g, btnoff2_2g,backlight;
     Button on_1g, off_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan, btnofffan;
     Spinner sp1, sp2;
-    ProgressBar spinner;
-    TextView resp;
     HelperT helperT;
     ProgressBar progressbarfan;
     TextView tvinfo, tvfanspeed;
@@ -68,7 +66,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public static final int SERVER_PORT = 8081;
     int v = 0, j = 0, point = 0;
     int count = 0;
-    boolean bgthread=false;
+    boolean bgthread=false,backlightbool =false;
     String click = null, cntrlstatus = null;
     Context ctx = this;
     Database db = new Database(ctx);
@@ -89,9 +87,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Thread Thread13G = null;
     Thread Thread1OTHER = null;
     Thread Thread2 = null;
+    Thread Thread2bg = null;
     Thread Thread1bg = null;
     String btnclick = null;
-    String protocolON, protocolOFF, protocolON2G, protocolON4G, protocolOFF4G, protocolON1G, protocolOFF1G, protocolONPLUG, protocolOFFPLUG, protocolOFF2G, protocolON3G, protocolOFF3G, protocolONM, protocolOFFM, protocolOFFFAN, protocolONFAN, protocolMINUSFAN, protocolPLUSFAN;
+    String protocolON, protocolOFF, protocolON2G, protocolON4G, protocolOFF4G, protocolON1G, protocolOFF1G, protocolONPLUG, protocolOFFPLUG, protocolOFF2G, protocolON3G, protocolOFF3G, protocolONM, protocolOFFM, protocolOFFFAN, protocolONFAN, protocolMINUSFAN, protocolPLUSFAN,protocolBL;
     List<String> devicenameAR = new ArrayList<String>();
     List<String> areaDUPLICATE = new ArrayList<String>();
     List<String> areaAR = new ArrayList<String>();
@@ -183,6 +182,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnminusfan = (Button) findViewById(R.id.btnminusfan);
         btnonfan = (Button) findViewById(R.id.btnonfan);
         btnofffan = (Button) findViewById(R.id.btnofffan);
+        backlight = (Button) findViewById(R.id.backlight);
         progressbarfan = (ProgressBar) findViewById(R.id.progressbarfan);
         progressbarfan.setScaleY(3.5f);
         progressbarfan.setMax(5);
@@ -195,9 +195,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         on_1plug = (Button) findViewById(R.id.btn1onplug);
         off_1plug = (Button) findViewById(R.id.btn1offplug);
-
-        resp = (TextView)findViewById(R.id.resp);
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
 
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -322,6 +319,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String value3 = devicemodelAR.get(position);
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
                 sp2.setSelection(position);
+                if (value.equals("PS")){
+                    backlight.setVisibility(View.GONE);
+                }else{
+                    backlight.setVisibility(View.VISIBLE);
+                }
                 //v = position;
                 //j = position;
                 //get values from array based on value of v and assign them to the protocol.
@@ -436,6 +438,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String value2 = areaAR.get(position);
                 String value3 = devicemodelAR.get(position);
                 tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
+                if (value.equals("PS")){
+                    backlight.setVisibility(View.GONE);
+                }else{
+                    backlight.setVisibility(View.VISIBLE);
+                }
                 //sp1.setSelection(position);
                 v = position;
                 //j = position;
@@ -637,12 +644,70 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 System.out.println("bACKGROUND THREAD ; " + SERVER_IP + SERVER_PORT + ipaddressVAR);
                 InetAddress serverAddr = InetAddress.getByName(ipaddressVAR);
                 socket = new Socket(serverAddr, SERVER_PORT);
-                Thread2 commThread2 = new Thread2(socket);
+                Thread2bg commThread2 = new Thread2bg(socket);
                 new Thread(commThread2).start();
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    class Thread2bg implements Runnable {
+
+        public Thread2bg(Socket socket) {
+            InputStream in = null;
+            try {
+                in = socket.getInputStream();
+            } catch (IOException ex) {
+                System.out.println("Can't get socket input stream. ");
+            }
+
+            System.out.println("Waiting Socket events ....");
+            byte[] bytes = new byte[1];
+            int count;
+
+            String input_str = "";
+            String temp_prev = "";
+            String temp_curr = "";
+            try {
+                while ((count = in.read(bytes)) > 0) {
+                    temp_curr = bytesToHex(bytes).toUpperCase();
+                    if ((temp_prev + temp_curr).equals("0003") || (temp_prev + temp_curr).equals("AB03")) {
+                        input_str += temp_curr;
+
+                        System.out.print(input_str.toUpperCase());
+                        clientrply = input_str;
+                        UIhandler.post(new updateUIThread(input_str.toUpperCase()));
+                        input_str += temp_curr;
+                        input_str = "";
+                        System.out.println();
+                    } else {
+                        input_str += temp_curr;
+                    }
+                    temp_prev = temp_curr;
+                }
+
+            } catch (Exception ex) {
+                try {
+                    if (clientrply == null) {
+                        socket.close();
+                        System.out.println("Socket Closed [in] thread2bg");
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Something wrong with your device!", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                    }
+                } catch (IOException ex1) {
+                    System.exit(0);
+                }
+            }
+        }
+
+        public void run() {
+            //do nothing
         }
     }
 
@@ -677,6 +742,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             @Override
             public boolean onSwipe(Direction direction) {
+                checkdevstatus cds = new checkdevstatus();
+                cds.execute(homeidVAR);
                 if (direction == Direction.up) {
                     j=0;
                     int devicemodelARszie = devicemodelAR.size();
@@ -694,6 +761,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         String value3 = contrlstatusAR.get(v);
                         String value4 = devicemodelAR.get(v);
                         tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
+                        if (value.equals("PS")){
+                            backlight.setVisibility(View.GONE);
+                        }else{
+                            backlight.setVisibility(View.VISIBLE);
+                        }
                         //sp1.setSelection(v);
                         sp2.setSelection(v);
                         //get values from array based on value of v and assign them to the protocol.
@@ -830,6 +902,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         String value2 = areaAR.get(v);
                         String value4 = devicemodelAR.get(v);
                         tvinfo.setText("[Device : " + value4 + "] [Area :" + value2 + "]");
+                        if (value.equals("PS")){
+                            backlight.setVisibility(View.GONE);
+                        }else{
+                            backlight.setVisibility(View.VISIBLE);
+                        }
                         //sp1.setSelection(v);
                         sp2.setSelection(v);
                         //get values from array based on value of v and assign them to the protocol.
@@ -975,6 +1052,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             System.out.println("indexOf ardb : " + indexofsecnddevice);
                             //sp1.setSelection(indexofsecnddevice);
                             sp2.setSelection(indexofsecnddevice);
+                            if (value.equals("PS")){
+                                backlight.setVisibility(View.GONE);
+                            }else{
+                                backlight.setVisibility(View.VISIBLE);
+                            }
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
                                 getcntrlstate(value4);
@@ -1118,6 +1200,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             System.out.println("indexOf ardb : " + indexofsecnddevice);
                             //sp1.setSelection(indexofsecnddevice);
                             sp2.setSelection(indexofsecnddevice);
+                            if (value.equals("PS")){
+                                backlight.setVisibility(View.GONE);
+                            }else{
+                                backlight.setVisibility(View.VISIBLE);
+                            }
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
                                 getcntrlstate(value4);
@@ -1425,6 +1512,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolMINUSFAN.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
+                }else if (click.contains("btnbacklight")) {
+                    byte[] by = hexStringToByteArray(protocolBL.replaceAll(" ", ""));
+                    out.write(by, 0, by.length);
+                    out.flush();
                 } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
@@ -1546,7 +1637,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         public Thread2(Socket socket) {
             InputStream in = null;
             try {
-                //socket.setSoTimeout(3000);
+                socket.setSoTimeout(4000);
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -1581,11 +1672,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 try {
                     if (clientrply == null) {
                         socket.close();
-                        System.out.println("Socket Closed [in]");
+                        System.out.println("Socket Closed [in] thread2");
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                //spinner.setVisibility(View.GONE);
-                                //resp.setText("");
                                 Toast.makeText(getApplicationContext(), "Something wrong with your device!", Toast.LENGTH_LONG).show();
                             }
                         });
@@ -1626,77 +1715,34 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 if (message.length()>48) { //if message > 48 check if manual update else it must be reply frm server
                     manualup = message.substring(46, 48);
                 }
-                if (manualup == null){ //if manual update digit is null then its normal response
-                    System.out.println("manual is null" + devname + click);
-                    changebuttonfunc(devname,click); //chnage btn func accrdingly
+                if (manualup == null){ //if manual update digit is null then its global response
+                    System.out.println("Server update Initiated : " + devname + click);
+                    changebuttonfunc(devname,click); //change btn func accordingly
                 }
                 else if (manualup.equals("00")) { //if manual update check for 00
                         String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
                         String status = message.substring(44, 46); //get status of that device
-                        System.out.println("Click is null ps 01" + val + devmodel + getinternalid + status + " " + manualup);
-
-                        if (devmodel.equals("PS")) {
-                            switch (status) {
-                                case "01":
-                                    click = "1PLUGoneOFF";
-                                    changebuttonfunc(devname, click);
-                                    break;
-                                case "02":
-                                    click = "1PLUGoneON";
-                                    changebuttonfunc(devname, click);
-                                    break;
-                            }
-
-                        } else if (devmodel.equals("TS2G")) {
-                            switch (getinternalid) {
-                                case "01":
-                                    if (status.equals("01")) {
-                                        click = "2GoneOFF";
-                                        changebuttonfunc(devname, click);
-                                    } else if (status.equals("02")) {
-                                        click = "2GoneON";
-                                        changebuttonfunc(devname, click);
-                                    }
-                                    break;
-                                case "02":
-                                    if (status.equals("01")) {
-                                        click = "2GtwoOFF";
-                                        changebuttonfunc(devname, click);
-                                    } else if (status.equals("02")) {
-                                        click = "2GtwoON";
-                                        changebuttonfunc(devname, click);
-                                    }
-                                    break;
-                            }
-                        }else if (devmodel.equals("FC")){
-                            click = "FCon";
-                            System.out.println("Fan controls :" + devname + click);
-                            changebuttonfunc(devname, click);
-                        }
+                        System.out.println("Manual Update Initiated : " + val + devmodel + getinternalid + status + " " + manualup);
+                        searchfordev(devmodel,status,devname,getinternalid);
                     } else {
-                    System.out.println("gr8r than 48 :" + devname + click); //not manaul update not server update,ordinary update with AB in the end
+                    System.out.println("App update initiated :" + devname + click); //not manaul update not server update,ordinary update with AB in the end
+                    String getinternalid = message.substring(42, 44);
+                    String status = message.substring(44, 46);
                     if (click == null){ //if click null can mean that another device tried to control the switch u are in.
-                        String getinternalid = message.substring(42, 44);
-                        String status = message.substring(44, 46);
-                        if (devname.equals("Touch switch -2G")){
-                            if (getinternalid.equals("01")){
-                                if (status.equals("01")) {
-                                    click = "2GoneOFF";
-                                    changebuttonfunc(devname, click);
-                                }else if(status.equals("02")){
-                                    click = "2GoneON";
-                                    changebuttonfunc(devname, click);
-                                }
-                            }else if (getinternalid.equals("02")){
-                                if (status.equals("01")) {
-                                    click = "2GtwoOFF";
-                                    changebuttonfunc(devname, click);
-                                }else if(status.equals("02")){
-                                    click = "2GtwoON";
-                                    changebuttonfunc(devname, click);
-                                }
-                            }}}
-                            changebuttonfunc(devname, click); //else normal update
+                        searchfordev(devmodel,status,devname,getinternalid);
+                    }
+                    if (click.equals("btnbacklight")){
+                        if (status.equals("01")){
+                            Toast.makeText(Home.this, "Backlight ON", Toast.LENGTH_SHORT).show();
+                            backlightbool=true;
+                        }else{
+                            Toast.makeText(Home.this, "Backlight OFF", Toast.LENGTH_SHORT).show();
+                            backlightbool=false;
+                        }
+                    }
+                    if (!click.equals("btnbacklight")){
+                     changebuttonfunc(devname, click); //else normal update
+                    }
                         UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                     }
 
@@ -1738,6 +1784,50 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             contrltypeARDB.add(contrtypeVAR);
             contrlstatusARDB.add(cntrlstatusDB);
         } while (cursor3.moveToNext());
+    }
+
+    public void backlight(View view){
+        System.out.println("btnbacklight");
+        point = v;
+        int point2 = 0;
+        click = "btnbacklight";
+        getcontroller();
+        // Device : [
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
+        // ]
+
+        //Controller : [
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
+        // ] 02 03 00 00 00 83 03 48 00 00 00 00 00 00 00 34 06 01 AB 03
+        String v4c1 = dectohex(v4);
+        String v7c1 = dectohex(v7);
+        String v6c1 = dectohex(v6);
+        String v10c1 = dectohex(v10);
+
+        v4c = ("00" + v4c1).substring(v4c1.length());
+        String v7c = ("00" + v7c1).substring(v7c1.length());
+        String v6c = ("00" + v6c1).substring(v6c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
+        if (backlightbool==false) {
+            protocolBL = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
+        }else{
+            protocolBL = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
+        }
+        System.out.println(protocolBL);
+        devicestatus = v1;
+
+        this.Thread1OTHER = new Thread(new Thread1OTHER());
+        this.Thread1OTHER.start();
     }
 
     public void btnoff5g(View view) {
@@ -3501,11 +3591,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String key = entry.getKey();
             String click = entry.getValue();
             System.out.println("getcntrlstate : " + "Key :" + key  + " Devname :" + devname +  " Click :" + click);
-            if (key.matches(devname)) {
+            if (cntrlstatusinfo.containsKey(devname)) {
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.GONE);
                     on_1g.setVisibility(View.VISIBLE);
-                } else if (click == "1PLUGoneOFF") {
+                }else if(click.equals("fcOFF")){
+                    btnofffan.setVisibility(View.GONE);
+                    btnonfan.setVisibility(View.VISIBLE);
+                }else if (click == "1PLUGoneOFF") {
                     off_1plug.setVisibility(View.GONE);
                     on_1plug.setVisibility(View.VISIBLE);
                 } else if (click == "2GoneOFF") {
@@ -3556,6 +3649,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.VISIBLE);
                     on_1g.setVisibility(View.GONE);
+                }else if(click.equals("fcOFF")){
+                    btnofffan.setVisibility(View.GONE);
+                    btnonfan.setVisibility(View.VISIBLE);
                 } else if (click == "1PLUGoneOFF") {
                     off_1plug.setVisibility(View.VISIBLE);
                     on_1plug.setVisibility(View.GONE);
@@ -3664,20 +3760,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         System.out.println("Raw device list : " + devname + " " + status + " " + internalid);
 
                         if (status.equals("1")){
-                            if (devmodel.equals("PS")) {
-                                cntrlstatusinfo.put(devname, "1PLUGoneOFF");
-                            }else if(devmodel.equals("TS2G")){
-                                switch (internalid){
-                                    case "1":
-                                        cntrlstatusinfo.put(devname, "2GoneOFF");
-                                        break;
-                                    case "2":
-                                        cntrlstatusinfo.put(devname, "2GtwoOFF");
-                                        break;
-                                }
-                            }
-                        }else{
-                            System.out.println("MOve on");
+                            updatecntrlstatusarray(devmodel,devname,internalid);
+                        }
+                        else{
+                            System.out.println("Move on");
                         }
                     } catch (JSONException e) {
                         // Oops
@@ -3738,6 +3824,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
 
     public void changebuttonfunc(String devname,String click){
+        String powerlinid = dectohex(powerlineidAR.get(v));
+        String devmodel = devicenameAR.get(v);
+        System.out.println("CBF : " + powerlinid + devmodel);
         getsamedevcontrols(devname,click);
         if (click.equals("2GoneON")) {
             btnon1_2g.setVisibility(View.GONE);
@@ -3835,9 +3924,282 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         } else if (click.equals("5GfiveON")) {
             on5_5g.setVisibility(View.GONE);
             off5_5g.setVisibility(View.VISIBLE);
-        }else if(click.equals("FCon")){
+        }else if(click.equals("fcOFF")){
             btnofffan.setVisibility(View.GONE);
             btnonfan.setVisibility(View.VISIBLE);
+        }else if(click.equals("fcON")){
+            btnofffan.setVisibility(View.VISIBLE);
+            btnonfan.setVisibility(View.GONE);
+        }
+    }
+
+    public void searchfordev(String devmodel,String status,String devname,String getinternalid){
+
+        if (devmodel.equals("PS")) {
+            switch (status) {
+                case "01":
+                    click = "1PLUGoneOFF";
+                    changebuttonfunc(devname, click);
+                    break;
+                case "02":
+                    click = "1PLUGoneON";
+                    changebuttonfunc(devname, click);
+                    break;
+            }
+
+        }else if (devmodel.equals("TS1G")) {
+            switch (getinternalid) {
+                case "01":
+                    if (status.equals("01")) {
+                        click = "1GoneOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "1GoneON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+            }
+        } else if (devmodel.equals("TS2G")) {
+            switch (getinternalid) {
+                case "01":
+                    if (status.equals("01")) {
+                        click = "2GoneOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "2GoneON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "02":
+                    if (status.equals("01")) {
+                        click = "2GtwoOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "2GtwoON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+            }
+        }else if (devmodel.equals("FC")){
+            if (status.equals("01")) {
+                click = "fcOFF";
+                System.out.println("Fan controls :" + devname + click);
+                changebuttonfunc(devname, click);
+            }else if (status.equals("02")) {
+                click = "fcON";
+                System.out.println("Fan controls :" + devname + click);
+                changebuttonfunc(devname, click);
+            }
+        }else if (devmodel.equals("TS3G")) {
+            switch (getinternalid) {
+                case "01":
+                    if (status.equals("01")) {
+                        click = "3GoneOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "3GoneON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "02":
+                    if (status.equals("01")) {
+                        click = "3GtwoOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "3GtwoON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "03":
+                    if (status.equals("01")) {
+                        click = "3GthreeOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "3GthreeON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+            }
+
+    }else if (devmodel.equals("TS4G")) {
+            switch (getinternalid) {
+                case "01":
+                    if (status.equals("01")) {
+                        click = "4GoneOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "4GoneON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "02":
+                    if (status.equals("01")) {
+                        click = "4GtwoOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "4GtwoON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "03":
+                    if (status.equals("01")) {
+                        click = "4GthreeOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "4GthreeON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "04":
+                    if (status.equals("01")) {
+                        click = "4GfourOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "4GfourON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+            }
+
+        }else if (devmodel.equals("TS5G")) {
+            switch (getinternalid) {
+                case "01":
+                    if (status.equals("01")) {
+                        click = "5GoneOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "5GoneON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "02":
+                    if (status.equals("01")) {
+                        click = "5GtwoOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "5GtwoON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "03":
+                    if (status.equals("01")) {
+                        click = "5GthreeOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "5GthreeON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "04":
+                    if (status.equals("01")) {
+                        click = "5GfourOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "5GfourON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+                case "05":
+                    if (status.equals("01")) {
+                        click = "5GfiveOFF";
+                        changebuttonfunc(devname, click);
+                    } else if (status.equals("02")) {
+                        click = "5GfiveON";
+                        changebuttonfunc(devname, click);
+                    }
+                    break;
+            }
+
+        }
+
+}
+
+    public void updatecntrlstatusarray(String devmodel,String devname,String getinternalid){
+        if (devmodel.equals("PS")) {
+                    click = "1PLUGoneOFF";
+                    cntrlstatusinfo.put(devname, click);
+
+        }else if (devmodel.equals("TS1G")) {
+            switch (getinternalid) {
+                case "01":
+                    click = "1GoneOFF";
+                    cntrlstatusinfo.put(devname, click);
+                    break;
+            }
+        } else if (devmodel.equals("TS2G")) {
+            switch (getinternalid) {
+                case "01":
+                    click = "2GoneOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "02":
+                        click = "2GtwoOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+            }
+        }else if (devmodel.equals("FC")){
+                click = "fcOFF";
+                System.out.println("Fan controls :" + devname + click);
+                cntrlstatusinfo.put(devname, click);
+        }else if (devmodel.equals("TS3G")) {
+            switch (getinternalid) {
+                case "01":
+                        click = "3GoneOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "02":
+                        click = "3GtwoOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "03":
+                        click = "3GthreeOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+            }
+        }else if (devmodel.equals("TS4G")) {
+            switch (getinternalid) {
+                case "01":
+                        click = "4GoneOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "02":
+                        click = "4GtwoOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "03":
+                        click = "4GthreeOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "04":
+                        click = "4GfourOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+            }
+
+        }else if (devmodel.equals("TS5G")) {
+            switch (getinternalid) {
+                case "01":
+                        click = "5GoneOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "02":
+                        click = "5GtwoOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "03":
+                        click = "5GthreeOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "04":
+                        click = "5GfourOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+                case "05":
+                        click = "5GfiveOFF";
+                        cntrlstatusinfo.put(devname, click);
+                    break;
+            }
+
         }
     }
 
