@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,10 +25,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +55,13 @@ import java.util.Map;
 public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     private RelativeLayout someLayout, rl1, rl2, rl3, rl4, rl5, rlplug, rlfan;
-    Button on_5g, off_5g, on2_5g, off2_5g, on3_5g, off3_5g, on4_5g, off4_5g, on5_5g, off5_5g;
-    Button on_4g, off_4g, on2_4g, off2_4g, on3_4g, off3_4g, on4_4g, off4_4g;
-    Button on_3g, off_3g, on2_3g, off2_3g, on3_3g, off3_3g;
-    Button btnon1_2g, btnoff1_2g, btnon2_2g, btnoff2_2g,backlight;
-    Button on_1g, off_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan, btnofffan;
+    Button on_5g, on2_5g, on3_5g, on4_5g, on5_5g;
+    Button on_4g, on2_4g, on3_4g, on4_4g;
+    Button on_3g, on2_3g, on3_3g;
+    Button btnon1_2g,btnon2_2g;
+    Button on_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan ;
+    ImageView btnofffan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
+    Switch backlight;
     Spinner sp1, sp2;
     HelperT helperT;
     ProgressBar progressbarfan;
@@ -148,41 +154,42 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         sp2 = (Spinner) findViewById(R.id.sp2);
 
         on_5g = (Button) findViewById(R.id.btnon5g);
-        off_5g = (Button) findViewById(R.id.btnoff5g);
+        off_5g = (ImageView) findViewById(R.id.btnoff5g);
         on2_5g = (Button) findViewById(R.id.btn1on5g);
-        off2_5g = (Button) findViewById(R.id.btn1off5g);
+        off2_5g = (ImageView) findViewById(R.id.btn1off5g);
         on3_5g = (Button) findViewById(R.id.btn2on5g);
-        off3_5g = (Button) findViewById(R.id.btn2off5g);
+        off3_5g = (ImageView) findViewById(R.id.btn2off5g);
         on4_5g = (Button) findViewById(R.id.btn3on5g);
-        off4_5g = (Button) findViewById(R.id.btn3off5g);
+        off4_5g = (ImageView) findViewById(R.id.btn3off5g);
         on5_5g = (Button) findViewById(R.id.btn4on5g);
-        off5_5g = (Button) findViewById(R.id.btn4off5g);
+        off5_5g = (ImageView) findViewById(R.id.btn4off5g);
 
         on_4g = (Button) findViewById(R.id.btnon4g);
-        off_4g = (Button) findViewById(R.id.btnoff4g);
+        off_4g = (ImageView) findViewById(R.id.btnoff4g);
         on2_4g = (Button) findViewById(R.id.btn1on4g);
-        off2_4g = (Button) findViewById(R.id.btn1off4g);
+        off2_4g = (ImageView) findViewById(R.id.btn1off4g);
         on3_4g = (Button) findViewById(R.id.btn2on4g);
-        off3_4g = (Button) findViewById(R.id.btn2off4g);
+        off3_4g = (ImageView) findViewById(R.id.btn2off4g);
         on4_4g = (Button) findViewById(R.id.btn3on4g);
-        off4_4g = (Button) findViewById(R.id.btn3off4g);
+        off4_4g = (ImageView) findViewById(R.id.btn3off4g);
 
         on_3g = (Button) findViewById(R.id.btnon3g);
-        off_3g = (Button) findViewById(R.id.btnoff3g);
+        off_3g = (ImageView) findViewById(R.id.btnoff3g);
         on2_3g = (Button) findViewById(R.id.btn1on3g);
-        off2_3g = (Button) findViewById(R.id.btn1off3g);
+        off2_3g = (ImageView) findViewById(R.id.btn1off3g);
         on3_3g = (Button) findViewById(R.id.btn2on3g);
-        off3_3g = (Button) findViewById(R.id.btn2off3g);
+        off3_3g = (ImageView) findViewById(R.id.btn2off3g);
 
         btnon1_2g = (Button) findViewById(R.id.btnon2g);
-        btnoff1_2g = (Button) findViewById(R.id.btnoff2g);
+        btnoff1_2g = (ImageView) findViewById(R.id.btnoff2g);
         btnon2_2g = (Button) findViewById(R.id.btn1on2g);
-        btnoff2_2g = (Button) findViewById(R.id.btn1off2g);
+        btnoff2_2g = (ImageView) findViewById(R.id.btn1off2g);
         btnplusfan = (Button) findViewById(R.id.btnplusfan);
         btnminusfan = (Button) findViewById(R.id.btnminusfan);
         btnonfan = (Button) findViewById(R.id.btnonfan);
-        btnofffan = (Button) findViewById(R.id.btnofffan);
-        backlight = (Button) findViewById(R.id.backlight);
+        btnofffan = (ImageView) findViewById(R.id.btnofffan);
+        backlight = (Switch) findViewById(R.id.backlight);
+        backlight.setChecked(false);
         progressbarfan = (ProgressBar) findViewById(R.id.progressbarfan);
         progressbarfan.setScaleY(3.5f);
         progressbarfan.setMax(5);
@@ -191,7 +198,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnminusfan.setEnabled(true);
 
         on_1g = (Button) findViewById(R.id.btn1on1g);
-        off_1g = (Button) findViewById(R.id.btn1off1g);
+        off_1g = (ImageView) findViewById(R.id.btn1off1g);
 
         on_1plug = (Button) findViewById(R.id.btn1onplug);
         off_1plug = (Button) findViewById(R.id.btn1offplug);
@@ -559,6 +566,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         checkdevstatus cds = new checkdevstatus();
         cds.execute(homeidVAR);
         helperT = new HelperT(ctx);
+
+        backlightcmnd();
     }
 
 
@@ -663,7 +672,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 System.out.println("Can't get socket input stream. ");
             }
 
-            System.out.println("Waiting Socket events ....");
+            System.out.println("Waiting Socket events bg ....");
             byte[] bytes = new byte[1];
             int count;
 
@@ -742,6 +751,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
             @Override
             public boolean onSwipe(Direction direction) {
+                Thread1bg = new Thread(new Thread1bg());
+                Thread1bg.start();
                 checkdevstatus cds = new checkdevstatus();
                 cds.execute(homeidVAR);
                 if (direction == Direction.up) {
@@ -1786,7 +1797,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         } while (cursor3.moveToNext());
     }
 
-    public void backlight(View view){
+    public void backlight(){
         System.out.println("btnbacklight");
         point = v;
         int point2 = 0;
@@ -4201,6 +4212,72 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
 
         }
+    }
+
+    public void backlightcmnd(){
+        backlight.setChecked(false);
+        backlight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String device = devicenameAR.get(v);
+                if (isChecked) {
+                    System.out.println("ischeck");
+                    backlight();
+                    switch (device){
+                        case "TS1G":
+                            off_1g.setColorFilter(Color.BLUE);
+                        case "TS2G":
+                            btnoff1_2g.setColorFilter(Color.BLUE);
+                            btnoff2_2g.setColorFilter(Color.BLUE);
+                        case "TS3G":
+                            off_3g.setColorFilter(Color.BLUE);
+                            off2_3g.setColorFilter(Color.BLUE);
+                            off3_3g.setColorFilter(Color.BLUE);
+                        case "TS4G":
+                            off_4g.setColorFilter(Color.BLUE);
+                            off2_4g.setColorFilter(Color.BLUE);
+                            off3_4g.setColorFilter(Color.BLUE);
+                            off4_4g.setColorFilter(Color.BLUE);
+                        case "TS5G":
+                            off_5g.setColorFilter(Color.BLUE);
+                            off2_5g.setColorFilter(Color.BLUE);
+                            off3_5g.setColorFilter(Color.BLUE);
+                            off4_5g.setColorFilter(Color.BLUE);
+                            off5_5g.setColorFilter(Color.BLUE);
+                        case "FC":
+                            btnofffan.setColorFilter(Color.BLUE);
+                    }
+
+                } else {
+                    System.out.println("nocheck");
+                    backlight();
+                    switch (device){
+                        case "TS1G":
+                            off_1g.setColorFilter(Color.WHITE);
+                        case "TS2G":
+                            btnoff1_2g.setColorFilter(Color.WHITE);
+                            btnoff2_2g.setColorFilter(Color.WHITE);
+                        case "TS3G":
+                            off_3g.setColorFilter(Color.WHITE);
+                            off2_3g.setColorFilter(Color.WHITE);
+                            off3_3g.setColorFilter(Color.WHITE);
+                        case "TS4G":
+                            off_4g.setColorFilter(Color.WHITE);
+                            off2_4g.setColorFilter(Color.WHITE);
+                            off3_4g.setColorFilter(Color.WHITE);
+                            off4_4g.setColorFilter(Color.WHITE);
+                        case "TS5G":
+                            off_5g.setColorFilter(Color.WHITE);
+                            off2_5g.setColorFilter(Color.WHITE);
+                            off3_5g.setColorFilter(Color.WHITE);
+                            off4_5g.setColorFilter(Color.WHITE);
+                            off5_5g.setColorFilter(Color.WHITE);
+                        case "FC":
+                            btnofffan.setColorFilter(Color.WHITE);
+                    }
+
+                }
+            }
+        });
     }
 
 }

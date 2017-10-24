@@ -96,21 +96,21 @@
                     android:onClick="btnon5g"
                     android:background="@drawable/button_on" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btnoff5g"
                     android:onClick="btnoff5g"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/btnoff" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn1off5g"
                     android:onClick="btn1off5g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
@@ -149,13 +149,13 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn2off5g"
                     android:onClick="btn2off5g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
@@ -181,13 +181,13 @@
                     android:onClick="btn3on5g"
                     android:background="@drawable/button_on" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn3off5g"
                     android:onClick="btn3off5g"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/btnoff" />
 
                 <Button
                     android:layout_width="70dp"
@@ -201,13 +201,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn4off5g"
                     android:onClick="btn4off5g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
@@ -247,21 +247,21 @@
                     android:background="@drawable/button_on"
                     android:visibility="gone" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btnoff4g"
                     android:onClick="btnoff4g"
-                    android:background="@drawable/button_off"/>
+                    android:src="@drawable/btnoff"/>
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn1off4g"
                     android:onClick="btn1off4g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
@@ -272,7 +272,7 @@
                     android:text="ON"
                     android:id="@+id/btn1on4g"
                     android:onClick="btn1on4g"
-                    android:background="@drawable/button_on"
+                    android:background="@drawable/button_off"
                     android:visibility="gone"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
@@ -329,13 +329,13 @@
                     android:background="@drawable/button_on"
                     android:visibility="gone" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn2off4g"
                     android:onClick="btn2off4g"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/btnoff" />
 
                 <Button
                     android:layout_width="70dp"
@@ -349,13 +349,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn3off4g"
                     android:onClick="btn3off4g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -394,13 +394,13 @@
                     android:onClick="btnon3g"
                     android:background="@drawable/button_on" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btnoff3g"
                     android:onClick="btnoff3g"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/btnoff" />
 
             </RelativeLayout>
 
@@ -424,13 +424,13 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn1off3g"
                     android:onClick="btn1off3g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
@@ -459,13 +459,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn2off3g"
                     android:onClick="btn2off3g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -505,13 +505,13 @@
                     android:onClick="btnon2g"
                     android:background="@drawable/button_on" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btnoff2g"
                     android:onClick="btnoff2g"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/btnoff" />
 
             </RelativeLayout>
 
@@ -567,13 +567,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn1off2g"
                     android:onClick="btn1off2g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -641,13 +641,13 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btn1off1g"
                     android:onClick="btn1off1g"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
@@ -715,7 +715,6 @@
                 <Button
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-
                     android:background="@drawable/button_on"
                     android:visibility="gone" />
 
@@ -724,7 +723,6 @@
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:visibility="gone"
-
                     android:background="@drawable/button_off"/>
 
                 <Button
@@ -848,13 +846,13 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:text="OFF"
                     android:id="@+id/btnofffan"
                     android:onClick="btnofffan"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/btnoff"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
 
@@ -905,14 +903,11 @@
             android:layout_alignParentEnd="true"
             android:orientation="horizontal">
 
-            <Button
+            <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/backlight"
-                android:onClick="backlight"
-                android:text="Backlight"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
+                android:text="Backlight"/>
 
             <TextView
             android:layout_width="match_parent"
