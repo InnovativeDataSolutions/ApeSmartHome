@@ -16,16 +16,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -54,16 +58,18 @@ import java.util.Map;
 
 public class Home extends AppCompatActivity implements View.OnTouchListener {
 
-    private RelativeLayout someLayout, rl1, rl2, rl3, rl4, rl5, rlplug, rlfan;
+    private RelativeLayout someLayout, rl1, rl2, rl3, rl4, rl5, rlplug, rlfan,rlbell;
     Button on_5g, on2_5g, on3_5g, on4_5g, on5_5g;
     Button on_4g, on2_4g, on3_4g, on4_4g;
     Button on_3g, on2_3g, on3_3g;
     Button btnon1_2g,btnon2_2g;
     Button on_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan ;
-    ImageView btnofffan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
+    ImageView bell,btnofffan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
     Switch backlight;
+    ImageButton lockopen,lockclosed,durationinfo,intervalinfo;
     Spinner sp1, sp2;
     HelperT helperT;
+    EditText interval,duration;
     ProgressBar progressbarfan;
     TextView tvinfo, tvfanspeed;
     private static final String TAG = "motion";
@@ -73,6 +79,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     int v = 0, j = 0, point = 0;
     int count = 0;
     boolean bgthread=false,backlightbool =false;
+    ArrayAdapter<String> dataAdapter2;
     String click = null, cntrlstatus = null;
     Context ctx = this;
     Database db = new Database(ctx);
@@ -84,7 +91,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
-    String pidfkDB, contrlidDB,manualup, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
+    String pidfkDB, contrlidDB,manualup,areaslctd, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
     int i, fan = 1;
     Handler UIhandler;
     Socket socket = null;
@@ -96,7 +103,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Thread Thread2bg = null;
     Thread Thread1bg = null;
     String btnclick = null;
-    String protocolON, protocolOFF, protocolON2G, protocolON4G, protocolOFF4G, protocolON1G, protocolOFF1G, protocolONPLUG, protocolOFFPLUG, protocolOFF2G, protocolON3G, protocolOFF3G, protocolONM, protocolOFFM, protocolOFFFAN, protocolONFAN, protocolMINUSFAN, protocolPLUSFAN,protocolBL;
+    String protocolON, protocolOFF, protocolON2G, protocolON4G, protocolOFF4G, protocolON1G, protocolOFF1G, protocolONPLUG, protocolOFFPLUG, protocolOFF2G, protocolON3G, protocolOFF3G, protocolONM, protocolOFFM, protocolOFFFAN, protocolONFAN, protocolMINUSFAN, protocolPLUSFAN,protocolBL,protcollockopen,protcollockclosed,protcolduration,protcolinterval;
     List<String> devicenameAR = new ArrayList<String>();
     List<String> areaDUPLICATE = new ArrayList<String>();
     List<String> areaAR = new ArrayList<String>();
@@ -150,6 +157,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         rl5 = (RelativeLayout) findViewById(R.id.rl1g);
         rlplug = (RelativeLayout) findViewById(R.id.rlplug);
         rlfan = (RelativeLayout) findViewById(R.id.rlfan);
+        rlbell = (RelativeLayout) findViewById(R.id.rlbell);
         sp1 = (Spinner) findViewById(R.id.sp1);
         sp2 = (Spinner) findViewById(R.id.sp2);
 
@@ -189,6 +197,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnonfan = (Button) findViewById(R.id.btnonfan);
         btnofffan = (ImageView) findViewById(R.id.btnofffan);
         backlight = (Switch) findViewById(R.id.backlight);
+
+        lockclosed = (ImageButton) findViewById(R.id.lockclosed);
+        lockopen = (ImageButton) findViewById(R.id.lockopen);
+        durationinfo = (ImageButton) findViewById(R.id.sq_explain_duration);
+        intervalinfo = (ImageButton) findViewById(R.id.sq_explain_interval);
+        duration = (EditText) findViewById(R.id.duration);
+        interval = (EditText) findViewById(R.id.interval);
+        bell = (ImageView) findViewById(R.id.bell);
         backlight.setChecked(false);
         progressbarfan = (ProgressBar) findViewById(R.id.progressbarfan);
         progressbarfan.setScaleY(3.5f);
@@ -219,7 +235,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         tvinfo = (TextView) findViewById(R.id.tvinfo);
         tvfanspeed = (TextView) findViewById(R.id.faninfotv);
-        System.out.println("ip & port : " + SERVER_IP + " " + SERVER_PORT);
 
         cursor = db.gethomeinfo();
         try {
@@ -289,7 +304,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             areaDUPLICATE.add(obj); //create duplicate array for area copying values from original area array
         }
 
-        for(int s=0;s<areaDUPLICATE.size()-1;s++)
+        for(int s=0;s<areaDUPLICATE.size();s++)
         {
             for(int m=1;m<areaDUPLICATE.size();m++)
             {
@@ -311,7 +326,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         // attaching data adapter to spinner
         sp1.setAdapter(dataAdapter);
 
-        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicemodelAR);
+        dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, devicemodelAR);
 // Specify the layout to use when the list of choices appears
         dataAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
@@ -320,6 +335,23 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+//                areaslctd = areaDUPLICATE.get(position);
+//                System.out.println("running spinner 1" + areaslctd);
+//                devicemodelAR.clear();
+//                devicenameAR.clear();
+//                masteridAR.clear();
+//                powerlineidAR.clear();
+//                commandidAR.clear();
+//                rl1.setVisibility(View.GONE);
+//                rl2.setVisibility(View.GONE);
+//                rl3.setVisibility(View.GONE);
+//                rl4.setVisibility(View.GONE);
+//                rl5.setVisibility(View.GONE);
+//                rlplug.setVisibility(View.GONE);
+//                rlfan.setVisibility(View.GONE);
+//                filterareadevices cds = new filterareadevices();
+//                cds.execute(homeidVAR);
 
                 String value = devicenameAR.get(position);
                 String value2 = areaAR.get(v);
@@ -335,95 +367,25 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 //j = position;
                 //get values from array based on value of v and assign them to the protocol.
                 if (value.contains("TS1G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.VISIBLE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl5);
                 } else if (value.contains("TS2G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.VISIBLE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl4);
                 } else if (value.contains("TS3G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.VISIBLE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl3);
                 } else if (value.contains("TS4G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.VISIBLE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl2);
                 } else if (value.contains("Dimmer")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.VISIBLE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl3);
                 } else if (value.contains("BC")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.VISIBLE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rlbell);
                 } else if (value.contains("TS5G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.VISIBLE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl1);
                 } else if (value.contains("PS")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.VISIBLE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rlplug);
                 } else if (value.contains("METER")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.VISIBLE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
+                    setLayoutVisibililty(rl5);
                 } else if (value.contains("FC")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.VISIBLE);
+                    setLayoutVisibililty(rlfan);
                 }
                 getcntrlstate(value3);
 
@@ -441,120 +403,44 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                String value = devicenameAR.get(position);
-                String value2 = areaAR.get(position);
-                String value3 = devicemodelAR.get(position);
-                tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
-                if (value.equals("PS")){
-                    backlight.setVisibility(View.GONE);
-                }else{
-                    backlight.setVisibility(View.VISIBLE);
+                //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
+                    String value = devicenameAR.get(position);
+                    String value2 = areaAR.get(position);
+                    String value3 = devicemodelAR.get(position);
+                    tvinfo.setText("[Device : " + value3 + "] [Area :" + value2 + "]");
+                    if (value.equals("PS")) {
+                        backlight.setVisibility(View.GONE);
+                    } else {
+                        backlight.setVisibility(View.VISIBLE);
+                    }
+                    //sp1.setSelection(position);
+                    v = position;
+                    //j = position;
+                    //get values from array based on value of v and assign them to the protocol.
+                    if (value.contains("TS1G")) {
+                        setLayoutVisibililty(rl5);
+                    } else if (value.contains("TS2G")) {
+                        setLayoutVisibililty(rl4);
+                    } else if (value.contains("TS3G")) {
+                        setLayoutVisibililty(rl3);
+                    } else if (value.contains("TS4G")) {
+                        setLayoutVisibililty(rl2);
+                    } else if (value.contains("Dimmer")) {
+                        setLayoutVisibililty(rl3);
+                    } else if (value.contains("BC")) {
+                        setLayoutVisibililty(rlbell);
+                    } else if (value.contains("TS5G")) {
+                        setLayoutVisibililty(rl1);
+                    } else if (value.contains("PS")) {
+                        setLayoutVisibililty(rlplug);
+                    } else if (value.contains("METER")) {
+                        setLayoutVisibililty(rl5);
+                    } else if (value.contains("FC")) {
+                        setLayoutVisibililty(rlfan);
+                    }
+                    getcntrlstate(value3);
                 }
-                //sp1.setSelection(position);
-                v = position;
-                //j = position;
-                //get values from array based on value of v and assign them to the protocol.
-                if (value.contains("TS1G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.VISIBLE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("TS2G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.VISIBLE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("TS3G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.VISIBLE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("TS4G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.VISIBLE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("2")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.VISIBLE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                } else if (value.contains("Dimmer")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.VISIBLE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("BC")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.VISIBLE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("TS5G")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.VISIBLE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("PS")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.VISIBLE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("METER")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.VISIBLE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.GONE);
-                } else if (value.contains("FC")) {
-                    //getcntrlstatus();
-                    rl1.setVisibility(View.GONE);
-                    rl2.setVisibility(View.GONE);
-                    rl3.setVisibility(View.GONE);
-                    rl4.setVisibility(View.GONE);
-                    rl5.setVisibility(View.GONE);
-                    rlplug.setVisibility(View.GONE);
-                    rlfan.setVisibility(View.VISIBLE);
-                }
-                getcntrlstate(value3);
-            }
+                //}
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -562,12 +448,39 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
 
         });
-
-        checkdevstatus cds = new checkdevstatus();
-        cds.execute(homeidVAR);
+        //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
+            checkdevstatus cds = new checkdevstatus();
+            cds.execute(homeidVAR);
+        //}
         helperT = new HelperT(ctx);
 
         backlightcmnd();
+
+        duration.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    String duration = v.getText().toString();
+                    sendbellduration(duration);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        interval.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    String interval = v.getText().toString();
+                    sendbellinterval(interval);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
 
 
@@ -650,7 +563,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             //Socket socket = null;
             try {
                 //here you must put your computer's IP address.
-                System.out.println("bACKGROUND THREAD ; " + SERVER_IP + SERVER_PORT + ipaddressVAR);
+                System.out.println("Background thread running.... " + SERVER_PORT + ipaddressVAR);
                 InetAddress serverAddr = InetAddress.getByName(ipaddressVAR);
                 socket = new Socket(serverAddr, SERVER_PORT);
                 Thread2bg commThread2 = new Thread2bg(socket);
@@ -753,8 +666,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public boolean onSwipe(Direction direction) {
                 Thread1bg = new Thread(new Thread1bg());
                 Thread1bg.start();
-                checkdevstatus cds = new checkdevstatus();
-                cds.execute(homeidVAR);
+                    checkdevstatus cds = new checkdevstatus();
+                    cds.execute(homeidVAR);
                 if (direction == Direction.up) {
                     j=0;
                     int devicemodelARszie = devicemodelAR.size();
@@ -782,111 +695,47 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl5);
                             btmToUp(rl5);
                         } else if (value.contains("TS2G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl4);
                             btmToUp(rl4);
                         } else if (value.contains("TS3G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl3);
                             btmToUp(rl3);
                         } else if (value.contains("TS4G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl2);
                             btmToUp(rl2);
                         } else if (value.contains("2")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl4);
                             btmToUp(rl4);
                         } else if (value.contains("Dimmer")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl3);
                             btmToUp(rl3);
                         } else if (value.contains("BC")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            btmToUp(rl2);
+                            setLayoutVisibililty(rlbell);
+                            btmToUp(rlbell);
                         } else if (value.contains("TS5G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.VISIBLE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl1);
                             btmToUp(rl1);
                         } else if (value.contains("PS")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.VISIBLE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rlplug);
                             btmToUp(rlplug);
                         } else if (value.contains("METER")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl5);
                             btmToUp(rl5);
                         } else if (value.contains("FC")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.VISIBLE);
+                            setLayoutVisibililty(rlfan);
                             btmToUp(rlfan);
                         }
                         System.out.println("Page B: " + v);
@@ -923,113 +772,47 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl5);
                             topToBtm(rl5);
                         } else if (value.contains("TS2G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl4);
                             topToBtm(rl4);
                         } else if (value.contains("TS3G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl3);
                             topToBtm(rl3);
                         } else if (value.contains("TS4G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl2);
                             topToBtm(rl2);
                         } else if (value.contains("2")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.VISIBLE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl4);
                             topToBtm(rl4);
                         } else if (value.contains("Dimmer")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl3);
                             topToBtm(rl3);
                         } else if (value.contains("BC")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
-                            topToBtm(rl2);
+                            setLayoutVisibililty(rlbell);
+                            topToBtm(rlbell);
                         } else if (value.contains("TS5G")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.VISIBLE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl1);
                             topToBtm(rl1);
                         } else if (value.contains("PS")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.VISIBLE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rlplug);
                             topToBtm(rlplug);
                         } else if (value.contains("METER")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.VISIBLE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.GONE);
+                            setLayoutVisibililty(rl5);
                             topToBtm(rl5);
                         } else if (value.contains("FC")) {
                             getcntrlstate(value4);
-                            rl1.setVisibility(View.GONE);
-                            rl2.setVisibility(View.GONE);
-                            rl3.setVisibility(View.GONE);
-                            rl4.setVisibility(View.GONE);
-                            rl5.setVisibility(View.GONE);
-                            rlplug.setVisibility(View.GONE);
-                            rlfan.setVisibility(View.VISIBLE);
+                            setLayoutVisibililty(rlfan);
                             topToBtm(rlfan);
                         }
                         System.out.println("Page A down: " + v);
@@ -1071,113 +854,47 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl5);
                                 rightToLeft(rl5);
                             } else if (value.contains("TS2G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl4);
                                 rightToLeft(rl4);
                             } else if (value.contains("TS3G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl3);
                                 rightToLeft(rl3);
                             } else if (value.contains("TS4G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl2);
                                 rightToLeft(rl2);
                             } else if (value.contains("2")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl4);
                                 rightToLeft(rl4);
                             } else if (value.contains("Dimmer")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl3);
                                 rightToLeft(rl3);
                             } else if (value.contains("BC")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                rightToLeft(rl2);
+                                setLayoutVisibililty(rlbell);
+                                rightToLeft(rlbell);
                             } else if (value.contains("TS5G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.VISIBLE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl1);
                                 rightToLeft(rl1);
                             } else if (value.contains("PS")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.VISIBLE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rlplug);
                                 rightToLeft(rlplug);
                             } else if (value.contains("METER")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl5);
                                 rightToLeft(rl5);
                             } else if (value.contains("FC")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.VISIBLE);
+                                setLayoutVisibililty(rlfan);
                                 rightToLeft(rlfan);
                             }
                             System.out.println("page left swipe : " + j);
@@ -1219,113 +936,47 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             //get values from array based on value of v and assign them to the protocol.
                             if (value.contains("TS1G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl5);
                                 leftToRight(rl5);
                             } else if (value.contains("TS2G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl4);
                                 leftToRight(rl4);
                             } else if (value.contains("TS3G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl3);
                                 leftToRight(rl3);
                             } else if (value.contains("TS4G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl2);
                                 leftToRight(rl2);
                             } else if (value.contains("2")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.VISIBLE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl4);
                                 leftToRight(rl4);
                             } else if (value.contains("Dimmer")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.VISIBLE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl3);
                                 leftToRight(rl3);
                             } else if (value.contains("BC")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.VISIBLE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
-                                leftToRight(rl2);
+                                setLayoutVisibililty(rlbell);
+                                leftToRight(rlbell);
                             } else if (value.contains("TS5G")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.VISIBLE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl1);
                                 leftToRight(rl1);
                             } else if (value.contains("PS")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.VISIBLE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rlplug);
                                 leftToRight(rlplug);
                             } else if (value.contains("METER")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.VISIBLE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.GONE);
+                                setLayoutVisibililty(rl5);
                                 leftToRight(rl5);
                             } else if (value.contains("FC")) {
                                 getcntrlstate(value4);
-                                rl1.setVisibility(View.GONE);
-                                rl2.setVisibility(View.GONE);
-                                rl3.setVisibility(View.GONE);
-                                rl4.setVisibility(View.GONE);
-                                rl5.setVisibility(View.GONE);
-                                rlplug.setVisibility(View.GONE);
-                                rlfan.setVisibility(View.VISIBLE);
+                                setLayoutVisibililty(rlfan);
                                 leftToRight(rlfan);
                             }
                             Log.d(TAG, "onSwipe: right" + j);
@@ -1349,6 +1000,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         activateallbuttons();
         gestureDetector.onTouchEvent(event);
         return true;
+    }
+
+    private void setLayoutVisibililty(RelativeLayout relativeLayout) {
+        rl1.setVisibility(View.GONE);
+        rl2.setVisibility(View.GONE);
+        rl3.setVisibility(View.GONE);
+        rl4.setVisibility(View.GONE);
+        rl5.setVisibility(View.GONE);
+        rlplug.setVisibility(View.GONE);
+        rlfan.setVisibility(View.GONE);
+        rlbell.setVisibility(View.GONE);
+        relativeLayout.setVisibility(View.VISIBLE);
     }
 
     class Thread1 implements Runnable {
@@ -1527,6 +1190,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protocolBL.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
+                }else if (click.contains("lockopen")) {
+                    byte[] by = hexStringToByteArray(protcollockopen.replaceAll(" ", ""));
+                    out.write(by, 0, by.length);
+                    out.flush();
+                }else if (click.contains("lockclosed")) {
+                    byte[] by = hexStringToByteArray(protcollockclosed.replaceAll(" ", ""));
+                    out.write(by, 0, by.length);
+                    out.flush();
                 } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
@@ -1539,11 +1210,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
                 int iid = Integer.parseInt(v10c, 16); // " internal id
                 String iid2 = String.valueOf(iid); // converting internal to decimal
-                if (click.contains("OFF") || click.contains("off")) {
+                if (click.contains("OFF") || click.contains("off") || click.contains("lockclosed")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,on);
                     System.out.println("overTheNet : " + pid2 + iid2);
-                } else if (click.contains("ON") || click.contains("on")) {
+                } else if (click.contains("ON") || click.contains("on") || click.contains("lockopen")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,off);
                     System.out.println("overTheNet : " + pid2 + iid2);
@@ -1648,7 +1319,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         public Thread2(Socket socket) {
             InputStream in = null;
             try {
-                socket.setSoTimeout(4000);
+                socket.setSoTimeout(5000);
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
@@ -2015,7 +1686,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g3off");
         click = "5GthreeOFF";
         int point = v;
-        int point2 = 3;
+        int point2 = 5;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -2057,7 +1728,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g3on");
         click = "5GthreeON";
         int point = v;
-        int point2 = 3;
+        int point2 = 5;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -2098,7 +1769,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g4off");
         click = "5GfourOFF";
         int point = v;
-        int point2 = 4;
+        int point2 = 3;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -2140,7 +1811,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g4on");
         click = "5GfourON";
         int point = v;
-        int point2 = 4;
+        int point2 = 3;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -2182,7 +1853,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g5off");
         click = "5GfiveOFF";
         int point = v;
-        int point2 = 5;
+        int point2 = 4;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -2224,7 +1895,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g5on");
         click = "5GfiveON";
         int point = v;
-        int point2 = 5;
+        int point2 = 4;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -3400,6 +3071,90 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     }
 
+    public void lockopen(View view){
+        lockclosed.setVisibility(View.VISIBLE);
+        lockopen.setVisibility(View.GONE);
+        int point = v;
+        click = "lockopen";
+        getcontroller();
+        System.out.println("lockopen " + SERVER_IP);
+        // Device : [
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
+        // ]
+
+        //Controller : [
+        int point2 = 1;
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
+
+        String v4c1 = dectohex(v4);
+        String v7c1 = dectohex(v7);
+        String v6c1 = dectohex(v6);
+        String v10c1 = dectohex(v10);
+
+        v4c = ("00" + v4c1).substring(v4c1.length());
+        String v7c = ("00" + v7c1).substring(v7c1.length());
+        String v6c = ("00" + v6c1).substring(v6c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
+        protcollockopen = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 02 AB 03", v7c, v4c, v6c, v10c);
+        System.out.println(protcollockopen);
+        devicestatus = v1;
+
+        this.Thread1OTHER = new Thread(new Thread1OTHER());
+        this.Thread1OTHER.start();
+    }
+
+    public void lockclosed(View view){
+        lockopen.setVisibility(View.VISIBLE);
+        lockclosed.setVisibility(View.GONE);
+        int point = v;
+        click = "lockclosed";
+        getcontroller();
+        System.out.println("lockclosed " + SERVER_IP);
+        // Device : [
+        String v1 = devicenameAR.get(point);
+        String v2 = areaAR.get(point);
+        String v3 = physicalidAR.get(point);
+        String v4 = powerlineidAR.get(point);
+        String v5 = devicecodeAR.get(point);
+        String v6 = commandidAR.get(point);
+        String v7 = masteridAR.get(point);
+        // ]
+
+        //Controller : [
+        int point2 = 1;
+        String v8 = pidfkARDB.get(point2);
+        String v9 = contrlidARDB.get(point2);
+        String v10 = internalidARDB.get(point2);
+        String v11 = contrltypeARDB.get(point2);
+        String v12 = contrlstatusARDB.get(point2);
+
+        String v4c1 = dectohex(v4);
+        String v7c1 = dectohex(v7);
+        String v6c1 = dectohex(v6);
+        String v10c1 = dectohex(v10);
+
+        v4c = ("00" + v4c1).substring(v4c1.length());
+        String v7c = ("00" + v7c1).substring(v7c1.length());
+        String v6c = ("00" + v6c1).substring(v6c1.length());
+        v10c = ("00" + v10c1).substring(v10c1.length());
+        protcollockclosed = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s 01 AB 03", v7c, v4c, v6c, v10c);
+        System.out.println(lockclosed);
+        devicestatus = v1;
+
+        this.Thread1OTHER = new Thread(new Thread1OTHER());
+        this.Thread1OTHER.start();
+    }
+
     private void addDrawerItems() {
         String[] osArray = {"Home", "Dashboard"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
@@ -3556,8 +3311,12 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String statusvalidateinfo = user_data.getString("STATUS");
                 String validateip = user_data.getString("DESC");
                 System.out.println("Staus of validate info : " + s);
-                UIhandler.post(new UpdateButtonState(click.toUpperCase())); //to update state of button (ex:disbaled or enabled) by sending click value
-                UIhandler.post(new updateUIThread(v4c.toUpperCase())); //to update value of button(ex: on or off) by sending powerlineid
+                if (statusvalidateinfo.equals("FAILED")) {
+                    Toast.makeText(Home.this, "Unable to connect with your device!", Toast.LENGTH_SHORT).show();
+                }else{
+                    UIhandler.post(new UpdateButtonState(click.toUpperCase())); //to update state of button (ex:disbaled or enabled) by sending click value
+                    UIhandler.post(new updateUIThread(v4c.toUpperCase())); //to update value of button(ex: on or off) by sending powerlineid
+                }
             } catch (JSONException e) {
                 runOnUiThread(new Runnable(){
                     public void run() {
@@ -3785,10 +3544,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
             }
-            String model = devicemodelAR.get(v);
-            getcntrlstate(model);
-            System.out.println(model);
-
+            //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
+                String model = devicemodelAR.get(v);
+                getcntrlstate(model);
+                System.out.println(model);
+            //}
             for (Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {  //checking in hash map if data has been input
                 String key = entry.getKey();
                 String click = entry.getValue();
@@ -4245,6 +4005,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             off5_5g.setColorFilter(Color.BLUE);
                         case "FC":
                             btnofffan.setColorFilter(Color.BLUE);
+                        case "BC":
+                            bell.setColorFilter(Color.BLUE);
                     }
 
                 } else {
@@ -4273,11 +4035,157 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             off5_5g.setColorFilter(Color.WHITE);
                         case "FC":
                             btnofffan.setColorFilter(Color.WHITE);
+                        case "BC":
+                            bell.setColorFilter(Color.WHITE);
                     }
 
                 }
             }
         });
+    }
+
+    class filterareadevices extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String homeid = params[0];
+            String data = "";
+            int tmp;
+
+            try {
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceList/"); //to get device list
+                String urlParams = "HomeID="+homeid;
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                OutputStream os = httpURLConnection.getOutputStream();
+                os.write(urlParams.getBytes());
+                os.flush();
+                os.close();
+                InputStream is = httpURLConnection.getInputStream();
+                while ((tmp = is.read()) != -1) {
+                    data += (char) tmp;
+                }
+                is.close();
+                httpURLConnection.disconnect();
+
+                return data;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            String err = null;
+            if (s.equals("")) {
+                s = "Data saved successfully.";
+            }
+            try {
+                JSONObject jObject = new JSONObject(s);
+
+                final JSONArray jArray = jObject.getJSONArray("DEVICES");
+                for (i = 0; i < jArray.length(); i++) {
+                    try {
+                        JSONObject oneObject = jArray.getJSONObject(i);
+                        // Pulling items from the array
+//                        String name = oneObject.getString("name");
+//                        String area = oneObject.getString("area");
+//                        String model = oneObject.getString("device_model");
+//                        String cmndid = oneObject.getString("command_id");
+//                        String masterid = oneObject.getString("master_id");
+//                        String powerlineid = oneObject.getString("powerline_id");
+
+                        String oneObjectsItem = oneObject.getString("physical_id");
+                        String oneObjectsItem2 = oneObject.getString("powerline_id");
+                        String oneObjectsItem3 = oneObject.getString("name");
+                        String oneObjectsItem4 = oneObject.getString("area");
+                        String oneObjectsItem5 = oneObject.getString("device_model");
+                        String oneObjectsItem6 = oneObject.getString("device_code");
+                        String oneObjectsItem7 = oneObject.getString("command_id");
+                        String oneObjectsItem8 = oneObject.getString("master_id");
+
+                        if (areaslctd.equals(oneObjectsItem4)) {
+                            //db.deletecurrentinfo();
+                            physicalidAR.add(oneObjectsItem);
+                            devicemodelAR.add(oneObjectsItem3);
+                            devicenameAR.add(oneObjectsItem5);
+                            masteridAR.add(oneObjectsItem8);
+                            powerlineidAR.add(oneObjectsItem2);
+                            commandidAR.add(oneObjectsItem7);
+                            devicecodeAR.add(oneObjectsItem6);
+                            System.out.println("dataAdapter2 runnig" + areaslctd);}
+
+
+                            final JSONArray jArray2 = oneObject.getJSONArray("Controllers");
+                            for (int j = 0; j < jArray2.length(); j++) {
+                                try {
+                                    JSONObject oneObject2 = jArray2.getJSONObject(j);
+                                    String oneObjectsItem12 = oneObject2.getString("device_id");
+                                    String oneObjectsItem13 = oneObject2.getString("internal_id");
+                                    String oneObjectsItem14 = oneObject2.getString("dev_name");
+                                    String oneObjectsItem15 = oneObject2.getString("control_type");
+                                    String oneObjectsItem16 = oneObject2.getString("current_status");
+
+                                } catch (Exception e) {
+
+                                }
+                            }
+
+
+                    } catch (JSONException e) {
+                        // Oops
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                err = "Exception: " + e.getMessage();
+            }
+            System.out.println("dataAdapter2 runnig");
+            dataAdapter2.notifyDataSetChanged();
+        }
+
+
+    }
+
+    public void sendbellduration(String duration){
+        int dur = Integer.parseInt(duration);
+        if (dur>255){
+            Toast.makeText(Home.this, "Duration should be less than 255", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(Home.this, duration, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendbellinterval(String interval){
+        int intrvl = Integer.parseInt(interval);
+        if (intrvl>255){
+            Toast.makeText(Home.this, "Interval should be less than 255", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(Home.this, interval, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void explainduration(View view) {
+
+        String title = "Duration?";
+        String message = "Used to customize bells ringing tone,A number between 1-255";
+
+        HelperT.showExplanationAlertDialog(message, title, Home.this);
+    }
+
+    public void explainintrvl(View view) {
+
+        String title = "Interval?";
+        String message = "Used to customize wait time until next ring,A number between 1-255";
+
+        HelperT.showExplanationAlertDialog(message, title, Home.this);
     }
 
 }

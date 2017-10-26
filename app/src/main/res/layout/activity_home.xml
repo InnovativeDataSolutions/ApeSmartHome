@@ -19,7 +19,7 @@
         tools:context="com.ids.smarthomev2.Home"
         tools:showIn="@layout/activity_home">
         <!--========================================================================================================================================================-->
-        <LinearLayout
+       <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ll"
@@ -793,6 +793,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rlfan"
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             android:layout_below="@+id/ll"
             android:background="#000000"
@@ -893,6 +894,140 @@
                     android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
+
+        </RelativeLayout>
+<!--=======================================================================================================================-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlbell"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:layout_below="@+id/ll"
+            android:background="#000000"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rlbell1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp">
+
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:id="@+id/lockopen"
+                    android:onClick="lockopen"
+                    android:background="@drawable/lockopen" />
+
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:visibility="gone"
+                    android:id="@+id/lockclosed"
+                    android:onClick="lockclosed"
+                    android:background="@drawable/lockclosed" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rlbell2"
+                android:layout_below="@+id/rlbell1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="35dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:id="@+id/bell"
+                    android:src="@drawable/btnoff"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rlbell2"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/relativeLayout">
+
+                <EditText
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:background="#ffffff"
+                    android:inputType="number"
+                    android:id="@+id/duration"
+                    android:imeOptions="actionSend"
+                    android:hint="1-255"/>
+
+
+                <EditText
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:background="#ffffff"
+                    android:hint="1-255"
+                    android:inputType="number"
+                    android:id="@+id/interval"
+                    android:imeOptions="actionSend"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <ImageButton
+                    android:id="@+id/sq_explain_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info"
+                    android:background="#ffffff"
+                    android:onClick="explainduration"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/duration"
+                    android:layout_alignBottom="@+id/duration" />
+
+                <ImageButton
+                    android:id="@+id/sq_explain_interval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info"
+                    android:background="#ffffff"
+                    android:onClick="explainintrvl"
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/interval"
+                    android:layout_alignBottom="@+id/interval" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duation"
+                android:textColor="#ffffff"
+                android:layout_below="@+id/rlbell2"
+                android:layout_alignStart="@+id/relativeLayout"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interval"
+                android:textColor="#ffffff"
+                android:layout_below="@+id/rlbell2"
+                android:layout_alignEnd="@+id/relativeLayout"
+                android:id="@+id/textView2" />
 
         </RelativeLayout>
 

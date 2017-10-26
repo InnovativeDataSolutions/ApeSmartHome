@@ -43,49 +43,4 @@ public class HelperT {
         }
     }
 
-//    public String decodemanualupdate(String powerln,String internalid2){
-//        cursor = db.getController(powerln, sqLiteDatabase);
-//
-//        String getinternalid = internalid2.substring(42,44);
-//
-//        System.out.println("substring internal id :" + getinternalid);
-//
-//        cursor.moveToFirst();
-//        do {
-//            String pidfkDB = cursor.getString(0);
-//            String contrlidDB = cursor.getString(1);
-//            internalid = cursor.getString(2);
-//            String contrlnameDB = cursor.getString(3);
-//            String contrltype = cursor.getString(4);
-//            String cntrlstatusDB = cursor.getString(5);
-//
-//            System.out.println("getcontroller info through PID : " + pidfkDB + " " + contrlidDB + " " + internalid+ " " + contrlnameDB + " " + cntrlstatusDB + " " + contrltype);
-//
-//        } while (cursor.moveToNext());
-//
-//        cursor2 = db.getdevmodel(powerln, sqLiteDatabase);
-//
-//        cursor2.moveToFirst();
-//        do {
-//            model = cursor2.getString(8);
-//
-//            System.out.println("get dev model info through PID : " + model);
-//
-//        } while (cursor2.moveToNext());
-//
-//            if (model.equals("PS")) {
-//                click = "1PLUGoneOFF";
-//            }else if(model.equals("TS2G")){
-//                switch (getinternalid){
-//                    case "01":
-//                        click = "2GoneOFF";
-//                        break;
-//                    case "02":
-//                        click = "2GtwoOFF";
-//                        break;
-//                }
-//            }
-//        return click;
-//    }
-
     }
