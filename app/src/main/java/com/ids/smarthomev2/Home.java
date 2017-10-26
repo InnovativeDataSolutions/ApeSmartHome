@@ -63,8 +63,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Button on_4g, on2_4g, on3_4g, on4_4g;
     Button on_3g, on2_3g, on3_3g;
     Button btnon1_2g,btnon2_2g;
-    Button on_1g, on_1plug, off_1plug, btnplusfan, btnminusfan, btnonfan ;
-    ImageView bell,btnofffan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
+    Button on_1g, on_1plug, off_1plug, btnonfan ;
+    ImageView bell,btnofffan, btnplusfan, btnminusfan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
     Switch backlight;
     ImageButton lockopen,lockclosed,durationinfo,intervalinfo;
     Spinner sp1, sp2;
@@ -91,7 +91,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
-    String pidfkDB, contrlidDB,manualup,areaslctd, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
+    String pidfkDB, contrlidDB,manualup,intervalET,durationET,areaslctd, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
     int i, fan = 1;
     Handler UIhandler;
     Socket socket = null;
@@ -192,8 +192,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnoff1_2g = (ImageView) findViewById(R.id.btnoff2g);
         btnon2_2g = (Button) findViewById(R.id.btn1on2g);
         btnoff2_2g = (ImageView) findViewById(R.id.btn1off2g);
-        btnplusfan = (Button) findViewById(R.id.btnplusfan);
-        btnminusfan = (Button) findViewById(R.id.btnminusfan);
+        btnplusfan = (ImageView) findViewById(R.id.btnplusfan);
+        btnminusfan = (ImageView) findViewById(R.id.btnminusfan);
         btnonfan = (Button) findViewById(R.id.btnonfan);
         btnofffan = (ImageView) findViewById(R.id.btnofffan);
         backlight = (Switch) findViewById(R.id.backlight);
@@ -461,8 +461,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    String duration = v.getText().toString();
-                    sendbellduration(duration);
+                    durationET = v.getText().toString();
+                    sendbellduration(durationET);
                     handled = true;
                 }
                 return handled;
@@ -474,8 +474,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    String interval = v.getText().toString();
-                    sendbellinterval(interval);
+                    intervalET = v.getText().toString();
+                    sendbellinterval(intervalET);
                     handled = true;
                 }
                 return handled;
@@ -1198,6 +1198,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     byte[] by = hexStringToByteArray(protcollockclosed.replaceAll(" ", ""));
                     out.write(by, 0, by.length);
                     out.flush();
+                }else if (click.contains("duration")) {
+                    byte[] by = hexStringToByteArray(protcolduration.replaceAll(" ", ""));
+                    out.write(by, 0, by.length);
+                    out.flush();
+                }else if (click.contains("interval")) {
+                    byte[] by = hexStringToByteArray(protcolinterval.replaceAll(" ", ""));
+                    out.write(by, 0, by.length);
+                    out.flush();
                 } else {
                     Toast.makeText(Home.this, "Something went wrong,check connection", Toast.LENGTH_SHORT).show();
                 }
@@ -1226,6 +1234,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,fanintid,on);
                     System.out.println("overTheNet : " + pid2 + iid2);
+                }else if (click.contains("duration")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute(homeidVAR,pid2,iid2,durationET);
+                    System.out.println("overTheNet : " + pid2 + iid2 + durationET);
+                }else if (click.contains("duration") || click.contains("interval")) {
+                    SendCmnd sc = new SendCmnd();
+                    sc.execute(homeidVAR,pid2,iid2,intervalET);
+                    System.out.println("overTheNet : " + pid2 + iid2 + intervalET);
                 }
                 e.printStackTrace();
             }
@@ -4005,6 +4021,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             off5_5g.setColorFilter(Color.BLUE);
                         case "FC":
                             btnofffan.setColorFilter(Color.BLUE);
+                            btnplusfan.setColorFilter(Color.BLUE);
+                            btnminusfan.setColorFilter(Color.BLUE);
                         case "BC":
                             bell.setColorFilter(Color.BLUE);
                     }
@@ -4035,6 +4053,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             off5_5g.setColorFilter(Color.WHITE);
                         case "FC":
                             btnofffan.setColorFilter(Color.WHITE);
+                            btnplusfan.setColorFilter(Color.WHITE);
+                            btnminusfan.setColorFilter(Color.WHITE);
                         case "BC":
                             bell.setColorFilter(Color.WHITE);
                     }
@@ -4159,15 +4179,89 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             Toast.makeText(Home.this, "Duration should be less than 255", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(Home.this, duration, Toast.LENGTH_SHORT).show();
+            int point = v;
+            click = "duration";
+            getcontroller();
+            System.out.println("duration " + SERVER_IP);
+            // Device : [
+            String v1 = devicenameAR.get(point);
+            String v2 = areaAR.get(point);
+            String v3 = physicalidAR.get(point);
+            String v4 = powerlineidAR.get(point);
+            String v5 = devicecodeAR.get(point);
+            String v6 = commandidAR.get(point);
+            String v7 = masteridAR.get(point);
+            // ]
+
+            //Controller : [
+            int point2 = 2;
+            String v8 = pidfkARDB.get(point2);
+            String v9 = contrlidARDB.get(point2);
+            String v10 = internalidARDB.get(point2);
+            String v11 = contrltypeARDB.get(point2);
+            String v12 = contrlstatusARDB.get(point2);
+
+            String v4c1 = dectohex(v4);
+            String v7c1 = dectohex(v7);
+            String v6c1 = dectohex(v6);
+            String v10c1 = dectohex(v10);
+
+            v4c = ("00" + v4c1).substring(v4c1.length());
+            String v7c = ("00" + v7c1).substring(v7c1.length());
+            String v6c = ("00" + v6c1).substring(v6c1.length());
+            v10c = ("00" + v10c1).substring(v10c1.length());
+            protcolduration = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s %s AB 03", v7c, v4c, v6c, v10c,duration);
+            System.out.println(protcolduration);
+            devicestatus = v1;
+
+            this.Thread1OTHER = new Thread(new Thread1OTHER());
+            this.Thread1OTHER.start();
         }
     }
 
     public void sendbellinterval(String interval){
         int intrvl = Integer.parseInt(interval);
-        if (intrvl>255){
+        if (intrvl>255 || interval.equals("")){
             Toast.makeText(Home.this, "Interval should be less than 255", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(Home.this, interval, Toast.LENGTH_SHORT).show();
+            int point = v;
+            click = "interval";
+            getcontroller();
+            System.out.println("interval " + SERVER_IP);
+            // Device : [
+            String v1 = devicenameAR.get(point);
+            String v2 = areaAR.get(point);
+            String v3 = physicalidAR.get(point);
+            String v4 = powerlineidAR.get(point);
+            String v5 = devicecodeAR.get(point);
+            String v6 = commandidAR.get(point);
+            String v7 = masteridAR.get(point);
+            // ]
+
+            //Controller : [
+            int point2 = 3;
+            String v8 = pidfkARDB.get(point2);
+            String v9 = contrlidARDB.get(point2);
+            String v10 = internalidARDB.get(point2);
+            String v11 = contrltypeARDB.get(point2);
+            String v12 = contrlstatusARDB.get(point2);
+
+            String v4c1 = dectohex(v4);
+            String v7c1 = dectohex(v7);
+            String v6c1 = dectohex(v6);
+            String v10c1 = dectohex(v10);
+
+            v4c = ("00" + v4c1).substring(v4c1.length());
+            String v7c = ("00" + v7c1).substring(v7c1.length());
+            String v6c = ("00" + v6c1).substring(v6c1.length());
+            v10c = ("00" + v10c1).substring(v10c1.length());
+            protcolinterval = String.format("02 %s 00 00 00 83 03 %s 00 00 00 00 00 00 00 %s %s %s AB 03", v7c, v4c, v6c, v10c,interval);
+            System.out.println(protcolinterval);
+            devicestatus = v1;
+
+            this.Thread1OTHER = new Thread(new Thread1OTHER());
+            this.Thread1OTHER.start();
         }
 
     }

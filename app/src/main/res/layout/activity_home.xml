@@ -868,27 +868,23 @@
                 android:layout_marginTop="45dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="40dp">
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:id="@+id/btnplusfan"
-                    android:text="+"
                     android:textSize="40dp"
-                    android:textColor="#ffffff"
                     android:onClick="btnplusfan"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/button_off" />
+                    android:src="@drawable/plus" />
 
 
-                <Button
+                <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:text="-"
                     android:textSize="50dp"
-                    android:textColor="#ffffff"
                     android:id="@+id/btnminusfan"
                     android:onClick="btnminusfan"
-                    android:background="@drawable/button_off"
+                    android:src="@drawable/minus"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -948,7 +944,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:id="@+id/bell"
-                    android:src="@drawable/btnoff"
+                    android:src="@drawable/bell"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="20dp"/>
