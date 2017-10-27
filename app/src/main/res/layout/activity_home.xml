@@ -69,7 +69,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:id="@+id/rl5g"
             android:layout_marginTop="20dp"
             android:layout_below="@+id/ll"
@@ -969,19 +968,19 @@
                     android:inputType="number"
                     android:id="@+id/duration"
                     android:imeOptions="actionSend"
-                    android:hint="1-255"/>
+                    android:hint="1-10"/>
 
 
                 <EditText
                     android:layout_width="80dp"
                     android:layout_height="40dp"
                     android:background="#ffffff"
-                    android:hint="1-255"
+                    android:hint="1-10"
                     android:inputType="number"
                     android:id="@+id/interval"
                     android:imeOptions="actionSend"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_toStartOf="@+id/sq_explain_interval" />
 
                 <ImageButton
                     android:id="@+id/sq_explain_duration"
@@ -1002,7 +1001,7 @@
                     android:background="#ffffff"
                     android:onClick="explainintrvl"
                     android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/interval"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignBottom="@+id/interval" />
 
             </RelativeLayout>

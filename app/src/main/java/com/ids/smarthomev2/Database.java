@@ -217,6 +217,15 @@ public class Database extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean deletecurrentinfo()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from "+ table);
+        db.execSQL("delete from "+ table2);
+        db.close();
+        return true;
+    }
+
 
 
     public Cursor gethomeinfo() {

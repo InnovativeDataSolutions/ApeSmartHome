@@ -92,6 +92,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
     String pidfkDB, contrlidDB,manualup,intervalET,durationET,areaslctd, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
+    String oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8,oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16;
+    boolean dbcheck1, dbcheck2;
     int i, fan = 1;
     Handler UIhandler;
     Socket socket = null;
@@ -127,6 +129,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     //List<String> cntrlstatusinfo = new ArrayList<String>();
     HashMap<String, String> cntrlstatusinfo = new HashMap<String, String>();
     HashMap<String, String> area_devname = new HashMap<String, String>();
+    HashMap<String, String> blstatusinfo = new HashMap<String, String>();
 
     //Contrller:[
     List<String> pidfkAR = new ArrayList<String>();
@@ -316,6 +319,18 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
         }
 
+        for(int s=0;s<areaDUPLICATE.size();s++)
+        {
+            for(int m=1;m<areaDUPLICATE.size();m++)
+            {
+
+                if(areaDUPLICATE.get(s) != null && areaDUPLICATE.get(s).equals(areaDUPLICATE.get(m)))
+                {
+                    areaDUPLICATE.remove(m); //remove duplicate values
+                }
+            }
+        }
+
         for (String obj2 : areaDUPLICATE) {
             System.out.println("areafilter2 : " + obj2);
         }
@@ -338,18 +353,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
 //                areaslctd = areaDUPLICATE.get(position);
 //                System.out.println("running spinner 1" + areaslctd);
-//                devicemodelAR.clear();
-//                devicenameAR.clear();
-//                masteridAR.clear();
-//                powerlineidAR.clear();
-//                commandidAR.clear();
-//                rl1.setVisibility(View.GONE);
-//                rl2.setVisibility(View.GONE);
-//                rl3.setVisibility(View.GONE);
-//                rl4.setVisibility(View.GONE);
-//                rl5.setVisibility(View.GONE);
-//                rlplug.setVisibility(View.GONE);
-//                rlfan.setVisibility(View.GONE);
+//                db.deletecurrentinfo();//
 //                filterareadevices cds = new filterareadevices();
 //                cds.execute(homeidVAR);
 
@@ -451,7 +455,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
             checkdevstatus cds = new checkdevstatus();
             cds.execute(homeidVAR);
-        //}
+       // }
         helperT = new HelperT(ctx);
 
         backlightcmnd();
@@ -692,6 +696,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         }
                         //sp1.setSelection(v);
                         sp2.setSelection(v);
+                        checkbacklightstate(value4,value);
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
                             getcntrlstate(value4);
@@ -769,6 +774,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         }
                         //sp1.setSelection(v);
                         sp2.setSelection(v);
+                        checkbacklightstate(value4,value);
                         //get values from array based on value of v and assign them to the protocol.
                         if (value.contains("TS1G")) {
                             getcntrlstate(value4);
@@ -846,6 +852,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             System.out.println("indexOf ardb : " + indexofsecnddevice);
                             //sp1.setSelection(indexofsecnddevice);
                             sp2.setSelection(indexofsecnddevice);
+                            checkbacklightstate(value,value4);
                             if (value.equals("PS")){
                                 backlight.setVisibility(View.GONE);
                             }else{
@@ -928,6 +935,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                             System.out.println("indexOf ardb : " + indexofsecnddevice);
                             //sp1.setSelection(indexofsecnddevice);
                             sp2.setSelection(indexofsecnddevice);
+                            checkbacklightstate(value,value4);
                             if (value.equals("PS")){
                                 backlight.setVisibility(View.GONE);
                             }else{
@@ -1431,10 +1439,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     }
                     if (click.equals("btnbacklight")){
                         if (status.equals("01")){
-                            Toast.makeText(Home.this, "Backlight ON", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Home.this, "Backlight ON", Toast.LENGTH_SHORT).show();
                             backlightbool=true;
                         }else{
-                            Toast.makeText(Home.this, "Backlight OFF", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Home.this, "Backlight OFF", Toast.LENGTH_SHORT).show();
                             backlightbool=false;
                         }
                     }
@@ -1702,7 +1710,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g3off");
         click = "5GthreeOFF";
         int point = v;
-        int point2 = 5;
+        int point2 = 3;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -1744,7 +1752,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g3on");
         click = "5GthreeON";
         int point = v;
-        int point2 = 5;
+        int point2 = 3;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -1785,7 +1793,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g4off");
         click = "5GfourOFF";
         int point = v;
-        int point2 = 3;
+        int point2 = 4;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -1827,7 +1835,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g4on");
         click = "5GfourON";
         int point = v;
-        int point2 = 3;
+        int point2 = 4;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -1869,7 +1877,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g5off");
         click = "5GfiveOFF";
         int point = v;
-        int point2 = 4;
+        int point2 = 5;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -1911,7 +1919,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         System.out.println("5g5on");
         click = "5GfiveON";
         int point = v;
-        int point2 = 4;
+        int point2 = 5;
         getcontroller();
         // Device : [
         String v1 = devicenameAR.get(point);
@@ -3372,11 +3380,10 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void getcntrlstate(String devname){
-
         for ( Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {
             String key = entry.getKey();
             String click = entry.getValue();
-            System.out.println("getcntrlstate : " + "Key :" + key  + " Devname :" + devname +  " Click :" + click);
+            System.out.println("getcntrlstate : " + "Key :" + key + " Devname :" + devname +  " Click :" + click) ;
             if (cntrlstatusinfo.containsKey(devname)) {
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.GONE);
@@ -3430,7 +3437,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     off5_5g.setVisibility(View.GONE);
                     on5_5g.setVisibility(View.VISIBLE);
                 }
-            }else{
+            }
+            else{
                 System.out.println("Reset to ealier");
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.VISIBLE);
@@ -3560,11 +3568,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
             }
-            //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
+           // if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
                 String model = devicemodelAR.get(v);
                 getcntrlstate(model);
                 System.out.println(model);
-            //}
+           // }
             for (Map.Entry<String, String> entry : cntrlstatusinfo.entrySet()) {  //checking in hash map if data has been input
                 String key = entry.getKey();
                 String click = entry.getValue();
@@ -3721,7 +3729,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void searchfordev(String devmodel,String status,String devname,String getinternalid){
-
+//            String click;
         if (devmodel.equals("PS")) {
             switch (status) {
                 case "01":
@@ -3902,88 +3910,88 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 }
 
     public void updatecntrlstatusarray(String devmodel,String devname,String getinternalid){
+        System.out.println("updatecntrlstatusarray : " + devmodel + devname + getinternalid);
         if (devmodel.equals("PS")) {
                     click = "1PLUGoneOFF";
-                    cntrlstatusinfo.put(devname, click);
+            cntrlstatusinfo.put(devname, click);
 
         }else if (devmodel.equals("TS1G")) {
             switch (getinternalid) {
-                case "01":
+                case "1":
                     click = "1GoneOFF";
                     cntrlstatusinfo.put(devname, click);
                     break;
             }
         } else if (devmodel.equals("TS2G")) {
             switch (getinternalid) {
-                case "01":
+                case "1":
                     click = "2GoneOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "02":
+                case "2":
                         click = "2GtwoOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
             }
         }else if (devmodel.equals("FC")){
                 click = "fcOFF";
-                System.out.println("Fan controls :" + devname + click);
-                cntrlstatusinfo.put(devname, click);
+            cntrlstatusinfo.put(devname, click);
         }else if (devmodel.equals("TS3G")) {
             switch (getinternalid) {
-                case "01":
+                case "1":
                         click = "3GoneOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "02":
+                case "2":
                         click = "3GtwoOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "03":
+                case "3":
                         click = "3GthreeOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
             }
         }else if (devmodel.equals("TS4G")) {
             switch (getinternalid) {
-                case "01":
+                case "1":
                         click = "4GoneOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "02":
+                case "2":
                         click = "4GtwoOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "03":
+                case "3":
                         click = "4GthreeOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "04":
+                case "4":
                         click = "4GfourOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
             }
 
         }else if (devmodel.equals("TS5G")) {
             switch (getinternalid) {
-                case "01":
+                case "1":
                         click = "5GoneOFF";
                         cntrlstatusinfo.put(devname, click);
                     break;
-                case "02":
+                case "2":
                         click = "5GtwoOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "03":
+                case "3":
                         click = "5GthreeOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);;
                     break;
-                case "04":
+                case "4":
                         click = "5GfourOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
-                case "05":
+                case "5":
                         click = "5GfiveOFF";
-                        cntrlstatusinfo.put(devname, click);
+                    cntrlstatusinfo.put(devname, click);
                     break;
             }
 
@@ -3991,13 +3999,15 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void backlightcmnd(){
-        backlight.setChecked(false);
         backlight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String device = devicenameAR.get(v);
+                String name = devicemodelAR.get(v);
+                String pid = powerlineidAR.get(v);
                 if (isChecked) {
-                    System.out.println("ischeck");
+                    System.out.println("ischeck " + name);
                     backlight();
+                    blstatusinfo.put(name,"btnbacklight");
                     switch (device){
                         case "TS1G":
                             off_1g.setColorFilter(Color.BLUE);
@@ -4028,8 +4038,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     }
 
                 } else {
-                    System.out.println("nocheck");
+                    System.out.println("nocheck " + name);
                     backlight();
+                    blstatusinfo.remove(name);
                     switch (device){
                         case "TS1G":
                             off_1g.setColorFilter(Color.WHITE);
@@ -4073,7 +4084,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             int tmp;
 
             try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceList/"); //to get device list
+                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //to get device list
                 String urlParams = "HomeID="+homeid;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -4113,55 +4124,63 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 for (i = 0; i < jArray.length(); i++) {
                     try {
                         JSONObject oneObject = jArray.getJSONObject(i);
-                        // Pulling items from the array
-//                        String name = oneObject.getString("name");
-//                        String area = oneObject.getString("area");
-//                        String model = oneObject.getString("device_model");
-//                        String cmndid = oneObject.getString("command_id");
-//                        String masterid = oneObject.getString("master_id");
-//                        String powerlineid = oneObject.getString("powerline_id");
 
-                        String oneObjectsItem = oneObject.getString("physical_id");
-                        String oneObjectsItem2 = oneObject.getString("powerline_id");
-                        String oneObjectsItem3 = oneObject.getString("name");
-                        String oneObjectsItem4 = oneObject.getString("area");
-                        String oneObjectsItem5 = oneObject.getString("device_model");
-                        String oneObjectsItem6 = oneObject.getString("device_code");
-                        String oneObjectsItem7 = oneObject.getString("command_id");
-                        String oneObjectsItem8 = oneObject.getString("master_id");
+                        oneObjectsItem = oneObject.getString("physical_id");
+                        oneObjectsItem2 = oneObject.getString("powerline_id");
+                        oneObjectsItem3 = oneObject.getString("name");
+                        oneObjectsItem4 = oneObject.getString("area");
+                        oneObjectsItem5 = oneObject.getString("device_model");
+                        oneObjectsItem6 = oneObject.getString("device_code");
+                        oneObjectsItem7 = oneObject.getString("command_id");
+                        oneObjectsItem8 = oneObject.getString("master_id");
+                        oneObjectsItem12 = oneObject.getString("device_id");
+                        oneObjectsItem13 = oneObject.getString("internal_id");
+                        oneObjectsItem14 = oneObject.getString("dev_name");
+                        oneObjectsItem15 = oneObject.getString("control_type");
+                        oneObjectsItem16 = oneObject.getString("current_status");
 
                         if (areaslctd.equals(oneObjectsItem4)) {
-                            //db.deletecurrentinfo();
-                            physicalidAR.add(oneObjectsItem);
-                            devicemodelAR.add(oneObjectsItem3);
-                            devicenameAR.add(oneObjectsItem5);
-                            masteridAR.add(oneObjectsItem8);
-                            powerlineidAR.add(oneObjectsItem2);
-                            commandidAR.add(oneObjectsItem7);
-                            devicecodeAR.add(oneObjectsItem6);
-                            System.out.println("dataAdapter2 runnig" + areaslctd);}
+                                physicalidAR.add(oneObjectsItem);
+                                devicemodelAR.add(oneObjectsItem3);
+                                devicenameAR.add(oneObjectsItem5);
+                                masteridAR.add(oneObjectsItem8);
+                                powerlineidAR.add(oneObjectsItem2);
+                                commandidAR.add(oneObjectsItem7);
+                                devicecodeAR.add(oneObjectsItem6);
+                                System.out.println("dataAdapter2 runnig" + areaslctd);
+                                    pidfkAR.add(oneObjectsItem2);
+                                    contrlidAR.add(oneObjectsItem12);
+                                    internalidAR.add(oneObjectsItem13);
+                                    cntrlnameAR.add(oneObjectsItem14);
+                                    contrltypeAR.add(oneObjectsItem15);
+                                    contrlstatusAR.add(oneObjectsItem16);
+                                        System.out.println("loop 2 running" + oneObjectsItem2 + oneObjectsItem12+ oneObjectsItem13 +oneObjectsItem14 + oneObjectsItem15 + oneObjectsItem16);
 
-
-                            final JSONArray jArray2 = oneObject.getJSONArray("Controllers");
-                            for (int j = 0; j < jArray2.length(); j++) {
-                                try {
-                                    JSONObject oneObject2 = jArray2.getJSONObject(j);
-                                    String oneObjectsItem12 = oneObject2.getString("device_id");
-                                    String oneObjectsItem13 = oneObject2.getString("internal_id");
-                                    String oneObjectsItem14 = oneObject2.getString("dev_name");
-                                    String oneObjectsItem15 = oneObject2.getString("control_type");
-                                    String oneObjectsItem16 = oneObject2.getString("current_status");
-
-                                } catch (Exception e) {
-
+                                System.out.println("Controller info : " + oneObjectsItem12 + oneObjectsItem13 + oneObjectsItem14 + oneObjectsItem15 + oneObjectsItem16);
+                                dbcheck1 = db.insertcontrollerinfo(oneObjectsItem2, oneObjectsItem12, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16);
+                                if (dbcheck1 == true) {
+                                    System.out.println("controller info DB inserted " + i + " " + j + " " + oneObjectsItem2 + " " + oneObjectsItem12 + " " + oneObjectsItem13 + " " + oneObjectsItem14 + " " + oneObjectsItem15 + " " + oneObjectsItem16);
+                                } else {
+                                    System.out.println("controller db failure");
                                 }
+
+                            dbcheck2 = db.inserthomeinfo(homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, oneObjectsItem, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8);
+                            if (dbcheck2 == true) {
+                                System.out.println("home info DB inserted " + i);
+                            } else {
+                                System.out.println("home info db failure");
                             }
 
+                        }
 
-                    } catch (JSONException e) {
-                        // Oops
+
+                        }catch(JSONException e){
+                            // Oops
+                        }
+                        System.out.println("check for status of devices : " + oneObjectsItem + " " + oneObjectsItem2 + " " + oneObjectsItem3 + " " + oneObjectsItem4 + " " + oneObjectsItem5 + " " + oneObjectsItem6 + " " + oneObjectsItem7 + " " + oneObjectsItem8);
+
                     }
-                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 err = "Exception: " + e.getMessage();
@@ -4175,8 +4194,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void sendbellduration(String duration){
         int dur = Integer.parseInt(duration);
-        if (dur>255){
-            Toast.makeText(Home.this, "Duration should be less than 255", Toast.LENGTH_SHORT).show();
+        if (dur>10){
+            Toast.makeText(Home.this, "Duration should be less than 10", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(Home.this, duration, Toast.LENGTH_SHORT).show();
             int point = v;
@@ -4221,8 +4240,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void sendbellinterval(String interval){
         int intrvl = Integer.parseInt(interval);
-        if (intrvl>255 || interval.equals("")){
-            Toast.makeText(Home.this, "Interval should be less than 255", Toast.LENGTH_SHORT).show();
+        if (intrvl>10 || interval.equals("")){
+            Toast.makeText(Home.this, "Interval should be less than 10", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(Home.this, interval, Toast.LENGTH_SHORT).show();
             int point = v;
@@ -4269,7 +4288,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void explainduration(View view) {
 
         String title = "Duration?";
-        String message = "Used to customize bells ringing tone,A number between 1-255";
+        String message = "Used to customize bells ringing tone,A number between 1-10";
 
         HelperT.showExplanationAlertDialog(message, title, Home.this);
     }
@@ -4277,11 +4296,85 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void explainintrvl(View view) {
 
         String title = "Interval?";
-        String message = "Used to customize wait time until next ring,A number between 1-255";
+        String message = "Used to customize wait time until next ring,A number between 10";
 
         HelperT.showExplanationAlertDialog(message, title, Home.this);
     }
 
-}
+    public void checkbacklightstate(String devname,String model){
+
+        for ( Map.Entry<String, String> entry : blstatusinfo.entrySet()) {
+            String key = entry.getKey();
+            String click = entry.getValue();
+            System.out.println("getBLstate : " + "Key :" + key + "( Devname :" + devname + " Devname :" + model +  ") Click :" + click) ;
+            if (blstatusinfo.containsKey(devname)) {
+                if (click.equals("btnbacklight")) {
+                    System.out.println("getBLstate : SUCCESS");
+                    switch (model){
+                        case "TS1G":
+                            off_1g.setColorFilter(Color.BLUE);
+                        case "TS2G":
+                            btnoff1_2g.setColorFilter(Color.BLUE);
+                            btnoff2_2g.setColorFilter(Color.BLUE);
+                        case "TS3G":
+                            off_3g.setColorFilter(Color.BLUE);
+                            off2_3g.setColorFilter(Color.BLUE);
+                            off3_3g.setColorFilter(Color.BLUE);
+                        case "TS4G":
+                            off_4g.setColorFilter(Color.BLUE);
+                            off2_4g.setColorFilter(Color.BLUE);
+                            off3_4g.setColorFilter(Color.BLUE);
+                            off4_4g.setColorFilter(Color.BLUE);
+                        case "TS5G":
+                            off_5g.setColorFilter(Color.BLUE);
+                            off2_5g.setColorFilter(Color.BLUE);
+                            off3_5g.setColorFilter(Color.BLUE);
+                            off4_5g.setColorFilter(Color.BLUE);
+                            off5_5g.setColorFilter(Color.BLUE);
+                        case "FC":
+                            btnofffan.setColorFilter(Color.BLUE);
+                            btnplusfan.setColorFilter(Color.BLUE);
+                            btnminusfan.setColorFilter(Color.BLUE);
+                        case "BC":
+                            bell.setColorFilter(Color.BLUE);
+                    }
+                    backlight.setChecked(true);
+                }}
+                else{
+                System.out.println("getBLstate : off");
+                switch (model){
+                    case "TS1G":
+                        off_1g.setColorFilter(Color.WHITE);
+                    case "TS2G":
+                        btnoff1_2g.setColorFilter(Color.WHITE);
+                        btnoff2_2g.setColorFilter(Color.WHITE);
+                    case "TS3G":
+                        off_3g.setColorFilter(Color.WHITE);
+                        off2_3g.setColorFilter(Color.WHITE);
+                        off3_3g.setColorFilter(Color.WHITE);
+                    case "TS4G":
+                        off_4g.setColorFilter(Color.WHITE);
+                        off2_4g.setColorFilter(Color.WHITE);
+                        off3_4g.setColorFilter(Color.WHITE);
+                        off4_4g.setColorFilter(Color.WHITE);
+                    case "TS5G":
+                        off_5g.setColorFilter(Color.WHITE);
+                        off2_5g.setColorFilter(Color.WHITE);
+                        off3_5g.setColorFilter(Color.WHITE);
+                        off4_5g.setColorFilter(Color.WHITE);
+                        off5_5g.setColorFilter(Color.WHITE);
+                    case "FC":
+                        btnofffan.setColorFilter(Color.WHITE);
+                        btnplusfan.setColorFilter(Color.WHITE);
+                        btnminusfan.setColorFilter(Color.WHITE);
+                    case "BC":
+                        bell.setColorFilter(Color.WHITE);
+                }
+                backlight.setChecked(false);
+            }
+            }
+
+
+}}
 
 
