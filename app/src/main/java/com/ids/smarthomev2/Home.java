@@ -92,7 +92,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     private String mActivityTitle;
     String homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, areanameVAR, devicenameVAR, devicemodelVAR, powerlineidVAR, cmmndidVAR, masteridVAR, devicecodeVAR, physicalidVAR, contridVAR, internalidVAR, contrnameVAR, contrtypeVAR, contrstatusVAR, pidfk;
     String pidfkDB, contrlidDB,manualup,intervalET,durationET,areaslctd, internalidDB, contrlnameDB, cntrlstatusDB, v4c, v10c, fanintid, buttonstate,clientrply, devicestatus = null, switchstatusid,on="1",off="2";
-    String oneObjectsItem, oneObjectsItem12, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8,oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16;
     boolean dbcheck1, dbcheck2;
     int i, fan = 1;
     Handler UIhandler;
@@ -231,10 +230,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-//        WifiManager wifiMgr = (WifiManager).getSystemService(Context.WIFI_SERVICE);
-//        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-//        String name = wifiInfo.getSSID();
 
         tvinfo = (TextView) findViewById(R.id.tvinfo);
         tvfanspeed = (TextView) findViewById(R.id.faninfotv);
@@ -1050,13 +1045,16 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 int iid = Integer.parseInt(v10c, 16); // " internal id
                 String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
-                    SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,on);
-                    System.out.println("overTheNet : " + pid2 + iid2);
+                    if (!usernameVAR.equals("infotel")) {
+                        SendCmnd sc = new SendCmnd();
+                        sc.execute(homeidVAR, pid2, iid2, on);
+                        System.out.println("overTheNet : " + pid2 + iid2);
+                    }
                 } else {
+                    if (!usernameVAR.equals("infotel")) {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,off);
-                    System.out.println("overTheNet : " + pid2 + iid2);
+                    System.out.println("overTheNet : " + pid2 + iid2);}
                 }
                 e.printStackTrace();
             }
@@ -1087,6 +1085,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                if (!usernameVAR.equals("infotel")) {
                 int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
                 String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
                 int iid = Integer.parseInt(v10c, 16); // " internal id
@@ -1099,7 +1098,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,off);
                     System.out.println("overTheNet : " + pid2 + iid2);
-                }
+                }}
                 e.printStackTrace();
             }
         }
@@ -1129,6 +1128,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                if (!usernameVAR.equals("infotel")) {
                 int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
                 String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
                 int iid = Integer.parseInt(v10c, 16); // " internal id
@@ -1141,7 +1141,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,off);
                     System.out.println("overTheNet : " + pid2 + iid2);
-                }
+                }}
                 e.printStackTrace();
             }
         }
@@ -1222,6 +1222,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 return;
             } catch (Exception e) {
                 UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+                if (!usernameVAR.equals("infotel")) {
                 int pid = Integer.parseInt(v4c, 16); //taking powerlineid(hex) converting to integer
                 String pid2 = String.valueOf(pid); // converting hex powerlineid to deciaml
                 int iid = Integer.parseInt(v10c, 16); // " internal id
@@ -1250,7 +1251,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     SendCmnd sc = new SendCmnd();
                     sc.execute(homeidVAR,pid2,iid2,intervalET);
                     System.out.println("overTheNet : " + pid2 + iid2 + intervalET);
-                }
+                }}
                 e.printStackTrace();
             }
         }
@@ -1414,43 +1415,142 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
-            System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline + "controller name : "); //used for checking
+            System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
 
-                if (message.length()>48) { //if message > 48 check if manual update else it must be reply frm server
+                if (message.length() == 50) { //if message > 48 check if manual update else it must be reply frm server
                     manualup = message.substring(46, 48);
+                }
+                if (message.length()>50){
+                    int messagelength = message.length();
+                    if (messagelength == 54) {
+                        manualup = message.substring(50, 52);
+                    }else if (messagelength == 58) {
+                        manualup = message.substring(54, 56);
+                    }else if (messagelength == 62) {
+                        manualup = message.substring(58, 60);
+                    }else if (messagelength == 66) {
+                        manualup = message.substring(62, 64);
+                    }else if (messagelength == 70) {
+                        manualup = message.substring(66, 68);
+                    }
                 }
                 if (manualup == null){ //if manual update digit is null then its global response
                     System.out.println("Server update Initiated : " + devname + click);
                     changebuttonfunc(devname,click); //change btn func accordingly
                 }
-                else if (manualup.equals("00")) { //if manual update check for 00
+                else if (manualup.equals("00")) {
+                    if(message.length() == 50){
+                        //if manual update check for 00
                         String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
                         String status = message.substring(44, 46); //get status of that device
-                        System.out.println("Manual Update Initiated : " + val + devmodel + getinternalid + status + " " + manualup);
+                        System.out.println("Manual Update Initiated '50' : " + val + devmodel + getinternalid + status + " " + manualup);
                         searchfordev(devmodel,status,devname,getinternalid);
+                    }
+                    else if (message.length()>50){
+                        int messagelength = message.length();
+                        if (messagelength == 54) {
+                            String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
+                            String status = message.substring(44, 46); //get status of that device
+                            String getinternalid2 = message.substring(46, 48); //get internal id to recognize the device number
+                            String status2 = message.substring(48, 50); //get status of that device
+                            System.out.println("Manual Update Initiated '54': " + val + devmodel + getinternalid + status + " " + manualup);
+                            searchfordev(devmodel,status,devname,getinternalid);
+                            searchfordev(devmodel,status2,devname,getinternalid2);
+                        }else if (messagelength == 58) {
+                            String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
+                            String status = message.substring(44, 46); //get status of that device
+                            String getinternalid2 = message.substring(46, 48); //get internal id to recognize the device number
+                            String status2 = message.substring(48, 50); //get status of that device
+                            String getinternalid3 = message.substring(50, 52); //get internal id to recognize the device number
+                            String status3 = message.substring(52, 54); //get status of that device
+                            System.out.println("Manual Update Initiated '58' : " + val + devmodel + getinternalid + status + " " + manualup);
+                            searchfordev(devmodel,status,devname,getinternalid);
+                            searchfordev(devmodel,status2,devname,getinternalid2);
+                            searchfordev(devmodel,status3,devname,getinternalid3);
+                        }else if (messagelength == 62) {
+                            String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
+                            String status = message.substring(44, 46); //get status of that device
+                            String getinternalid2 = message.substring(46, 48); //get internal id to recognize the device number
+                            String status2 = message.substring(48, 50); //get status of that device
+                            String getinternalid3 = message.substring(50, 52); //get internal id to recognize the device number
+                            String status3 = message.substring(52, 54); //get status of that device
+                            String getinternalid4 = message.substring(54, 56); //get internal id to recognize the device number
+                            String status4 = message.substring(56, 58); //get status of that device
+                            System.out.println("Manual Update Initiated '62': " + val + devmodel + getinternalid + status + " " + manualup);
+                            searchfordev(devmodel,status,devname,getinternalid);
+                            searchfordev(devmodel,status2,devname,getinternalid2);
+                            searchfordev(devmodel,status3,devname,getinternalid3);
+                            searchfordev(devmodel,status4,devname,getinternalid4);
+                        }else if (messagelength == 66) {
+                            String getinternalid = message.substring(42, 44); //get internal id to recognize the device number
+                            String status = message.substring(44, 46); //get status of that device
+                            String getinternalid2 = message.substring(46, 48); //get internal id to recognize the device number
+                            String status2 = message.substring(48, 50); //get status of that device
+                            String getinternalid3 = message.substring(50, 52); //get internal id to recognize the device number
+                            String status3 = message.substring(52, 54); //get status of that device
+                            String getinternalid4 = message.substring(54, 56); //get internal id to recognize the device number
+                            String status4 = message.substring(56, 58); //get status of that device
+                            String getinternalid5 = message.substring(58, 60); //get internal id to recognize the device number
+                            String status5 = message.substring(60, 62); //get status of that device
+                            System.out.println("Manual Update Initiated '66' : " + val + devmodel + getinternalid + status + " " + manualup);
+                            searchfordev(devmodel,status,devname,getinternalid);
+                            searchfordev(devmodel,status2,devname,getinternalid2);
+                            searchfordev(devmodel,status3,devname,getinternalid3);
+                            searchfordev(devmodel,status4,devname,getinternalid4);
+                            searchfordev(devmodel,status5,devname,getinternalid5);
+                        }else if (messagelength == 70) {
+                            String getinternalid = message.substring(42, 44);
+                            String status = message.substring(44, 46);
+                            String getinternalid2 = message.substring(46, 48);
+                            String status2 = message.substring(48, 50); //get status of that device
+                            String getinternalid3 = message.substring(50, 52); //get internal id to recognize the device number
+                            String status3 = message.substring(52, 54); //get status of that device
+                            String getinternalid4 = message.substring(54, 56); //get internal id to recognize the device number
+                            String status4 = message.substring(56, 58); //get status of that device
+                            String getinternalid5 = message.substring(58, 60); //get internal id to recognize the device number
+                            String status5 = message.substring(60, 62); //get status of that device
+                            String getinternalid6 = message.substring(62, 64); //get internal id to recognize the device number
+                            String status6 = message.substring(64, 66); //get status of that device
+                            System.out.println("Manual Update Initiated '70' : " + val + devmodel + getinternalid + status + " " + manualup);
+                            searchfordev(devmodel,status,devname,getinternalid);
+                            searchfordev(devmodel,status2,devname,getinternalid2);
+                            searchfordev(devmodel,status3,devname,getinternalid3);
+                            searchfordev(devmodel,status4,devname,getinternalid4);
+                            searchfordev(devmodel,status5,devname,getinternalid5);
+                            searchfordev(devmodel,status6,devname,getinternalid6);
+                        }
+                    }
                     } else {
                     System.out.println("App update initiated :" + devname + click); //not manaul update not server update,ordinary update with AB in the end
                     String getinternalid = message.substring(42, 44);
                     String status = message.substring(44, 46);
-                    if (click == null){ //if click null can mean that another device tried to control the switch u are in.
-                        searchfordev(devmodel,status,devname,getinternalid);
+                    if (click == null) { //if click null can mean that another device tried to control the switch u are in.
+                        searchfordev(devmodel, status, devname, getinternalid);
                     }
-                    if (click.equals("btnbacklight")){
-                        if (status.equals("01")){
-                            //Toast.makeText(Home.this, "Backlight ON", Toast.LENGTH_SHORT).show();
-                            backlightbool=true;
-                        }else{
-                            //Toast.makeText(Home.this, "Backlight OFF", Toast.LENGTH_SHORT).show();
-                            backlightbool=false;
+                    if (click.equals("btnbacklight")) {
+                        if (status.equals("01")) {
+                            backlightbool = true;
+                        } else {
+                            backlightbool = false;
                         }
                     }
-                    if (!click.equals("btnbacklight")){
-                     changebuttonfunc(devname, click); //else normal update
-                    }
+                    if (getinternalid.equals("08")) {
+                        if (getinternalid.equals("08") && status.equals("01") || getinternalid.equals("8") && status.equals("1")) {
+                            String event = "ON";
+                            groupmessage(event);
+                        } else if (getinternalid.equals("08") && status.equals("02") || getinternalid.equals("8") && status.equals("2")) {
+                            String event = "OFF";
+                            groupmessage(event);
+                        }
+                    } else {
+                        if (!click.equals("btnbacklight")) {
+                            changebuttonfunc(devname, click); //else normal update
+                        }
                         UIhandler.post(new UpdateButtonState(click.toUpperCase()));
                     }
+                }
 
                     activateallbuttons();
             }
@@ -3384,7 +3484,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String key = entry.getKey();
             String click = entry.getValue();
             System.out.println("getcntrlstate : " + "Key :" + key + " Devname :" + devname +  " Click :" + click) ;
-            if (cntrlstatusinfo.containsKey(devname)) {
+            if (cntrlstatusinfo.containsKey(devname)||cntrlstatusinfo.containsKey(devname+10)||cntrlstatusinfo.containsKey(devname+11)||cntrlstatusinfo.containsKey(devname+12)||cntrlstatusinfo.containsKey(devname+13)||cntrlstatusinfo.containsKey(devname+14)||cntrlstatusinfo.containsKey(devname+15)||cntrlstatusinfo.containsKey(devname+16)||cntrlstatusinfo.containsKey(devname+17)||cntrlstatusinfo.containsKey(devname+1)||cntrlstatusinfo.containsKey(devname+18)||cntrlstatusinfo.containsKey(devname+2)||cntrlstatusinfo.containsKey(devname+3)||cntrlstatusinfo.containsKey(devname+4)||cntrlstatusinfo.containsKey(devname+5)||cntrlstatusinfo.containsKey(devname+6)||cntrlstatusinfo.containsKey(devname+7)||cntrlstatusinfo.containsKey(devname+8)||cntrlstatusinfo.containsKey(devname+9)) {
                 if (click == "1GoneOFF") {
                     off_1g.setVisibility(View.GONE);
                     on_1g.setVisibility(View.VISIBLE);
@@ -3444,8 +3544,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     off_1g.setVisibility(View.VISIBLE);
                     on_1g.setVisibility(View.GONE);
                 }else if(click.equals("fcOFF")){
-                    btnofffan.setVisibility(View.GONE);
-                    btnonfan.setVisibility(View.VISIBLE);
+                    btnofffan.setVisibility(View.VISIBLE);
+                    btnonfan.setVisibility(View.GONE);
                 } else if (click == "1PLUGoneOFF") {
                     off_1plug.setVisibility(View.VISIBLE);
                     on_1plug.setVisibility(View.GONE);
@@ -3554,7 +3654,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         System.out.println("Raw device list : " + devname + " " + status + " " + internalid);
 
                         if (status.equals("1")){
-                            updatecntrlstatusarray(devmodel,devname,internalid);
+                            updatecntrlstatusarray(devmodel,devname+i,internalid);
+                            System.out.println(devname+i);
                         }
                         else{
                             System.out.println("Move on");
@@ -4075,123 +4176,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         });
     }
 
-    class filterareadevices extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String homeid = params[0];
-            String data = "";
-            int tmp;
-
-            try {
-                URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/RawDeviceList/"); //to get device list
-                String urlParams = "HomeID="+homeid;
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                OutputStream os = httpURLConnection.getOutputStream();
-                os.write(urlParams.getBytes());
-                os.flush();
-                os.close();
-                InputStream is = httpURLConnection.getInputStream();
-                while ((tmp = is.read()) != -1) {
-                    data += (char) tmp;
-                }
-                is.close();
-                httpURLConnection.disconnect();
-
-                return data;
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            String err = null;
-            if (s.equals("")) {
-                s = "Data saved successfully.";
-            }
-            try {
-                JSONObject jObject = new JSONObject(s);
-
-                final JSONArray jArray = jObject.getJSONArray("DEVICES");
-                for (i = 0; i < jArray.length(); i++) {
-                    try {
-                        JSONObject oneObject = jArray.getJSONObject(i);
-
-                        oneObjectsItem = oneObject.getString("physical_id");
-                        oneObjectsItem2 = oneObject.getString("powerline_id");
-                        oneObjectsItem3 = oneObject.getString("name");
-                        oneObjectsItem4 = oneObject.getString("area");
-                        oneObjectsItem5 = oneObject.getString("device_model");
-                        oneObjectsItem6 = oneObject.getString("device_code");
-                        oneObjectsItem7 = oneObject.getString("command_id");
-                        oneObjectsItem8 = oneObject.getString("master_id");
-                        oneObjectsItem12 = oneObject.getString("device_id");
-                        oneObjectsItem13 = oneObject.getString("internal_id");
-                        oneObjectsItem14 = oneObject.getString("dev_name");
-                        oneObjectsItem15 = oneObject.getString("control_type");
-                        oneObjectsItem16 = oneObject.getString("current_status");
-
-                        if (areaslctd.equals(oneObjectsItem4)) {
-                                physicalidAR.add(oneObjectsItem);
-                                devicemodelAR.add(oneObjectsItem3);
-                                devicenameAR.add(oneObjectsItem5);
-                                masteridAR.add(oneObjectsItem8);
-                                powerlineidAR.add(oneObjectsItem2);
-                                commandidAR.add(oneObjectsItem7);
-                                devicecodeAR.add(oneObjectsItem6);
-                                System.out.println("dataAdapter2 runnig" + areaslctd);
-                                    pidfkAR.add(oneObjectsItem2);
-                                    contrlidAR.add(oneObjectsItem12);
-                                    internalidAR.add(oneObjectsItem13);
-                                    cntrlnameAR.add(oneObjectsItem14);
-                                    contrltypeAR.add(oneObjectsItem15);
-                                    contrlstatusAR.add(oneObjectsItem16);
-                                        System.out.println("loop 2 running" + oneObjectsItem2 + oneObjectsItem12+ oneObjectsItem13 +oneObjectsItem14 + oneObjectsItem15 + oneObjectsItem16);
-
-                                System.out.println("Controller info : " + oneObjectsItem12 + oneObjectsItem13 + oneObjectsItem14 + oneObjectsItem15 + oneObjectsItem16);
-                                dbcheck1 = db.insertcontrollerinfo(oneObjectsItem2, oneObjectsItem12, oneObjectsItem13, oneObjectsItem14, oneObjectsItem15, oneObjectsItem16);
-                                if (dbcheck1 == true) {
-                                    System.out.println("controller info DB inserted " + i + " " + j + " " + oneObjectsItem2 + " " + oneObjectsItem12 + " " + oneObjectsItem13 + " " + oneObjectsItem14 + " " + oneObjectsItem15 + " " + oneObjectsItem16);
-                                } else {
-                                    System.out.println("controller db failure");
-                                }
-
-                            dbcheck2 = db.inserthomeinfo(homeidVAR, usernameVAR, gatewayVAR, ipaddressVAR, oneObjectsItem, oneObjectsItem2, oneObjectsItem3, oneObjectsItem4, oneObjectsItem5, oneObjectsItem6, oneObjectsItem7, oneObjectsItem8);
-                            if (dbcheck2 == true) {
-                                System.out.println("home info DB inserted " + i);
-                            } else {
-                                System.out.println("home info db failure");
-                            }
-
-                        }
-
-
-                        }catch(JSONException e){
-                            // Oops
-                        }
-                        System.out.println("check for status of devices : " + oneObjectsItem + " " + oneObjectsItem2 + " " + oneObjectsItem3 + " " + oneObjectsItem4 + " " + oneObjectsItem5 + " " + oneObjectsItem6 + " " + oneObjectsItem7 + " " + oneObjectsItem8);
-
-                    }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                err = "Exception: " + e.getMessage();
-            }
-            System.out.println("dataAdapter2 runnig");
-            dataAdapter2.notifyDataSetChanged();
-        }
-
-
-    }
-
     public void sendbellduration(String duration){
         int dur = Integer.parseInt(duration);
         if (dur>10){
@@ -4375,6 +4359,81 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
 
 
-}}
+}
+
+    public void groupmessage(String event){
+            if (event.equals("ON")){
+                    btnon1_2g.setVisibility(View.VISIBLE);
+                    btnoff1_2g.setVisibility(View.GONE);
+                    btnon2_2g.setVisibility(View.VISIBLE);
+                    btnoff2_2g.setVisibility(View.GONE);
+                    off_1plug.setVisibility(View.GONE);
+                    on_1plug.setVisibility(View.VISIBLE);
+                    on_1g.setVisibility(View.VISIBLE);
+                    off_1g.setVisibility(View.GONE);
+                    on_3g.setVisibility(View.VISIBLE);
+                    off_3g.setVisibility(View.GONE);
+                    on2_3g.setVisibility(View.VISIBLE);
+                    off2_3g.setVisibility(View.GONE);
+                    on3_3g.setVisibility(View.VISIBLE);
+                    off3_3g.setVisibility(View.GONE);
+                    off_4g.setVisibility(View.GONE);
+                    on_4g.setVisibility(View.VISIBLE);
+                    off2_4g.setVisibility(View.GONE);
+                    on2_4g.setVisibility(View.VISIBLE);
+                    off3_4g.setVisibility(View.GONE);
+                    on3_4g.setVisibility(View.VISIBLE);
+                    off4_4g.setVisibility(View.GONE);
+                    on4_4g.setVisibility(View.VISIBLE);
+                    on_5g.setVisibility(View.VISIBLE);
+                    off_5g.setVisibility(View.GONE);
+                    on2_5g.setVisibility(View.VISIBLE);
+                    off2_5g.setVisibility(View.GONE);
+                    on3_5g.setVisibility(View.VISIBLE);
+                    off3_5g.setVisibility(View.GONE);
+                    on4_5g.setVisibility(View.VISIBLE);
+                    off4_5g.setVisibility(View.GONE);
+                    on5_5g.setVisibility(View.VISIBLE);
+                    off5_5g.setVisibility(View.GONE);
+                    btnofffan.setVisibility(View.GONE);
+                    btnonfan.setVisibility(View.VISIBLE);
+            }else if (event.equals("OFF")){
+                    btnon1_2g.setVisibility(View.GONE);
+                    btnoff1_2g.setVisibility(View.VISIBLE);
+                    btnon2_2g.setVisibility(View.GONE);
+                    btnoff2_2g.setVisibility(View.VISIBLE);
+                    off_1plug.setVisibility(View.VISIBLE);
+                    on_1plug.setVisibility(View.GONE);
+                    on_1g.setVisibility(View.GONE);
+                    off_1g.setVisibility(View.VISIBLE);
+                    on_3g.setVisibility(View.GONE);
+                    off_3g.setVisibility(View.VISIBLE);
+                    on2_3g.setVisibility(View.GONE);
+                    off2_3g.setVisibility(View.VISIBLE);
+                    on3_3g.setVisibility(View.GONE);
+                    off3_3g.setVisibility(View.VISIBLE);
+                    off_4g.setVisibility(View.VISIBLE);
+                    on_4g.setVisibility(View.GONE);
+                    off2_4g.setVisibility(View.VISIBLE);
+                    on2_4g.setVisibility(View.GONE);
+                    off3_4g.setVisibility(View.VISIBLE);
+                    on3_4g.setVisibility(View.GONE);
+                    off4_4g.setVisibility(View.VISIBLE);
+                    on4_4g.setVisibility(View.GONE);
+                    on_5g.setVisibility(View.GONE);
+                    off_5g.setVisibility(View.VISIBLE);
+                    on2_5g.setVisibility(View.GONE);
+                    off2_5g.setVisibility(View.VISIBLE);
+                    on3_5g.setVisibility(View.GONE);
+                    off3_5g.setVisibility(View.VISIBLE);
+                    on4_5g.setVisibility(View.GONE);
+                    off4_5g.setVisibility(View.VISIBLE);
+                    on5_5g.setVisibility(View.GONE);
+                    off5_5g.setVisibility(View.VISIBLE);
+                    btnofffan.setVisibility(View.VISIBLE);
+                    btnonfan.setVisibility(View.GONE);
+            }
+    }
+}
 
 
