@@ -3494,6 +3494,9 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 }else if (click == "1PLUGoneOFF") {
                     off_1plug.setVisibility(View.GONE);
                     on_1plug.setVisibility(View.VISIBLE);
+                }else if (click == "1PLUGoneON") {
+                    off_1plug.setVisibility(View.VISIBLE);
+                    on_1plug.setVisibility(View.GONE);
                 } else if (click == "2GoneOFF") {
                     btnoff1_2g.setVisibility(View.GONE);
                     btnon1_2g.setVisibility(View.VISIBLE);
@@ -3654,8 +3657,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         System.out.println("Raw device list : " + devname + " " + status + " " + internalid);
 
                         if (status.equals("1")){
-                            updatecntrlstatusarray(devmodel,devname+i,internalid);
-                            System.out.println(devname+i);
+                            if (!devmodel.equals("PS")) {
+                                updatecntrlstatusarray(devmodel, devname+i, internalid);
+                                System.out.println(devname+i);
+                            }else{
+                                updatecntrlstatusarray(devmodel, devname, internalid);
+                                System.out.println(devname);
+                            }
                         }
                         else{
                             System.out.println("Move on");
