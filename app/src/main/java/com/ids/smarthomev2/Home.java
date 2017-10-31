@@ -4035,8 +4035,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     break;
             }
         }else if (devmodel.equals("FC")){
+            switch (getinternalid) {
+                case "6":
                 click = "fcOFF";
             cntrlstatusinfo.put(devname, click);
+                    break;}
         }else if (devmodel.equals("TS3G")) {
             switch (getinternalid) {
                 case "1":
