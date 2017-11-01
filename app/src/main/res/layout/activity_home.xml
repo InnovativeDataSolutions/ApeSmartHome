@@ -1010,7 +1010,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Duation"
+                android:text="Duration"
                 android:textColor="#ffffff"
                 android:layout_below="@+id/rlbell2"
                 android:layout_alignStart="@+id/relativeLayout"
