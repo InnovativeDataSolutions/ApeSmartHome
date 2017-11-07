@@ -1,5 +1,6 @@
 package com.ids.smarthomev2;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,6 +70,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     ImageButton lockopen,lockclosed,durationinfo,intervalinfo;
     Spinner sp1, sp2;
     HelperT helperT;
+    ProgressDialog progressdialog;
     EditText interval,duration;
     ProgressBar progressbarfan;
     TextView tvinfo, tvfanspeed;
@@ -403,6 +405,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
                 //if (devicenameAR.size()>0 && devicemodelAR.size()>0) {
+                checkdevstatus cds = new checkdevstatus();
+                cds.execute(homeidVAR);
                     String value = devicenameAR.get(position);
                     String value2 = areaAR.get(position);
                     String value3 = devicemodelAR.get(position);
@@ -1379,6 +1383,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 try {
                     if (clientrply == null) {
                         socket.close();
+                        progressdialog.dismiss();
                         System.out.println("Socket Closed [in] thread2");
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -1415,6 +1420,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
+            progressdialog.dismiss();
             System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
@@ -1638,7 +1644,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff5g(View view) {
 //        on_5g.setVisibility(View.VISIBLE);
-        off_5g.setEnabled(false);
+        //off_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g1off");
         point = v;
         int point2 = 1;
@@ -1680,7 +1687,8 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon5g(View view) {
 //        off_5g.setVisibility(View.VISIBLE);
-        on_5g.setEnabled(false);
+        //on_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g1on");
         click = "5GoneON";
         int point = v;
@@ -1722,7 +1730,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off5g(View view) {
 //        on2_5g.setVisibility(View.VISIBLE);
-        off2_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g2off");
         click = "5GtwoOFF";
         int point = v;
@@ -1764,7 +1772,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on5g(View view) {
 //        off2_5g.setVisibility(View.VISIBLE);
-        on2_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g2on");
         click = "5GtwoON";
         int point = v;
@@ -1806,7 +1814,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off5g(View view) {
 //        on3_5g.setVisibility(View.VISIBLE);
-        off3_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g3off");
         click = "5GthreeOFF";
         int point = v;
@@ -1848,7 +1856,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on5g(View view) {
 //        off3_5g.setVisibility(View.VISIBLE);
-        on3_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g3on");
         click = "5GthreeON";
         int point = v;
@@ -1889,7 +1897,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3off5g(View view) {
 //        on4_5g.setVisibility(View.VISIBLE);
-        off4_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g4off");
         click = "5GfourOFF";
         int point = v;
@@ -1931,7 +1939,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3on5g(View view) {
 //        off4_5g.setVisibility(View.VISIBLE);
-        on4_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g4on");
         click = "5GfourON";
         int point = v;
@@ -1973,7 +1981,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn4off5g(View view) {
 //        on5_5g.setVisibility(View.VISIBLE);
-        off5_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g5off");
         click = "5GfiveOFF";
         int point = v;
@@ -2015,7 +2023,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn4on5g(View view) {
 //        off5_5g.setVisibility(View.VISIBLE);
-        on5_5g.setEnabled(false);
+        progressDwait();
         System.out.println("5g5on");
         click = "5GfiveON";
         int point = v;
@@ -2057,7 +2065,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff4g(View view) {
 //        on_4g.setVisibility(View.VISIBLE);
-        off_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         int point2 = 1;
         System.out.println("4g1off");
@@ -2099,7 +2107,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon4g(View view) {
 //        off_4g.setVisibility(View.VISIBLE);
-        on_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g1on");
         click = "4GoneON";
@@ -2140,7 +2148,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off4g(View view) {
 //        on2_4g.setVisibility(View.VISIBLE);
-        off2_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g2off");
         click = "4GtwoOFF";
@@ -2181,7 +2189,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on4g(View view) {
 //        off2_4g.setVisibility(View.VISIBLE);
-        on2_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g2on");
         click = "4GtwoON";
@@ -2223,7 +2231,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off4g(View view) {
 //        on3_4g.setVisibility(View.VISIBLE);
-        off3_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g3off");
         click = "4GthreeOFF";
@@ -2265,7 +2273,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on4g(View view) {
 //        off3_4g.setVisibility(View.VISIBLE);
-        on3_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g3on");
         click = "4GthreeON";
@@ -2307,7 +2315,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3off4g(View view) {
 //        on4_4g.setVisibility(View.VISIBLE);
-        off4_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g4off");
         click = "4GfourOFF";
@@ -2349,7 +2357,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn3on4g(View view) {
 //        off4_4g.setVisibility(View.VISIBLE);
-        on4_4g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("4g4on");
         click = "4GfourON";
@@ -2391,7 +2399,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff3g(View view) {
 //        on_3g.setVisibility(View.VISIBLE);
-        off_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g1off");
         click = "3GoneOFF";
@@ -2433,7 +2441,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnon3g(View view) {
 //        off_3g.setVisibility(View.VISIBLE);
-        on_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g1oN");
         click = "3GoneON";
@@ -2475,7 +2483,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off3g(View view) {
 //        on2_3g.setVisibility(View.VISIBLE);
-        off2_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g2off");
         click = "3GtwoOFF";
@@ -2517,7 +2525,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on3g(View view) {
 //        off2_3g.setVisibility(View.VISIBLE);
-        on2_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g2oN");
         click = "3GtwoON";
@@ -2559,7 +2567,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2off3g(View view) {
 //        on3_3g.setVisibility(View.VISIBLE);
-        off3_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g3off");
         click = "3GthreeOFF";
@@ -2601,7 +2609,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn2on3g(View view) {
 //        off3_3g.setVisibility(View.VISIBLE);
-        on3_3g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("3g3oN");
         click = "3GthreeON";
@@ -2642,7 +2650,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btnon2g(View view) {
-        btnon1_2g.setEnabled(false);
+        progressDwait();
 //        btnoff1_2g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("2g1oN");
@@ -2685,7 +2693,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btnoff2g(View view) {
 //        btnon1_2g.setVisibility(View.VISIBLE);
-        btnoff1_2g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("2g1off");
         click = "2GoneOFF";
@@ -2726,7 +2734,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btn1on2g(View view) {
-        btnon2_2g.setEnabled(false);
+        progressDwait();
 //        btnoff2_2g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("2g2oN");
@@ -2769,7 +2777,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1off2g(View view) {
 //        btnon2_2g.setVisibility(View.VISIBLE);
-        btnoff2_2g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("2g2off");
         click = "2GtwoOFF";
@@ -2811,7 +2819,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void btn1off1g(View view) {
-        off_1g.setEnabled(false);
+        progressDwait();
 //        on_1g.setVisibility(View.VISIBLE);
         int point = v;
         System.out.println("1g1off");
@@ -2866,7 +2874,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1on1g(View view) {
 //        off_1g.setVisibility(View.VISIBLE);
-        on_1g.setEnabled(false);
+        progressDwait();
         int point = v;
         System.out.println("1g1on");
         click = "1GoneON";
@@ -2915,7 +2923,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1offplug(View view) {
 
-        off_1plug.setEnabled(false);
+        progressDwait();
 //        on_1plug.setVisibility(View.VISIBLE);
         int point = v;
         click = "1PLUGoneOFF";
@@ -2960,7 +2968,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
     public void btn1onplug(View view) {
 //        off_1plug.setVisibility(View.VISIBLE);
-        on_1plug.setEnabled(false);
+        progressDwait();
         int point = v;
         click = "1PLUGoneON";
         getcontroller();
@@ -3005,6 +3013,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         btnofffan.setVisibility(View.VISIBLE);
         btnonfan.setVisibility(View.GONE);
         progressbarfan.setProgress(fan);
+        progressDwait();
         //tvfanspeed.setText("");
 
         int point = v;
@@ -3151,8 +3160,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     public void btnofffan(View view) {
         btnofffan.setVisibility(View.GONE);
         btnonfan.setVisibility(View.VISIBLE);
-//        btnplusfan.setEnabled(true);
-//        btnminusfan.setEnabled(true);
+        progressDwait();
         //tvfanspeed.setText("");
 
         int point = v;
@@ -3196,6 +3204,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void lockopen(View view){
+        progressDwait();
         lockclosed.setVisibility(View.VISIBLE);
         lockopen.setVisibility(View.GONE);
         int point = v;
@@ -3238,6 +3247,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     }
 
     public void lockclosed(View view){
+        progressDwait();
         lockopen.setVisibility(View.VISIBLE);
         lockclosed.setVisibility(View.GONE);
         int point = v;
@@ -3437,6 +3447,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 System.out.println("Staus of validate info : " + s);
                 if (statusvalidateinfo.equals("FAILED")) {
                     Toast.makeText(Home.this, "Unable to connect with your device!", Toast.LENGTH_SHORT).show();
+                    progressdialog.dismiss();
                 }else{
                     UIhandler.post(new UpdateButtonState(click.toUpperCase())); //to update state of button (ex:disbaled or enabled) by sending click value
                     UIhandler.post(new updateUIThread(v4c.toUpperCase())); //to update value of button(ex: on or off) by sending powerlineid
@@ -3657,7 +3668,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                         System.out.println("Raw device list : " + devname + " " + status + " " + internalid);
 
                         if (status.equals("1")){
-                            if (!devmodel.equals("PS")) {
+                            if (!devmodel.equals("PS")|| internalid.equals("0")) {
                                 updatecntrlstatusarray(devmodel, devname+i, internalid);
                                 System.out.println(devname+i);
                             }else{
@@ -4444,6 +4455,12 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                     btnofffan.setVisibility(View.VISIBLE);
                     btnonfan.setVisibility(View.GONE);
             }
+    }
+
+    public void progressDwait(){
+        progressdialog = new ProgressDialog(Home.this);
+        progressdialog.setMessage("Please Wait....");
+        progressdialog.show();
     }
 }
 
