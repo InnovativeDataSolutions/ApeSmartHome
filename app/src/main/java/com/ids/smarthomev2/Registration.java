@@ -123,7 +123,7 @@ public class Registration extends AppCompatActivity {
             if(statussubmitinfo == null){
                 Toast.makeText(Registration.this, "Please check your internet connection!", Toast.LENGTH_SHORT).show();
                 progressLL.setVisibility(View.GONE);
-            } else if (statussubmitinfo.contains("AVAILABLE")) {
+            } else if (statussubmitinfo.equals("AVAILABLE")) {
                 Toast.makeText(Registration.this, "Registration Succesful!", Toast.LENGTH_SHORT).show();
                 progressLL.setVisibility(View.GONE);
                 tv.setText("Corresponding IP for your gateway recieved please verify if necessary");

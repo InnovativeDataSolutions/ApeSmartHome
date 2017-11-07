@@ -67,6 +67,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
     Button on_1g, on_1plug, off_1plug, btnonfan ;
     ImageView bell,btnofffan, btnplusfan, btnminusfan,btnoff1_2g,btnoff2_2g,off_1g, off_3g, off2_3g, off3_3g, off_4g, off2_4g, off3_4g, off4_4g, off_5g, off2_5g, off3_5g, off4_5g, off5_5g;
     Switch backlight;
+    String androidApp = "Android";
     ImageButton lockopen,lockclosed,durationinfo,intervalinfo;
     Spinner sp1, sp2;
     HelperT helperT;
@@ -1051,13 +1052,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 if (click.contains("OFF")) {
                     if (!usernameVAR.equals("infotel")) {
                         SendCmnd sc = new SendCmnd();
-                        sc.execute(homeidVAR, pid2, iid2, on);
+                        sc.execute(homeidVAR, pid2, iid2, on,androidApp);
                         System.out.println("overTheNet : " + pid2 + iid2);
                     }
                 } else {
                     if (!usernameVAR.equals("infotel")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,off);
+                    sc.execute(homeidVAR,pid2,iid2,off,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);}
                 }
                 e.printStackTrace();
@@ -1096,11 +1097,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,on);
+                    sc.execute(homeidVAR,pid2,iid2,on,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,off);
+                    sc.execute(homeidVAR,pid2,iid2,off,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 }}
                 e.printStackTrace();
@@ -1139,11 +1140,11 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,on);
+                    sc.execute(homeidVAR,pid2,iid2,on,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 } else {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,off);
+                    sc.execute(homeidVAR,pid2,iid2,off,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 }}
                 e.printStackTrace();
@@ -1233,27 +1234,27 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 String iid2 = String.valueOf(iid); // converting internal to decimal
                 if (click.contains("OFF") || click.contains("off") || click.contains("lockclosed")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,on);
+                    sc.execute(homeidVAR,pid2,iid2,on,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("ON") || click.contains("on") || click.contains("lockopen")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,off);
+                    sc.execute(homeidVAR,pid2,iid2,off,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("plusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,fanintid,on);
+                    sc.execute(homeidVAR,pid2,fanintid,on,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 } else if (click.contains("minusfan")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,fanintid,on);
+                    sc.execute(homeidVAR,pid2,fanintid,on,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2);
                 }else if (click.contains("duration")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,durationET);
+                    sc.execute(homeidVAR,pid2,iid2,durationET,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2 + durationET);
                 }else if (click.contains("duration") || click.contains("interval")) {
                     SendCmnd sc = new SendCmnd();
-                    sc.execute(homeidVAR,pid2,iid2,intervalET);
+                    sc.execute(homeidVAR,pid2,iid2,intervalET,androidApp);
                     System.out.println("overTheNet : " + pid2 + iid2 + intervalET);
                 }}
                 e.printStackTrace();
@@ -3400,13 +3401,14 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             String powerline_id = params[1];
             String internal_id = params[2];
             String event = params[3];
+            String android = params[4];
             String data = "";
             int tmp;
 
             try {
                 System.out.println("running send cmnd" + homeidVAR + " : " + v4c + " : " + v10c);
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
-                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event;
+                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event+"&App="+android;
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);

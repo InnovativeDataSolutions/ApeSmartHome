@@ -47,6 +47,7 @@ public class Dashboard extends AppCompatActivity {
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
+    String androidApp = "Android";
     int i;
     TextView dashboardconn;
     ArrayAdapter<String> adapter;
@@ -192,7 +193,7 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_OFF.add(itemTouched);
                                         devicenameAR_ON.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off);
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off,androidApp);
                                         System.out.println("ComndExec OFF: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + off);
                                         adapter.notifyDataSetChanged();
                                     }else if (selected.equals("OFF")){
@@ -202,7 +203,7 @@ public class Dashboard extends AppCompatActivity {
                                         devicenameAR_ON.add(itemTouched);
                                         devicenameAR_OFF.remove(position);
                                         SendCmnd sc = new SendCmnd();
-                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on);
+                                        sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on,androidApp);
                                         System.out.println("ComndExec ON: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + on);
                                         adapter.notifyDataSetChanged();
                                     }else{
@@ -213,7 +214,7 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_OFF.add(itemTouched);
                                             devicenameAR_ON.remove(itemTouched);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off);
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,off,androidApp);
                                             System.out.println("ComndExec off: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + off);
                                             adapter.notifyDataSetChanged();
                                         }else if (statusOfDevice.equals("2")){
@@ -223,7 +224,7 @@ public class Dashboard extends AppCompatActivity {
                                             devicenameAR_ON.add(itemTouched);
                                             devicenameAR_OFF.remove(itemTouched);
                                             SendCmnd sc = new SendCmnd();
-                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on);
+                                            sc.execute(homeid,itemTouchedPowerlineid,itemTouchedInternalid,on,androidApp);
                                             System.out.println("ComndExec ON: " + homeid + itemTouchedPowerlineid + itemTouchedInternalid + on);
                                             adapter.notifyDataSetChanged();
                                         }
@@ -338,12 +339,13 @@ public class Dashboard extends AppCompatActivity {
             String powerline_id = params[1];
             String internal_id = params[2];
             String event = params[3];
+            String android = params[4];
             String data = "";
             int tmp;
 
             try {
                 URL url = new URL("http://centraserv.idsworld.solutions:50/v1/Ape_srv/DeviceEvent/");
-                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event;
+                String urlParams = "HomeID="+homeid+"&powerline_id="+powerline_id+"&internal_id="+internal_id+"&action_event="+event+"&App="+android;
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 OutputStream os = httpURLConnection.getOutputStream();
