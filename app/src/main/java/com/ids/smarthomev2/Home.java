@@ -1421,7 +1421,13 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
 
         @Override
         public void run() {
-            progressdialog.dismiss();
+            if (progressdialog==null){
+                System.out.println("another device update");
+                decryptOutsiderRply(message);
+            }else {
+                decryptOutsiderRply(message);
+                progressdialog.dismiss();
+            }
             System.out.println("updateUIThread reply :" + message + " " + val + ":" + pwline); //used for checking
 
             if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
@@ -4464,6 +4470,174 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         progressdialog.setMessage("Please Wait....");
         progressdialog.show();
     }
+
+    public void decryptOutsiderRply(String message){
+        String val3 = dectohex(powerlineidAR.get(v));
+        String val4 = dectohex(powerlineidAR.get(j));
+        String devname = devicemodelAR.get(v);
+        String devmodel = devicenameAR.get(v);
+        String pwline = ("00" + val3).substring(val3.length());
+        String pwlinej = ("00" + val4).substring(val4.length());
+        if (message.length() > 48){
+            if (message.matches("(.*)" + pwline.toUpperCase() + "(.*)") || message.matches("(.*)" + pwlinej.toUpperCase() + "(.*)")) {
+                String getinternalid = message.substring(42, 44);
+                String status = message.substring(44, 46);
+                    if (devmodel.equals("PS")){
+                        if (getinternalid.equals("06")){
+                            if (status.equals("01")) {
+                                off_1plug.setVisibility(View.GONE);
+                                on_1plug.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                off_1plug.setVisibility(View.VISIBLE);
+                                on_1plug.setVisibility(View.GONE);
+                            }
+                        }
+                    }else if(devmodel.equals("TS1G")){
+                        if (getinternalid.equals("01")){
+                            if (status.equals("01")) {
+                                on_1g.setVisibility(View.VISIBLE);
+                                off_1g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on_1g.setVisibility(View.GONE);
+                                off_1g.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }else if(devmodel.equals("TS2G")){
+                        if (getinternalid.equals("01")){
+                            if (status.equals("01")) {
+                                btnon1_2g.setVisibility(View.VISIBLE);
+                                btnoff1_2g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                btnon1_2g.setVisibility(View.GONE);
+                                btnoff1_2g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("02")){
+                            if (status.equals("01")) {
+                                btnon2_2g.setVisibility(View.VISIBLE);
+                                btnoff2_2g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                btnon2_2g.setVisibility(View.GONE);
+                                btnoff2_2g.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }else if(devmodel.equals("TS3G")){
+                        if (getinternalid.equals("01")){
+                            if (status.equals("01")) {
+                                on_3g.setVisibility(View.VISIBLE);
+                                off_3g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on_3g.setVisibility(View.GONE);
+                                off_3g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("02")){
+                            if (status.equals("01")) {
+                                on2_3g.setVisibility(View.VISIBLE);
+                                off2_3g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on2_3g.setVisibility(View.GONE);
+                                off2_3g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("03")){
+                            if (status.equals("01")) {
+                                on3_3g.setVisibility(View.VISIBLE);
+                                off3_3g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on3_3g.setVisibility(View.GONE);
+                                off3_3g.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }else if(devmodel.equals("TS4G")){
+                        if (getinternalid.equals("01")){
+                            if (status.equals("01")) {
+                                off_4g.setVisibility(View.GONE);
+                                on_4g.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                off_4g.setVisibility(View.VISIBLE);
+                                on_4g.setVisibility(View.GONE);
+                            }
+                        }else if (getinternalid.equals("02")){
+                            if (status.equals("01")) {
+                                off2_4g.setVisibility(View.GONE);
+                                on2_4g.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                off2_4g.setVisibility(View.VISIBLE);
+                                on2_4g.setVisibility(View.GONE);
+                            }
+                        }else if (getinternalid.equals("03")){
+                            if (status.equals("01")) {
+                                off3_4g.setVisibility(View.GONE);
+                                on3_4g.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                off3_4g.setVisibility(View.VISIBLE);
+                                on3_4g.setVisibility(View.GONE);
+                            }
+                        }else if (getinternalid.equals("04")){
+                            if (status.equals("01")) {
+                                off4_4g.setVisibility(View.GONE);
+                                on4_4g.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                off4_4g.setVisibility(View.VISIBLE);
+                                on4_4g.setVisibility(View.GONE);
+                            }
+                        }
+                    }else if(devmodel.equals("TS5G")){
+                        if (getinternalid.equals("01")){
+                            if (status.equals("01")) {
+                                on_5g.setVisibility(View.VISIBLE);
+                                off_5g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on_5g.setVisibility(View.GONE);
+                                off_5g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("02")){
+                            if (status.equals("01")) {
+                                on2_5g.setVisibility(View.VISIBLE);
+                                off2_5g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on2_5g.setVisibility(View.GONE);
+                                off2_5g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("03")){
+                            if (status.equals("01")) {
+                                on3_5g.setVisibility(View.VISIBLE);
+                                off3_5g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on3_5g.setVisibility(View.GONE);
+                                off3_5g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("04")){
+                            if (status.equals("01")) {
+                                on4_5g.setVisibility(View.VISIBLE);
+                                off4_5g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on4_5g.setVisibility(View.GONE);
+                                off4_5g.setVisibility(View.VISIBLE);
+                            }
+                        }else if (getinternalid.equals("05")){
+                            if (status.equals("01")) {
+                                on5_5g.setVisibility(View.VISIBLE);
+                                off5_5g.setVisibility(View.GONE);
+                            }else if(status.equals("02")) {
+                                on5_5g.setVisibility(View.GONE);
+                                off5_5g.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }else if(devmodel.equals("FC")){
+                        if (getinternalid.equals("06")){
+                            if (status.equals("01")) {
+                                btnofffan.setVisibility(View.GONE);
+                                btnonfan.setVisibility(View.VISIBLE);
+                            }else if(status.equals("02")) {
+                                btnofffan.setVisibility(View.VISIBLE);
+                                btnonfan.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+            }
+            }
+        }
+
+
 }
 
 
