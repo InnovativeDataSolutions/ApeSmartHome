@@ -670,6 +670,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             public boolean onSwipe(Direction direction) {
                 Thread1bg = new Thread(new Thread1bg());
                 Thread1bg.start();
+                    cntrlstatusinfo.clear();
                     checkdevstatus cds = new checkdevstatus();
                     cds.execute(homeidVAR);
                 if (direction == Direction.up) {
