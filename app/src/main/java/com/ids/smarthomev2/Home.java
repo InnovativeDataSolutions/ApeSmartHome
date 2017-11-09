@@ -44,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -579,45 +580,101 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
+//    class Thread2bg implements Runnable {
+//
+//        public Thread2bg(Socket socket) {
+//            InputStream in = null;
+//            try {
+//                in = socket.getInputStream();
+//            } catch (IOException ex) {
+//                System.out.println("Can't get socket input stream. ");
+//            }
+//
+//            System.out.println("Waiting Socket events bg ....");
+//            byte[] bytes = new byte[1];
+//            int count;
+//
+//            String input_str = "";
+//            String temp_prev = "";
+//            String temp_curr = "";
+//            try {
+//                while ((count = in.read(bytes)) > 0) {
+//                    temp_curr = bytesToHex(bytes).toUpperCase();
+//                    if ((temp_prev + temp_curr).equals("0003") || (temp_prev + temp_curr).equals("AB03")) {
+//                        input_str += temp_curr;
+//
+//                        System.out.print(input_str.toUpperCase());
+//                        clientrply = input_str;
+//                        UIhandler.post(new updateUIThread(input_str.toUpperCase()));
+//                        input_str += temp_curr;
+//                        input_str = "";
+//                        System.out.println();
+//                    } else {
+//                        input_str += temp_curr;
+//                    }
+//                    temp_prev = temp_curr;
+//                }
+//
+//            } catch (Exception ex) {
+//                try {
+//                    if (clientrply == null) {
+//                        socket.close();
+//                        System.out.println("Socket Closed [in] thread2bg");
+//                        runOnUiThread(new Runnable() {
+//                            public void run() {
+//                                Toast.makeText(getApplicationContext(), "Something wrong with your device!", Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                        UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+//                    }
+//                } catch (IOException ex1) {
+//                    System.exit(0);
+//                }
+//            }
+//        }
+//
+//        public void run() {
+//            //do nothing
+//        }
+//    }
     class Thread2bg implements Runnable {
 
         public Thread2bg(Socket socket) {
             InputStream in = null;
+            DataInputStream dataInputStream = null;
             try {
                 in = socket.getInputStream();
             } catch (IOException ex) {
                 System.out.println("Can't get socket input stream. ");
             }
 
-            System.out.println("Waiting Socket events bg ....");
-            byte[] bytes = new byte[1];
-            int count;
-
-            String input_str = "";
-            String temp_prev = "";
-            String temp_curr = "";
             try {
-                while ((count = in.read(bytes)) > 0) {
-                    temp_curr = bytesToHex(bytes).toUpperCase();
-                    if ((temp_prev + temp_curr).equals("0003") || (temp_prev + temp_curr).equals("AB03")) {
-                        input_str += temp_curr;
+                int cc = 1;
+                while (socket.isConnected()) {
 
-                        System.out.print(input_str.toUpperCase());
-                        clientrply = input_str;
-                        UIhandler.post(new updateUIThread(input_str.toUpperCase()));
-                        input_str += temp_curr;
-                        input_str = "";
-                        System.out.println();
-                    } else {
-                        input_str += temp_curr;
+                    byte[] bytes = new byte[1];
+                    String TCP_string = "";
+                    String TCP_HEX_string = "";
+                    String plc_string = "";
+                    String iot_string = "";
+
+                    int count;
+                    while ((count = in.read(bytes)) > 0) {
+                        TCP_string += new String(bytes).toString();
+                        TCP_HEX_string += bytesToHex(bytes).toUpperCase();
+                        plc_string = HelperT.validProtocolStr(TCP_HEX_string);
+                        if (plc_string.length() > 0) {
+                            UIhandler.post(new updateUIThread(plc_string.toUpperCase()));
+                            System.out.println("Protocol 2bg : " + plc_string);
+                            break;
+                        }
                     }
-                    temp_prev = temp_curr;
-                }
 
-            } catch (Exception ex) {
+                }} catch(IOException e){
                 try {
                     if (clientrply == null) {
                         socket.close();
+                        progressdialog.dismiss();
                         System.out.println("Socket Closed [in] thread2bg");
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -629,8 +686,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 } catch (IOException ex1) {
                     System.exit(0);
                 }
-            }
-        }
+            }}
 
         public void run() {
             //do nothing
@@ -1345,10 +1401,70 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
         }
     }
 
+//    class Thread2 implements Runnable {
+//
+//        public Thread2(Socket socket) {
+//            InputStream in = null;
+//            try {
+//                socket.setSoTimeout(5000);
+//                in = socket.getInputStream();
+//            } catch (IOException ex) {
+//                System.out.println("Can't get socket input stream. ");
+//            }
+//
+//            System.out.println("Waiting Socket events ....");
+//            byte[] bytes = new byte[1];
+//            int count;
+//
+//            String input_str = "";
+//            String temp_prev = "";
+//            String temp_curr = "";
+//            try {
+//                while ((count = in.read(bytes)) > 0) {
+//                    temp_curr = bytesToHex(bytes).toUpperCase();
+//                    if ((temp_prev + temp_curr).equals("0003") || (temp_prev + temp_curr).equals("AB03")) {
+//                        input_str += temp_curr;
+//
+//                        System.out.print(input_str.toUpperCase());
+//                        clientrply = input_str;
+//                        UIhandler.post(new updateUIThread(input_str.toUpperCase()));
+//                        input_str += temp_curr;
+//                        input_str = "";
+//                        System.out.println();
+//                    } else {
+//                        input_str += temp_curr;
+//                    }
+//                    temp_prev = temp_curr;
+//                }
+//
+//            } catch (Exception ex) {
+//                try {
+//                    if (clientrply == null) {
+//                        socket.close();
+//                        progressdialog.dismiss();
+//                        System.out.println("Socket Closed [in] thread2");
+//                        runOnUiThread(new Runnable() {
+//                            public void run() {
+//                                Toast.makeText(getApplicationContext(), "Something wrong with your device!", Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                        UIhandler.post(new UpdateButtonState(click.toUpperCase()));
+//                    }
+//                } catch (IOException ex1) {
+//                    System.exit(0);
+//                }
+//            }
+//        }
+//
+//        public void run() {
+//            //do nothing
+//        }
+//    }
     class Thread2 implements Runnable {
 
         public Thread2(Socket socket) {
             InputStream in = null;
+            DataInputStream dataInputStream = null;
             try {
                 socket.setSoTimeout(5000);
                 in = socket.getInputStream();
@@ -1356,32 +1472,30 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 System.out.println("Can't get socket input stream. ");
             }
 
-            System.out.println("Waiting Socket events ....");
-            byte[] bytes = new byte[1];
-            int count;
-
-            String input_str = "";
-            String temp_prev = "";
-            String temp_curr = "";
             try {
-                while ((count = in.read(bytes)) > 0) {
-                    temp_curr = bytesToHex(bytes).toUpperCase();
-                    if ((temp_prev + temp_curr).equals("0003") || (temp_prev + temp_curr).equals("AB03")) {
-                        input_str += temp_curr;
+                int cc = 1;
+                while (socket.isConnected()) {
 
-                        System.out.print(input_str.toUpperCase());
-                        clientrply = input_str;
-                        UIhandler.post(new updateUIThread(input_str.toUpperCase()));
-                        input_str += temp_curr;
-                        input_str = "";
-                        System.out.println();
-                    } else {
-                        input_str += temp_curr;
+                    byte[] bytes = new byte[1];
+                    String TCP_string = "";
+                    String TCP_HEX_string = "";
+                    String plc_string = "";
+                    String iot_string = "";
+
+                    int count;
+                    while ((count = in.read(bytes)) > 0) {
+                        TCP_string += new String(bytes).toString();
+                        TCP_HEX_string += bytesToHex(bytes).toUpperCase();
+                        plc_string = HelperT.validProtocolStr(TCP_HEX_string);
+                        if (plc_string.length() > 0) {
+                            UIhandler.post(new updateUIThread(plc_string.toUpperCase()));
+                            System.out.println("Protocol 2 : " + plc_string);
+                            clientrply=plc_string;
+                            break;
+                        }
                     }
-                    temp_prev = temp_curr;
-                }
 
-            } catch (Exception ex) {
+                }} catch(IOException e){
                 try {
                     if (clientrply == null) {
                         socket.close();
@@ -1397,8 +1511,7 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
                 } catch (IOException ex1) {
                     System.exit(0);
                 }
-            }
-        }
+            }}
 
         public void run() {
             //do nothing
