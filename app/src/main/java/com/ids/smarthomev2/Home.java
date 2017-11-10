@@ -318,18 +318,6 @@ public class Home extends AppCompatActivity implements View.OnTouchListener {
             }
         }
 
-        for(int s=0;s<areaDUPLICATE.size();s++)
-        {
-            for(int m=1;m<areaDUPLICATE.size();m++)
-            {
-
-                if(areaDUPLICATE.get(s) != null && areaDUPLICATE.get(s).equals(areaDUPLICATE.get(m)))
-                {
-                    areaDUPLICATE.remove(m); //remove duplicate values
-                }
-            }
-        }
-
         for (String obj2 : areaDUPLICATE) {
             System.out.println("areafilter2 : " + obj2);
         }
